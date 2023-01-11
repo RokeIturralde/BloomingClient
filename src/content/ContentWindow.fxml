@@ -2,25 +2,29 @@
 
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 
 <AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="content.ContentWindowController">
    <children>
-      <Pane layoutX="-6.0" layoutY="-7.0" prefHeight="510.0" prefWidth="723.0">
+      <Pane layoutX="-6.0" layoutY="-7.0" prefHeight="510.0" prefWidth="723.0" style="-fx-background-color: #FA7C4E;">
          <children>
-            <TableView layoutX="123.0" layoutY="55.0" prefHeight="455.0" prefWidth="600.0">
+            <TableView layoutX="138.0" layoutY="68.0" prefHeight="428.0" prefWidth="571.0">
               <columns>
-                <TableColumn prefWidth="75.0" text="Name" />
-                <TableColumn prefWidth="75.0" text="Upload Date" />
-                  <TableColumn prefWidth="75.0" text="Image" />
-                  <TableColumn prefWidth="75.0" text="Loct" />
-                  <TableColumn prefWidth="75.0" text="Text" />
-                  <TableColumn prefWidth="75.0" text="C1" />
-                  <TableColumn prefWidth="75.0" text="C2" />
-                  <TableColumn prefWidth="75.0" text="C1" />
+                <TableColumn prefWidth="94.4000244140625" text="Name" />
+                <TableColumn prefWidth="103.19993591308594" text="Upload Date" />
+                  <TableColumn prefWidth="88.0" text="Image" />
+                  <TableColumn prefWidth="128.0" text="Location" />
+                  <TableColumn prefWidth="187.20001220703125" text="Text" />
               </columns>
             </TableView>
+            <ImageView fitHeight="105.0" fitWidth="130.0" layoutX="10.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../resources/bloomingPNG.png" />
+               </image>
+            </ImageView>
          </children>
       </Pane>
    </children>
