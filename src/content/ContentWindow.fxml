@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="content.ContentWindowController">
+   <children>
+      <Pane layoutX="-6.0" layoutY="-7.0" prefHeight="510.0" prefWidth="723.0">
+         <children>
+            <TableView layoutX="123.0" layoutY="55.0" prefHeight="455.0" prefWidth="600.0">
+              <columns>
+                <TableColumn prefWidth="75.0" text="Name" />
+                <TableColumn prefWidth="75.0" text="Upload Date" />
+                  <TableColumn prefWidth="75.0" text="Image" />
+                  <TableColumn prefWidth="75.0" text="Loct" />
+                  <TableColumn prefWidth="75.0" text="Text" />
+                  <TableColumn prefWidth="75.0" text="C1" />
+                  <TableColumn prefWidth="75.0" text="C2" />
+                  <TableColumn prefWidth="75.0" text="C1" />
+              </columns>
+            </TableView>
+         </children>
+      </Pane>
+   </children>
+</AnchorPane>
