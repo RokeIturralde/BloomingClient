@@ -2,9 +2,12 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -13,59 +16,99 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="content.ContentWindowController">
+<AnchorPane id="AnchorPane" prefHeight="682.0" prefWidth="1187.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="content.ContentWindowController">
    <children>
-      <Pane layoutX="-6.0" layoutY="-7.0" prefHeight="510.0" prefWidth="723.0" style="-fx-background-color: FF926A;">
+      <Pane prefHeight="688.0" prefWidth="1187.0" style="-fx-background-color: FF926A;">
          <children>
-            <Pane layoutX="6.0" layoutY="7.0" prefHeight="503.0" prefWidth="143.0" style="-fx-background-color: #FA7C4E;">
+            <Pane layoutX="-7.0" layoutY="-8.0" prefHeight="694.0" prefWidth="134.0" style="-fx-background-color: #FA7C4E;">
                <children>
-                  <Pane layoutX="-3.0" layoutY="160.0" prefHeight="62.0" prefWidth="143.0" style="-fx-background-color: E17046;" />
-                  <Text fontSmoothingType="LCD" layoutX="23.0" layoutY="196.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx background color:: D66136;" text="Albums" wrappingWidth="81.33673095703125">
+                  <Text fontSmoothingType="LCD" layoutX="28.0" layoutY="174.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx background color:: D66136;" text="Albums" wrappingWidth="81.33673095703125">
                      <font>
-                        <Font name="Baskerville Old Face" size="20.0" />
+                        <Font name="Microsoft YaHei" size="20.0" />
                      </font>
                   </Text>
-                  <Text fontSmoothingType="LCD" layoutX="20.0" layoutY="267.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Membership" textAlignment="CENTER" wrappingWidth="102.93670654296875">
+                  <Text fontSmoothingType="LCD" layoutX="-10.0" layoutY="330.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Membership" textAlignment="CENTER" wrappingWidth="158.13672637939453">
                      <font>
-                        <Font name="Baskerville Old Face" size="20.0" />
+                        <Font name="Microsoft YaHei" size="18.0" />
                      </font>
                   </Text>
-                  <Pane layoutX="-3.0" layoutY="364.0" prefHeight="62.0" prefWidth="143.0" style="-fx-background-color: E17046;" />
-                  <Text fontSmoothingType="LCD" layoutX="23.0" layoutY="400.0" strokeType="OUTSIDE" strokeWidth="0.0" text="My Profile" textAlignment="CENTER" wrappingWidth="102.93668977677589">
+                  <Button id="bProfile" layoutX="6.0" layoutY="569.0" mnemonicParsing="false" opacity="0.0" prefHeight="111.0" prefWidth="127.0" />
+                  <ImageView fitHeight="105.0" fitWidth="130.0" layoutX="6.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../resources/bloomingPNG.png" />
+                     </image>
+                  </ImageView>
+                  <Text fontSmoothingType="LCD" layoutX="25.0" layoutY="254.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Content" wrappingWidth="98.6097540203009">
                      <font>
-                        <Font name="Baskerville Old Face" size="20.0" />
+                        <Font name="Microsoft YaHei" size="20.0" />
                      </font>
                   </Text>
+                  <Button id="bMembership" layoutX="6.0" layoutY="306.0" mnemonicParsing="false" opacity="0.0" prefHeight="35.0" prefWidth="127.0" />
+                  <Button id="bAboutUs" layoutX="4.0" layoutY="385.0" mnemonicParsing="false" opacity="0.0" prefHeight="35.0" prefWidth="127.0" />
+                  <Button id="bAlbums" layoutX="6.0" layoutY="149.0" mnemonicParsing="false" opacity="0.0" prefHeight="35.0" prefWidth="127.0" />
+                  <ImageView fitHeight="49.0" fitWidth="55.0" layoutX="43.0" layoutY="589.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../../../Downloads/user.png" />
+                     </image>
+                  </ImageView>
+                  <Text fontSmoothingType="LCD" layoutX="-10.0" layoutY="668.0" strokeType="OUTSIDE" strokeWidth="0.0" text="My profile" textAlignment="CENTER" wrappingWidth="158.13672637939453">
+                     <font>
+                        <Font name="Microsoft YaHei" size="18.0" />
+                     </font>
+                  </Text>
+                  <Text fontSmoothingType="LCD" layoutX="-10.0" layoutY="409.0" strokeType="OUTSIDE" strokeWidth="0.0" text="About us" textAlignment="CENTER" wrappingWidth="158.13672637939453">
+                     <font>
+                        <Font name="Microsoft YaHei" size="18.0" />
+                     </font>
+                  </Text>
+                  <Button id="bContent" layoutX="4.0" layoutY="229.0" mnemonicParsing="false" opacity="0.0" prefHeight="35.0" prefWidth="127.0" />
+                  <Button id="bLogo" layoutX="4.0" layoutY="14.0" mnemonicParsing="false" opacity="0.0" prefHeight="111.0" prefWidth="127.0" />
                </children>
             </Pane>
-            <TableView layoutX="168.0" layoutY="107.0" prefHeight="316.0" prefWidth="542.0" style="-fx-background-color: FF926A;">
+            <TableView layoutX="154.0" layoutY="431.0" prefHeight="221.0" prefWidth="410.0" style="-fx-background-color: FF926A;">
               <columns>
-                <TableColumn prefWidth="94.4000244140625" text="Name" />
-                <TableColumn prefWidth="103.19993591308594" text="Upload Date" />
-                  <TableColumn prefWidth="88.0" text="Image" />
-                  <TableColumn prefWidth="103.20001220703125" text="Location" />
-                  <TableColumn prefWidth="176.79998779296875" text="Description" />
+                <TableColumn prefWidth="101.60000610351562" text="Name" />
+                <TableColumn prefWidth="102.39999389648438" text="Upload Date" />
+                  <TableColumn prefWidth="102.39996337890625" text="Location" />
+                  <TableColumn prefWidth="100.80001831054688" text="Image" />
               </columns>
             </TableView>
-            <ImageView fitHeight="105.0" fitWidth="130.0" layoutX="10.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../resources/bloomingPNG.png" />
-               </image>
-            </ImageView>
-            <Button layoutX="168.0" layoutY="448.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="112.0" text="Add Content" />
-            <Button layoutX="306.0" layoutY="448.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="112.0" text="Modify Content" />
-            <Button layoutX="457.0" layoutY="448.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="112.0" text="Delete Content" />
-            <Pane layoutX="168.0" layoutY="14.0" prefHeight="129.0" prefWidth="542.0">
+            <Pane layoutX="137.0" layoutY="320.0" prefHeight="77.0" prefWidth="444.0">
                <children>
-                  <ComboBox layoutX="14.0" layoutY="43.0" prefHeight="25.0" prefWidth="169.0" />
+                  <ComboBox layoutX="14.0" layoutY="43.0" prefHeight="25.0" prefWidth="134.0" />
                   <Label layoutX="14.0" layoutY="22.0" prefHeight="17.0" prefWidth="81.0" text="Parameter:" />
-                  <TextField layoutX="235.0" layoutY="43.0" prefHeight="25.0" prefWidth="169.0" />
-                  <Text layoutX="235.0" layoutY="35.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Value:" />
-                  <Button layoutX="489.0" layoutY="43.0" mnemonicParsing="false" text="Find" />
-                  <Button layoutX="432.0" layoutY="43.0" mnemonicParsing="false" text="Clear" />
+                  <TextField layoutX="193.0" layoutY="43.0" prefHeight="25.0" prefWidth="134.0" />
+                  <Text layoutX="193.0" layoutY="35.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Value:" />
+                  <Button layoutX="401.0" layoutY="43.0" mnemonicParsing="false" text="Find" />
+                  <Button layoutX="345.0" layoutY="43.0" mnemonicParsing="false" text="Clear" />
                   <Label layoutX="14.0" prefHeight="17.0" prefWidth="103.0" text="Search:" />
                </children>
             </Pane>
+            <Button layoutX="1045.0" layoutY="366.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="103.0" text="Delete Content" />
+            <Button layoutX="1045.0" layoutY="297.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="103.0" text="Add Content" />
+            <Button layoutX="1045.0" layoutY="332.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="103.0" text="Modify Content" />
+            <RadioButton layoutX="772.0" layoutY="106.0" mnemonicParsing="false" text="Custom Image" />
+            <RadioButton layoutX="937.0" layoutY="106.0" mnemonicParsing="false" text="Custom Text" />
+            <Text layoutX="737.0" layoutY="88.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Creation/Modification" />
+            <TextField layoutX="772.0" layoutY="152.0" prefHeight="25.0" prefWidth="149.0" />
+            <TextField layoutX="772.0" layoutY="218.0" prefHeight="20.0" prefWidth="149.0" />
+            <Text layoutX="772.0" layoutY="149.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Name" wrappingWidth="46.0933837890625" />
+            <Text layoutX="772.0" layoutY="214.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Location" wrappingWidth="54.93670654296875" />
+            <Button layoutX="997.0" layoutY="218.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="99.0" text="Choose Image" />
+            <TextArea layoutX="772.0" layoutY="277.0" prefHeight="62.0" prefWidth="149.0" />
+            <Text layoutX="772.0" layoutY="273.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Description" />
+            <DatePicker layoutX="972.0" layoutY="152.0" prefHeight="25.0" prefWidth="149.0" />
+            <Text layoutX="972.0" layoutY="149.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Upload Date" />
+            <Text layoutX="323.0" layoutY="427.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Image Table" wrappingWidth="71.16208465733501" />
+            <TableView layoutX="640.0" layoutY="431.0" prefHeight="221.0" prefWidth="456.0" style="-fx-background-color: FF926A;">
+               <columns>
+                  <TableColumn prefWidth="101.60000610351562" text="Name" />
+                  <TableColumn prefWidth="102.39999389648438" text="Upload Date" />
+                  <TableColumn prefWidth="102.39996337890625" text="Location" />
+                  <TableColumn prefWidth="147.199951171875" text="Description" />
+               </columns>
+            </TableView>
+            <ImageView fitHeight="294.0" fitWidth="493.0" layoutX="209.0" layoutY="13.0" pickOnBounds="true" preserveRatio="true" />
          </children>
       </Pane>
    </children>
