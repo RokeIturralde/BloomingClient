@@ -36,7 +36,7 @@ public class ContentWindowController {
      *
      * @param root root object with the DOM charged
      */
-    public void initSignUp(Parent root) {
+    public void initStage(Parent root) {
         LOGGER.info("Initializing Content window");
         Scene scene = new Scene(root);
         //Establishes the scene in the stage
