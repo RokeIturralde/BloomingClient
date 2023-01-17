@@ -7,6 +7,7 @@ package content;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Optional;
 import java.util.logging.Level;
 import javafx.stage.Stage;
 import java.util.logging.Logger;
@@ -29,7 +30,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
 import javafx.stage.WindowEvent;
-import javax.imageio.ImageIO;
 
 /**
  * FXML Controller class
@@ -37,7 +37,7 @@ import javax.imageio.ImageIO;
  * @author Roke
  */
 public class ContentWindowController {
-    
+
     @FXML
     private Button bLogo;
     @FXML
@@ -90,7 +90,7 @@ public class ContentWindowController {
     private TableView tableCustomText;
     @FXML
     private Button bPrintCustomText;
-    
+
     private final String tableImage = "Show Image";
     private Stage stage;
     private static final Logger LOGGER = Logger.getLogger("package content");
@@ -122,6 +122,7 @@ public class ContentWindowController {
         lblName.textProperty().addListener(this::textPropertyChange);
         lblDescription.textProperty().addListener(this::textPropertyChange);
         lblLocation.textProperty().addListener(this::textPropertyChange);
+        lblValue.textProperty().addListener(this::searchTextPropertyChange);
         //Set the textfields with a listener
         stage.show();
         //Establish the values of each field in the table
@@ -131,7 +132,7 @@ public class ContentWindowController {
         // tbcolImage.setCellValueFactory(new PropertyValueFactory<>(tableImage));
         // tbcolDescription.setCellValueFactory(new PropertyValueFactory<>("text"));
     }
-    
+
     @FXML
     private void handleClearButtonAction(ActionEvent event
     ) {
@@ -139,52 +140,72 @@ public class ContentWindowController {
         lblValue.setText("");
         cboxParameter.getSelectionModel().selectFirst();
     }
-    
+
     @FXML
     private void handleAddContentButtonAction(ActionEvent event
     ) {
     }
-    
+
     @FXML
     private void handleModifyContentButtonAction(ActionEvent event
     ) {
     }
-    
+
     @FXML
     private void handleDeleteContentButtonAction(ActionEvent event
     ) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setHeaderText("Delete Content");
+        alert.setTitle("Confirmation");
+        alert.setContentText("Are you sure you want to delete this content?");
+        Optional<ButtonType> action = alert.showAndWait();
+        //If you click on OK
+        if (action.get() == ButtonType.OK) {
+            //Call the method
+        }
     }
-    
+
     @FXML
     private void handleFindButtonAction(ActionEvent event
     ) {
+        if (cboxParameter.getSelectionModel().getSelectedItem().equals("Location")) {
+
+        }
+
+        if (cboxParameter.getSelectionModel().getSelectedItem().equals("Name")) {
+
+        }
+
+        if (cboxParameter.getSelectionModel().getSelectedItem().equals("Upload Date")) {
+
+        }
     }
-    
+
     @FXML
     private void handleLogoButtonAction(ActionEvent event
     ) {
     }
-    
+
     @FXML
     private void handleAlbumButtonAction(ActionEvent event
     ) {
     }
-    
+
     @FXML
     private void handleAboutUsButtonAction(ActionEvent event
     ) {
     }
-    
+
     @FXML
     private void handleMyProfileButtonAction(ActionEvent event
     ) {
     }
-    
+
     @FXML
     private void handleMembershipButtonAction(ActionEvent event
     ) {
     }
-    
+
     @FXML
     private void handleFileChooserButtonAction(ActionEvent event
     ) {
@@ -196,14 +217,14 @@ public class ContentWindowController {
         File image = fileChooser.showOpenDialog(stage);
         Image testing = new Image(image.toURI().toString());
         imagePreview.setImage(testing);
-        
+
     }
-    
+
     @FXML
     private void handlePrintCustomImageButtonAction(ActionEvent event
     ) {
     }
-    
+
     @FXML
     private void handlePrintCustomTextButtonAction(ActionEvent event
     ) {
@@ -217,7 +238,7 @@ public class ContentWindowController {
     public void setStage(Stage stage) {
         this.stage = stage;
     }
-    
+
     private void handlerWindowShowing(WindowEvent event) {
         LOGGER.info("Iniciando ContentWindowController::handlerWindowShowing");
         bDeleteContent.setDisable(true);
@@ -228,6 +249,7 @@ public class ContentWindowController {
         lblDescription.setDisable(true);
         lblLocation.setDisable(true);
         uploadDate.setDisable(true);
+        bFind.setDisable(true);
         cboxParameter.getItems().addAll(
                 "Location",
                 "Upload Date",
@@ -240,7 +262,7 @@ public class ContentWindowController {
             uploadDate.setDisable(false);
             lblDescription.setDisable(true);
         });
-        
+
         rbCustomText.setOnAction(e -> {
             bFileChooser.setDisable(true);
             lblName.setDisable(false);
@@ -248,7 +270,7 @@ public class ContentWindowController {
             uploadDate.setDisable(false);
             lblDescription.setDisable(false);
         });
-        
+
     }
 
     /**
@@ -265,7 +287,7 @@ public class ContentWindowController {
             String newValue) {
         RadioButton rb = (RadioButton) tgType.getSelectedToggle();
 
-        //If text fields values are longer than 25 (max value in Database), show error message and disable 
+        //If text fields values are longer than 25/100 (max value in Database), show error message and disable 
         //button
         if (lblName.getText().trim().length() > 25) {
             lblName.setText(lblName.getText().substring(0, 25));
@@ -282,14 +304,33 @@ public class ContentWindowController {
             new Alert(Alert.AlertType.ERROR, "The maximum length for the description is 100 characters", ButtonType.OK).showAndWait();
             bAddContent.setDisable(true);
         }
-        //If text fields are empty disable accept buttton
+        //If text fields are empty disable buttton
         if (lblName.getText().trim().isEmpty()
                 || lblLocation.getText().trim().isEmpty()
                 || (rb.equals(rbCustomText) && lblDescription.getText().trim().isEmpty())) {
             bAddContent.setDisable(true);
-        } //Else, enable accept button
+        } //Else, enable button
         else {
             bAddContent.setDisable(false);
+            bDeleteContent.setDisable(false);
+            bModifyContent.setDisable(false);
+        }
+
+    }
+
+    private void searchTextPropertyChange(ObservableValue observable,
+            String oldValue,
+            String newValue) {
+        if (cboxParameter.getSelectionModel().getSelectedItem() == null && lblValue.getText().trim().isEmpty()) {
+            bFind.setDisable(true);
+        }
+
+        //If text field is empty disable  buttton
+        if (lblValue.getText().trim().isEmpty()) {
+            bFind.setDisable(true);
+        } //Else, enable  button
+        else {
+            bFind.setDisable(false);
         }
     }
 }
