@@ -7,9 +7,12 @@ package content;
 
 import javafx.stage.Stage;
 import java.util.logging.Logger;
+import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -19,9 +22,11 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.ImageView;
 import javafx.stage.Modality;
+import javafx.stage.WindowEvent;
 
 /**
  * FXML Controller class
@@ -61,6 +66,8 @@ public class ContentWindowController {
     @FXML
     private RadioButton rbCustomText;
     @FXML
+    private ToggleGroup tgType;
+    @FXML
     private TextField lblName;
     @FXML
     private DatePicker uploadDate;
@@ -97,22 +104,19 @@ public class ContentWindowController {
      * @param root root object with the DOM charged
      */
     public void initStage(Parent root) {
-        LOGGER.info("Initializing Content window");
-        //Gathers the radioButtons to the same group
-        ToggleGroup toggleGroup = new ToggleGroup();
-        rbCustomImage.setToggleGroup(toggleGroup);
-        rbCustomText.setToggleGroup(toggleGroup);
+        LOGGER.info("Initializing SignIn window");
+        //Creates an scene
         Scene scene = new Scene(root);
-        //Establishes the scene in the stage
+        //Establishes an scene
         stage.setScene(scene);
         //Window title
-        stage.setTitle("Content");
-        //Modal window
-        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.setTitle("SignIn");
         //Not resizable window
         stage.setResizable(false);
-        stage.showAndWait();
-
+        //Set the Event handlers
+        stage.setOnShowing(this::handlerWindowShowing);
+        //Set the textfields with a listener
+        stage.show();
         //Establish the values of each field in the table
         // tbcolName.setCellValueFactory(new PropertyValueFactory<>("name"));
         //tbcolUploadDate.setCellValueFactory(new PropertyValueFactory<>("uploadDate"));
@@ -187,5 +191,52 @@ public class ContentWindowController {
     @FXML
     private void handlePrintCustomTextButtonAction(ActionEvent event
     ) {
+    }
+
+    /**
+     * Prepare the stage for a change of scene
+     *
+     * @param stage where the window shows
+     */
+    public void setStage(Stage stage) {
+        this.stage = stage;
+    }
+
+    private void handlerWindowShowing(WindowEvent event) {
+        LOGGER.info("Iniciando ContentWindowController::handlerWindowShowing");
+        bDeleteContent.setDisable(true);
+        bAddContent.setDisable(true);
+        bModifyContent.setDisable(true);
+        bFileChooser.setDisable(true);
+        lblName.setDisable(true);
+        lblDescription.setDisable(true);
+        lblLocation.setDisable(true);
+        uploadDate.setDisable(true);
+        cboxParameter.getItems().addAll(
+                "Location",
+                "Upload Date",
+                "Name");
+        // tgType.selectedToggleProperty().addListener(this::gtTypeChanged);
+
+    }
+
+    private void tgTypeChanged(ObservableValue observable,
+            String oldValue,
+            String newValue) {
+        RadioButton rb = (RadioButton) tgType.getSelectedToggle();
+        if (rb.equals(rbCustomImage)) {
+            bFileChooser.setDisable(false);
+            lblName.setDisable(false);
+            lblLocation.setDisable(false);
+            uploadDate.setDisable(false);
+            lblDescription.setDisable(true);
+        }
+        if (rb.equals(rbCustomText)) {
+            bFileChooser.setDisable(true);
+            lblName.setDisable(false);
+            lblLocation.setDisable(false);
+            uploadDate.setDisable(false);
+            lblDescription.setDisable(false);
+        }
     }
 }
