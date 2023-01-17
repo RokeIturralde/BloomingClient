@@ -144,7 +144,7 @@
         <TextField fx:id="lblLocation" layoutX="772.0" layoutY="218.0" prefHeight="20.0" prefWidth="149.0" />
         <Text layoutX="772.0" layoutY="149.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Name" wrappingWidth="46.0933837890625" />
         <Text layoutX="769.0" layoutY="214.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Location" wrappingWidth="66.55665323272115" />
-        <Button fx:id="bFileChooser" layoutX="976.0" layoutY="218.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="120.0" text="Choose Image">
+        <Button fx:id="bFileChooser" layoutX="976.0" layoutY="218.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="120.0" text="Choose Image" onAction="#handleFileChooserButtonAction">
             <cursor>
                 <Cursor fx:constant="HAND" />
             </cursor>
