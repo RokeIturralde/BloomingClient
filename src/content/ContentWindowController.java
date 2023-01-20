@@ -38,58 +38,21 @@ import javafx.stage.WindowEvent;
  */
 public class ContentWindowController {
 
-    @FXML
-    private Button bLogo;
-    @FXML
-    private Button bAlbum;
-    @FXML
-    private Button bContent;
-    @FXML
-    private Button bMembership;
-    @FXML
-    private Button bAboutUs;
-    @FXML
-    private Button bProfile;
-    @FXML
     private ImageView imagePreview;
-    @FXML
     private ComboBox cboxParameter;
-    @FXML
     private TextField lblValue;
-    @FXML
-    private Button bClear;
-    @FXML
     private Button bFind;
-    @FXML
-    private TableView tableCustomImage;
-    @FXML
-    private Button bPrintCustomImage;
-    @FXML
     private RadioButton rbCustomImage;
-    @FXML
     private RadioButton rbCustomText;
-    @FXML
     private ToggleGroup tgType;
-    @FXML
     private TextField lblName;
-    @FXML
     private DatePicker uploadDate;
-    @FXML
     private TextField lblLocation;
-    @FXML
     private Button bFileChooser;
-    @FXML
     private TextArea lblDescription;
-    @FXML
     private Button bAddContent;
-    @FXML
     private Button bModifyContent;
-    @FXML
     private Button bDeleteContent;
-    @FXML
-    private TableView tableCustomText;
-    @FXML
-    private Button bPrintCustomText;
 
     private final String tableImage = "Show Image";
     private Stage stage;
@@ -133,7 +96,6 @@ public class ContentWindowController {
         // tbcolDescription.setCellValueFactory(new PropertyValueFactory<>("text"));
     }
 
-    @FXML
     private void handleClearButtonAction(ActionEvent event
     ) {
         //Empty all the fields 
@@ -141,17 +103,7 @@ public class ContentWindowController {
         cboxParameter.getSelectionModel().selectFirst();
     }
 
-    @FXML
-    private void handleAddContentButtonAction(ActionEvent event
-    ) {
-    }
 
-    @FXML
-    private void handleModifyContentButtonAction(ActionEvent event
-    ) {
-    }
-
-    @FXML
     private void handleDeleteContentButtonAction(ActionEvent event
     ) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -165,7 +117,6 @@ public class ContentWindowController {
         }
     }
 
-    @FXML
     private void handleFindButtonAction(ActionEvent event
     ) {
         if (cboxParameter.getSelectionModel().getSelectedItem().equals("Location")) {
@@ -181,32 +132,7 @@ public class ContentWindowController {
         }
     }
 
-    @FXML
-    private void handleLogoButtonAction(ActionEvent event
-    ) {
-    }
 
-    @FXML
-    private void handleAlbumButtonAction(ActionEvent event
-    ) {
-    }
-
-    @FXML
-    private void handleAboutUsButtonAction(ActionEvent event
-    ) {
-    }
-
-    @FXML
-    private void handleMyProfileButtonAction(ActionEvent event
-    ) {
-    }
-
-    @FXML
-    private void handleMembershipButtonAction(ActionEvent event
-    ) {
-    }
-
-    @FXML
     private void handleFileChooserButtonAction(ActionEvent event
     ) {
         FileChooser.ExtensionFilter imageFilter
@@ -220,15 +146,6 @@ public class ContentWindowController {
 
     }
 
-    @FXML
-    private void handlePrintCustomImageButtonAction(ActionEvent event
-    ) {
-    }
-
-    @FXML
-    private void handlePrintCustomTextButtonAction(ActionEvent event
-    ) {
-    }
 
     /**
      * Prepare the stage for a change of scene
