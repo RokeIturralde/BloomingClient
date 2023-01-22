@@ -5,7 +5,7 @@
  */
 package app;
 
-import content.ContentWindowController;
+import ui.content.ContentWindowController;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;

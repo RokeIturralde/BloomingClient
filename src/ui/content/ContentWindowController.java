@@ -3,10 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package content;
+package ui.content;
 
+import businessLogic.content.ContentFactory;
+import businessLogic.content.ContentInterface;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
 import javafx.stage.Stage;
@@ -30,6 +33,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
 import javafx.stage.WindowEvent;
+import javax.ws.rs.core.GenericType;
+import objects.Content;
 
 /**
  * FXML Controller class
@@ -37,7 +42,7 @@ import javafx.stage.WindowEvent;
  * @author Roke
  */
 public class ContentWindowController {
-
+    
     @FXML
     private Button bLogo;
     @FXML
@@ -90,7 +95,7 @@ public class ContentWindowController {
     private TableView tableCustomText;
     @FXML
     private Button bPrintCustomText;
-
+    
     private final String tableImage = "Show Image";
     private Stage stage;
     private static final Logger LOGGER = Logger.getLogger("package content");
@@ -123,16 +128,12 @@ public class ContentWindowController {
         lblDescription.textProperty().addListener(this::textPropertyChange);
         lblLocation.textProperty().addListener(this::textPropertyChange);
         lblValue.textProperty().addListener(this::searchTextPropertyChange);
-        //Set the textfields with a listener
+        //Set the tables with values
+        ContentInterface client = ContentFactory.getModel();
+       // List<Content> contents = client.findAllContents_XML();
         stage.show();
-        //Establish the values of each field in the table
-        // tbcolName.setCellValueFactory(new PropertyValueFactory<>("name"));
-        //tbcolUploadDate.setCellValueFactory(new PropertyValueFactory<>("uploadDate"));
-        // tbcolLocation.setCellValueFactory(new PropertyValueFactory<>("location"));
-        // tbcolImage.setCellValueFactory(new PropertyValueFactory<>(tableImage));
-        // tbcolDescription.setCellValueFactory(new PropertyValueFactory<>("text"));
     }
-
+    
     @FXML
     private void handleClearButtonAction(ActionEvent event
     ) {
@@ -140,17 +141,17 @@ public class ContentWindowController {
         lblValue.setText("");
         cboxParameter.getSelectionModel().selectFirst();
     }
-
+    
     @FXML
     private void handleAddContentButtonAction(ActionEvent event
     ) {
     }
-
+    
     @FXML
     private void handleModifyContentButtonAction(ActionEvent event
     ) {
     }
-
+    
     @FXML
     private void handleDeleteContentButtonAction(ActionEvent event
     ) {
@@ -164,48 +165,48 @@ public class ContentWindowController {
             //Call the method
         }
     }
-
+    
     @FXML
     private void handleFindButtonAction(ActionEvent event
     ) {
         if (cboxParameter.getSelectionModel().getSelectedItem().equals("Location")) {
-
+            
         }
-
+        
         if (cboxParameter.getSelectionModel().getSelectedItem().equals("Name")) {
-
+            
         }
-
+        
         if (cboxParameter.getSelectionModel().getSelectedItem().equals("Upload Date")) {
-
+            
         }
     }
-
+    
     @FXML
     private void handleLogoButtonAction(ActionEvent event
     ) {
     }
-
+    
     @FXML
     private void handleAlbumButtonAction(ActionEvent event
     ) {
     }
-
+    
     @FXML
     private void handleAboutUsButtonAction(ActionEvent event
     ) {
     }
-
+    
     @FXML
     private void handleMyProfileButtonAction(ActionEvent event
     ) {
     }
-
+    
     @FXML
     private void handleMembershipButtonAction(ActionEvent event
     ) {
     }
-
+    
     @FXML
     private void handleFileChooserButtonAction(ActionEvent event
     ) {
@@ -217,14 +218,14 @@ public class ContentWindowController {
         File image = fileChooser.showOpenDialog(stage);
         Image testing = new Image(image.toURI().toString());
         imagePreview.setImage(testing);
-
+        
     }
-
+    
     @FXML
     private void handlePrintCustomImageButtonAction(ActionEvent event
     ) {
     }
-
+    
     @FXML
     private void handlePrintCustomTextButtonAction(ActionEvent event
     ) {
@@ -238,7 +239,7 @@ public class ContentWindowController {
     public void setStage(Stage stage) {
         this.stage = stage;
     }
-
+    
     private void handlerWindowShowing(WindowEvent event) {
         LOGGER.info("Iniciando ContentWindowController::handlerWindowShowing");
         bDeleteContent.setDisable(true);
@@ -262,7 +263,7 @@ public class ContentWindowController {
             uploadDate.setDisable(false);
             lblDescription.setDisable(true);
         });
-
+        
         rbCustomText.setOnAction(e -> {
             bFileChooser.setDisable(true);
             lblName.setDisable(false);
@@ -270,7 +271,7 @@ public class ContentWindowController {
             uploadDate.setDisable(false);
             lblDescription.setDisable(false);
         });
-
+        
     }
 
     /**
@@ -315,9 +316,9 @@ public class ContentWindowController {
             bDeleteContent.setDisable(false);
             bModifyContent.setDisable(false);
         }
-
+        
     }
-
+    
     private void searchTextPropertyChange(ObservableValue observable,
             String oldValue,
             String newValue) {
