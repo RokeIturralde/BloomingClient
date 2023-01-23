@@ -1,9 +1,12 @@
 package user;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
+import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
 import javafx.scene.Parent;
@@ -25,7 +28,6 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
 /**
- *
  * @author dani
  */
 public class UserWindowController {
@@ -65,20 +67,66 @@ public class UserWindowController {
     * 
     */
    
+   private final List <String> searchParameters = 
+           Arrays.asList("Login", "Email", "Full Name", "Privilege", "Status");
+   
    public void initUser(Parent root) {
        LOGGER.info("Initializing 'User' window");
-       
        // Stablish scene
        stage.setScene(
-            new Scene(root));
+            new Scene(root)
+       );
        // Set name
        stage.setTitle("User");
        // Set sizes
        stage.setResizable(false);
        stage.setOnShowing(this::handlerWindowShowing);
        
+       // buttons       
+       btnSearch.setDisable(true);
+       btnAddUser.setDisable(true);
+       btnModifyUser.setDisable(true);
+       btnDeleteUser.setDisable(true);
        
+       // texts
+       txtSearchValue.textProperty().addListener(this::textChanged);
+       txtLogin.textProperty().addListener(this::textChanged);
+       txtEmail.textProperty().addListener(this::textChanged);
        
+       comboBoxSearchParameter.setItems(searchParameters);
+              
+   }
+   
+   private void textChanged(ObservableValue observable,
+            String oldValue,
+            String newValue) {
+       
+       if (txtSearchValue.getText().trim().length() > 25) {
+           txtSearchValue.setText(txtSearchValue.getText().substring(0, 25));
+           new Alert(
+               Alert.AlertType.ERROR, 
+               "The maximum length for the search parameter is 25 characters.");
+           btnSearch.setDisable(true);
+       }
+       
+       //if (txtLogin.getText().trim().length() > 25)
+       
+   }
+   
+   private boolean weirdTextTester(String t) {
+       List <String> l = 
+            Arrays.asList(
+            "%", ":", ";", ",", "'", 
+            "¡", "!", "?", "¿", "|", 
+            "=", "-", "<", ">", "`",
+            "+", "@", "/", "[", "]",
+            "ç", "{", "}", "#", "º",
+            "ª", " ");
+       
+       if (t == null)
+           return false;
+       return ((!t.equals("")) && (t.matches("^[a-zA-Z0-9]*$")));
+      
    }
    
    private void handlerWindowShowing(WindowEvent event) {

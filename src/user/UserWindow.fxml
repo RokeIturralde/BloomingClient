@@ -67,7 +67,7 @@
                   <TableColumn prefWidth="148.79998779296875" text="Last password change" />
               </columns>
             </TableView>
-            <Pane id="paneUserData" layoutX="881.0" layoutY="39.0" prefHeight="564.0" prefWidth="282.0">
+            <Pane id="paneUserData" layoutX="881.0" layoutY="45.0" prefHeight="564.0" prefWidth="282.0" style="-fx-background-color: #FA7C4E;">
                <children>
                   <Text fontSmoothingType="LCD" layoutX="37.0" layoutY="62.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Credentials" wrappingWidth="158.13672637939453">
                      <font>
