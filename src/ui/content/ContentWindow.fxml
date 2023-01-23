@@ -17,7 +17,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<Pane prefHeight="688.0" prefWidth="1187.0" style="-fx-background-color: FF926A;" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="content.ContentWindowController">
+<Pane prefHeight="688.0" prefWidth="1187.0" style="-fx-background-color: FF926A;" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.content.ContentWindowController">
     <children>
         <Pane layoutX="-7.0" layoutY="-8.0" prefHeight="694.0" prefWidth="134.0" style="-fx-background-color: #FA7C4E;">
             <children>
@@ -38,7 +38,7 @@
                 </Button>
                 <ImageView fitHeight="105.0" fitWidth="130.0" layoutX="6.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
                     <image>
-                        <Image url="@../resources/bloomingPNG.png" />
+                        <Image url="@../../resources/bloomingPNG.png" />
                     </image>
                 </ImageView>
                 <Text fontSmoothingType="LCD" layoutX="25.0" layoutY="254.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Content" underline="true" wrappingWidth="98.6097540203009">
@@ -48,7 +48,7 @@
                 </Text>
                 <ImageView fitHeight="49.0" fitWidth="55.0" layoutX="43.0" layoutY="589.0" pickOnBounds="true" preserveRatio="true">
                     <image>
-                        <Image url="@../resources/user.png" />
+                        <Image url="@../../resources/user.png" />
                     </image>
                 </ImageView>
                 <Text fontSmoothingType="LCD" layoutX="-10.0" layoutY="668.0" strokeType="OUTSIDE" strokeWidth="0.0" text="My profile" textAlignment="CENTER" wrappingWidth="158.13672637939453">
@@ -88,12 +88,12 @@
                 </Button>
             </children>
         </Pane>
-        <TableView fx:id="tableCustomImage" layoutX="154.0" layoutY="424.0" prefHeight="221.0" prefWidth="410.0">
+        <TableView fx:id="tableCustomImage" fixedCellSize="0.0" layoutX="154.0" layoutY="424.0" prefHeight="221.0" prefWidth="425.0">
             <columns>
-                <TableColumn prefWidth="101.60000610351562" text="Name" />
-                <TableColumn prefWidth="102.39999389648438" text="Upload Date" />
-                <TableColumn prefWidth="102.39996337890625" text="Location" />
-                <TableColumn prefWidth="100.80001831054688" text="Image" />
+                <TableColumn fx:id="customImageName" prefWidth="101.60000610351562" text="Name" />
+                <TableColumn fx:id="customImageUploadDate" prefWidth="138.4000244140625" text="Upload Date" />
+                <TableColumn fx:id="customImageLocation" prefWidth="84.79998779296875" text="Location" />
+                <TableColumn fx:id="customImageImage" prefWidth="99.99990844726562" text="Image" />
             </columns>
         </TableView>
         <Pane layoutX="137.0" layoutY="320.0" prefHeight="77.0" prefWidth="444.0">
@@ -175,7 +175,7 @@
         <Text layoutX="807.0" layoutY="419.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Description Table" wrappingWidth="126.99997274301859" />
         <ImageView fx:id="imagePreview" fitHeight="252.0" fitWidth="370.0" layoutX="294.0" layoutY="45.0" pickOnBounds="true" preserveRatio="true">
             <image>
-                <Image url="@../resources/SignUpAtardecer.png" />
+                <Image url="@../../resources/SignUpAtardecer.png" />
             </image>
         </ImageView>
         <Label layoutX="148.0" layoutY="309.0" prefHeight="17.0" prefWidth="103.0" text="Search:">

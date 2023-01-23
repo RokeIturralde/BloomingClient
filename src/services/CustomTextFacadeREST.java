@@ -6,7 +6,7 @@
 package services;
 
 import businessLogic.customText.CustomTextInterface;
-import javax.ws.rs.ClientErrorException;
+import exceptions.ClientErrorException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.WebTarget;
 

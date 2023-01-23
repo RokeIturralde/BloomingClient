@@ -23,7 +23,7 @@ public class App extends Application {
     @Override
     public void start(Stage stage) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/content/ContentWindow.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/content/ContentWindow.fxml"));
             Parent root = (Parent) loader.load();
             //Obtain the Sign In window controller
             ContentWindowController controller = (ContentWindowController) loader.getController();

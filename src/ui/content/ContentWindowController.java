@@ -8,13 +8,13 @@ package ui.content;
 import businessLogic.content.ContentFactory;
 import businessLogic.content.ContentInterface;
 import java.io.File;
-import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
-import java.util.logging.Level;
 import javafx.stage.Stage;
 import java.util.logging.Logger;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
@@ -25,10 +25,12 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
@@ -42,7 +44,7 @@ import objects.Content;
  * @author Roke
  */
 public class ContentWindowController {
-    
+
     @FXML
     private Button bLogo;
     @FXML
@@ -67,6 +69,14 @@ public class ContentWindowController {
     private Button bFind;
     @FXML
     private TableView tableCustomImage;
+    @FXML
+    private TableColumn customImageName;
+    @FXML
+    private TableColumn customImageLocation;
+    @FXML
+    private TableColumn customImageUploadDate;
+    /* @FXML
+    private TableView customImageImage;*/
     @FXML
     private Button bPrintCustomImage;
     @FXML
@@ -95,10 +105,11 @@ public class ContentWindowController {
     private TableView tableCustomText;
     @FXML
     private Button bPrintCustomText;
-    
+
+    private ObservableList<Content> clientsData;
     private final String tableImage = "Show Image";
     private Stage stage;
-    private static final Logger LOGGER = Logger.getLogger("package content");
+    private static final Logger LOGGER = Logger.getLogger("package ui.content");
 
     /**
      * Initializes the controller class.
@@ -129,11 +140,28 @@ public class ContentWindowController {
         lblLocation.textProperty().addListener(this::textPropertyChange);
         lblValue.textProperty().addListener(this::searchTextPropertyChange);
         //Set the tables with values
-        ContentInterface client = ContentFactory.getModel();
-       // List<Content> contents = client.findAllContents_XML();
+        tableCustomImage.setEditable(false);
+        tableCustomText.setEditable(false);
+        customImageName.setCellValueFactory(
+                new PropertyValueFactory<>("name"));
+        customImageLocation.setCellValueFactory(
+                new PropertyValueFactory<>("location"));
+        customImageUploadDate.setCellValueFactory(
+                new PropertyValueFactory<>("uploadDate"));
+        /* tableCustomImageImage.setCellValueFactory(
+                    new PropertyValueFactory<>("customImageName"));*/
+        try {
+            ContentInterface client = ContentFactory.getModel();
+            clientsData = FXCollections.observableArrayList(client.findAllContents_XML(new GenericType<List<Content>>() {
+            }));
+            tableCustomImage.setItems(clientsData);
+            tableCustomImage.refresh();
+        } catch (Exception e) {
+            LOGGER.info(e.getMessage());
+        }
         stage.show();
     }
-    
+
     @FXML
     private void handleClearButtonAction(ActionEvent event
     ) {
@@ -141,17 +169,17 @@ public class ContentWindowController {
         lblValue.setText("");
         cboxParameter.getSelectionModel().selectFirst();
     }
-    
+
     @FXML
     private void handleAddContentButtonAction(ActionEvent event
     ) {
     }
-    
+
     @FXML
     private void handleModifyContentButtonAction(ActionEvent event
     ) {
     }
-    
+
     @FXML
     private void handleDeleteContentButtonAction(ActionEvent event
     ) {
@@ -165,48 +193,48 @@ public class ContentWindowController {
             //Call the method
         }
     }
-    
+
     @FXML
     private void handleFindButtonAction(ActionEvent event
     ) {
         if (cboxParameter.getSelectionModel().getSelectedItem().equals("Location")) {
-            
+
         }
-        
+
         if (cboxParameter.getSelectionModel().getSelectedItem().equals("Name")) {
-            
+
         }
-        
+
         if (cboxParameter.getSelectionModel().getSelectedItem().equals("Upload Date")) {
-            
+
         }
     }
-    
+
     @FXML
     private void handleLogoButtonAction(ActionEvent event
     ) {
     }
-    
+
     @FXML
     private void handleAlbumButtonAction(ActionEvent event
     ) {
     }
-    
+
     @FXML
     private void handleAboutUsButtonAction(ActionEvent event
     ) {
     }
-    
+
     @FXML
     private void handleMyProfileButtonAction(ActionEvent event
     ) {
     }
-    
+
     @FXML
     private void handleMembershipButtonAction(ActionEvent event
     ) {
     }
-    
+
     @FXML
     private void handleFileChooserButtonAction(ActionEvent event
     ) {
@@ -218,14 +246,14 @@ public class ContentWindowController {
         File image = fileChooser.showOpenDialog(stage);
         Image testing = new Image(image.toURI().toString());
         imagePreview.setImage(testing);
-        
+
     }
-    
+
     @FXML
     private void handlePrintCustomImageButtonAction(ActionEvent event
     ) {
     }
-    
+
     @FXML
     private void handlePrintCustomTextButtonAction(ActionEvent event
     ) {
@@ -239,7 +267,7 @@ public class ContentWindowController {
     public void setStage(Stage stage) {
         this.stage = stage;
     }
-    
+
     private void handlerWindowShowing(WindowEvent event) {
         LOGGER.info("Iniciando ContentWindowController::handlerWindowShowing");
         bDeleteContent.setDisable(true);
@@ -263,7 +291,7 @@ public class ContentWindowController {
             uploadDate.setDisable(false);
             lblDescription.setDisable(true);
         });
-        
+
         rbCustomText.setOnAction(e -> {
             bFileChooser.setDisable(true);
             lblName.setDisable(false);
@@ -271,7 +299,7 @@ public class ContentWindowController {
             uploadDate.setDisable(false);
             lblDescription.setDisable(false);
         });
-        
+
     }
 
     /**
@@ -316,9 +344,9 @@ public class ContentWindowController {
             bDeleteContent.setDisable(false);
             bModifyContent.setDisable(false);
         }
-        
+
     }
-    
+
     private void searchTextPropertyChange(ObservableValue observable,
             String oldValue,
             String newValue) {
