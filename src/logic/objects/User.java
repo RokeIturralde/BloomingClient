@@ -15,7 +15,6 @@ import java.util.List;
  */
 public class User implements Serializable {
 
-    private Integer id;
     private String email;
     private String fullName;
     private String login;
@@ -42,13 +41,6 @@ public class User implements Serializable {
         this.sharedAlbums = sharedAlbums;
     }
 
-    public Integer getIdUser() {
-        return id;
-    }
-
-    public void setIdUser(Integer idUser) {
-        this.id = idUser;
-    }
 
     public String getEmail() {
         return email;
@@ -109,7 +101,7 @@ public class User implements Serializable {
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
+        hash += (login != null ? login.hashCode() : 0);
         return hash;
     }
 
@@ -120,7 +112,7 @@ public class User implements Serializable {
             return false;
         }
         User other = (User) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+        if ((this.login == null && other.login != null) || (this.login != null && !this.login.equals(other.login))) {
             return false;
         }
         return true;
@@ -128,7 +120,7 @@ public class User implements Serializable {
 
     @Override
     public String toString() {
-        return "entities.User[ id=" + id + " ]";
+        return "entities.User[ id=" + login + " ]";
     }
 
 }
