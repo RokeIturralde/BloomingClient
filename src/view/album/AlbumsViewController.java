@@ -4,8 +4,14 @@
  */
 package view.album;
 
+import album.AlbumFactory;
+import album.AlbumInterface;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
@@ -14,14 +20,19 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import logic.objects.Album;
+import logic.objects.User;
 
 /**
  *
@@ -49,11 +60,15 @@ public class AlbumsViewController {
     @FXML
     private DatePicker dpCreationDate;
 
-    //Check Boxs
+    //Check Boxes
     @FXML
     private CheckBox checkShare;
     @FXML
     private CheckBox checkShared;
+
+    //Combo Box
+    @FXML
+    private ComboBox cbSearchType;
 
     //Tables
     @FXML
@@ -71,15 +86,15 @@ public class AlbumsViewController {
     @FXML
     private TableColumn columnDescMyAlbums;
     @FXML
-    private TableColumn columNameSharedAlbums;
+    private TableColumn columnNameSharedAlbums;
     @FXML
-    private TableColumn columCreatorharedAlbums;
+    private TableColumn columnCreatorSharedAlbums;
     @FXML
-    private TableColumn columCreationDateSharedAlbums;
+    private TableColumn columnCreationDateSharedAlbums;
     @FXML
-    private TableColumn columPeopleSharedAlbums;
+    private TableColumn columnPeopleSharedAlbums;
     @FXML
-    private TableColumn columDescSharedAlbums;
+    private TableColumn columnDescSharedAlbums;
 
     //Buttons
     @FXML
@@ -121,10 +136,12 @@ public class AlbumsViewController {
     @FXML
     private ImageView imageProfile;
 
-    //The stage of the window
+    //The stage of the window.
     private Stage stage;
-
+    //Logger for the aplication. 
     private static final Logger LOGGER = Logger.getLogger("package view.Album");
+    private ObservableList<Album> clientsData;
+     User user;
 
     /**
      * Initializing the window method
@@ -144,8 +161,23 @@ public class AlbumsViewController {
         //Set the Event handlers
         stage.setOnShowing(this::handlerWindowShowing);
         //Set the textfields with a listener
-        //tfLogin.textProperty().addListener(this::textChanged);
-        //cpPassword.textProperty().addListener(this::textChanged);
+        txtValue.textProperty().addListener(this::textChanged);
+        txtAlbumName.textProperty().addListener(this::textChanged);
+        txtAlbumCreator.textProperty().addListener(this::textChanged);
+        txtAddUser.textProperty().addListener(this::textChanged);
+        taAlbumDesc.textProperty().addListener(this::textChanged);
+        
+        //Charge tables data
+        try {
+            AlbumInterface client = AlbumFactory.getModel();
+            clientsData = FXCollections.observableArrayList(client.findMyAllAlbums_XML(ArrayList.class, "u1"));
+            tbMyAlbums.setItems(clientsData);
+            tbMyAlbums.refresh();
+            
+        } catch (Exception e) {
+            LOGGER.info(e.getMessage());
+        }
+        //Show the window
         stage.show();
     }
 
@@ -156,6 +188,49 @@ public class AlbumsViewController {
      */
     private void handlerWindowShowing(WindowEvent event) {
         LOGGER.info("Iniciando AlbumsViewController::handlerWindowShowing");
+        //Initializing tables
+        tbMyAlbums.setEditable(false);
+        tbSharedAlbums.setEditable(false);
+        //Initializing fields on blank
+        txtValue.setText("");
+        txtAlbumName.setText("");
+        txtAlbumCreator.setText("");
+        txtAddUser.setText("");
+        taAlbumDesc.setText("");
+        taUsers.setText("");
+        //All buttons despite the menus ones, prints and help, are disable at first
+        btnFind.setDisable(true);
+        btnClearShearch.setDisable(true);
+        btnAdd.setDisable(true);
+        btnCreateAlbum.setDisable(true);
+        btnModifyAlbum.setDisable(true);
+        btnDeleteAlbum.setDisable(true);
+        btnAdd.setDisable(true);
+        btnClearInfo.setDisable(true);
+
+        txtAddUser.setDisable(true);
+        taUsers.setDisable(true);
+        //Set factories for cell values in users table columns (My albums table)
+        columnNameMyAlbums.setCellValueFactory(
+                new PropertyValueFactory<>("name"));
+        columnCreationDateMyAlbums.setCellValueFactory(
+                new PropertyValueFactory<>("creationDate"));
+        columnPeopleMyAlbums.setCellValueFactory(
+                new PropertyValueFactory<>("users"));
+        columnDescMyAlbums.setCellValueFactory(
+                new PropertyValueFactory<>("description"));
+        //Set factories for cell values in users table columns (Shared albums table)
+        columnNameSharedAlbums.setCellValueFactory(
+                new PropertyValueFactory<>("name"));
+        columnCreatorSharedAlbums.setCellValueFactory(
+                new PropertyValueFactory<>("creator"));
+        columnCreationDateSharedAlbums.setCellValueFactory(
+                new PropertyValueFactory<>("creationDate"));
+        columnPeopleSharedAlbums.setCellValueFactory(
+                new PropertyValueFactory<>("users"));
+        columnDescSharedAlbums.setCellValueFactory(
+                new PropertyValueFactory<>("description"));
+       
     }
 
     /**
@@ -206,7 +281,6 @@ public class AlbumsViewController {
             txtAddUser.setText(txtAddUser.getText().substring(0, 25));
             new Alert(Alert.AlertType.ERROR, "The maximum lenght for the login is 25 characters.", ButtonType.OK).showAndWait();
             btnAdd.setDisable(true);
-            btnModifyAlbum.setDisable(true);
         }
     }
 

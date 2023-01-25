@@ -5,6 +5,7 @@
  */
 package bloomingclient;
 
+import album.AlbumInterface;
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.WebTarget;
@@ -22,7 +23,7 @@ import javax.ws.rs.client.WebTarget;
  *
  * @author 2dam
  */
-public class AlbumRESTfullClient {
+public class AlbumRESTfullClient implements AlbumInterface{
 
     private WebTarget webTarget;
     private Client client;
