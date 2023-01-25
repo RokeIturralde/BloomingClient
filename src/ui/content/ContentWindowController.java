@@ -7,9 +7,21 @@ package ui.content;
 
 import businessLogic.content.ContentFactory;
 import businessLogic.content.ContentInterface;
+import businessLogic.customImage.CustomImageFactory;
+import businessLogic.customImage.CustomImageInterface;
+import exceptions.ClientErrorException;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Level;
 import javafx.stage.Stage;
 import java.util.logging.Logger;
 import javafx.beans.value.ObservableValue;
@@ -35,7 +47,9 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
 import javafx.stage.WindowEvent;
+import javax.imageio.ImageIO;
 import javax.ws.rs.core.GenericType;
+import objects.CustomImage;
 import objects.Content;
 
 /**
@@ -108,7 +122,9 @@ public class ContentWindowController {
 
     private ObservableList<Content> clientsData;
     private final String tableImage = "Show Image";
+    private Byte[] imageBytes = null;
     private Stage stage;
+    private ContentInterface client;
     private static final Logger LOGGER = Logger.getLogger("package ui.content");
 
     /**
@@ -151,7 +167,7 @@ public class ContentWindowController {
         /* tableCustomImageImage.setCellValueFactory(
                     new PropertyValueFactory<>("customImageName"));*/
         try {
-            ContentInterface client = ContentFactory.getModel();
+            client = ContentFactory.getModel();
             clientsData = FXCollections.observableArrayList(client.findAllContents_XML(new GenericType<List<Content>>() {
             }));
             tableCustomImage.setItems(clientsData);
@@ -173,6 +189,23 @@ public class ContentWindowController {
     @FXML
     private void handleAddContentButtonAction(ActionEvent event
     ) {
+        if (rbCustomImage.isSelected()) {
+            CustomImage customImage = new CustomImage();
+            customImage.setName(lblName.getText());
+            customImage.setLocation(lblLocation.getText());
+            LocalDate datePicker = uploadDate.getValue();
+            Date date = Date.from(datePicker.atStartOfDay(ZoneId.systemDefault()).toInstant());
+            customImage.setUploadDate(date);
+            customImage.setBytes(imageBytes);
+            CustomImageInterface customImageInterface = CustomImageFactory.getModel();
+            try {
+                customImageInterface.createCustomImage_XML(customImage);
+            } catch (ClientErrorException ex) {
+                Logger.getLogger(ContentWindowController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else {
+
+        }
     }
 
     @FXML
@@ -183,7 +216,24 @@ public class ContentWindowController {
     @FXML
     private void handleDeleteContentButtonAction(ActionEvent event
     ) {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        if (rbCustomImage.isSelected()) {
+            CustomImage customImage = new CustomImage();
+            customImage.setName(lblName.getText());
+            customImage.setLocation(lblLocation.getText());
+            LocalDate datePicker = uploadDate.getValue();
+            Date date = Date.from(datePicker.atStartOfDay(ZoneId.systemDefault()).toInstant());
+            customImage.setUploadDate(date);
+            customImage.setBytes(imageBytes);
+            CustomImageInterface customImageInterface = CustomImageFactory.getModel();
+            try {
+                customImageInterface.createCustomImage_XML(customImage);
+            } catch (ClientErrorException ex) {
+                Logger.getLogger(ContentWindowController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else {
+
+        }
+        /*  Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setHeaderText("Delete Content");
         alert.setTitle("Confirmation");
         alert.setContentText("Are you sure you want to delete this content?");
@@ -191,7 +241,7 @@ public class ContentWindowController {
         //If you click on OK
         if (action.get() == ButtonType.OK) {
             //Call the method
-        }
+        }*/
     }
 
     @FXML
@@ -238,14 +288,26 @@ public class ContentWindowController {
     @FXML
     private void handleFileChooserButtonAction(ActionEvent event
     ) {
+
         FileChooser.ExtensionFilter imageFilter
-                = new FileChooser.ExtensionFilter("Image Files", "*.jpg", "*.png");
+                = new FileChooser.ExtensionFilter("Image Files", "*.jpg");
         FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().add(imageFilter);
         fileChooser.setTitle("Open Resource File");
         File image = fileChooser.showOpenDialog(stage);
         Image testing = new Image(image.toURI().toString());
         imagePreview.setImage(testing);
+        String path = image.getAbsolutePath();
+        try {
+            BufferedImage buffImage = ImageIO.read(new File(path));
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ImageIO.write(buffImage, "jpg", baos);
+            baos.flush();
+            byte[] imageInbytes = baos.toByteArray();
+            //  imageBytes = Arrays.asList(imageInbytes).toArray(new Byte[imageInbytes.length]);
+        } catch (IOException ex) {
+            Logger.getLogger(ContentWindowController.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
     }
 
@@ -361,5 +423,11 @@ public class ContentWindowController {
         else {
             bFind.setDisable(false);
         }
+    }
+
+    public Byte[] byteToByte(byte[] bytesPrim) {
+        Byte[] bytes = new Byte[bytesPrim.length];
+        Arrays.setAll(bytes, n -> bytesPrim[n]);
+        return bytes;
     }
 }

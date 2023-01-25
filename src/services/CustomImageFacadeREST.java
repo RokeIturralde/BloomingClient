@@ -5,11 +5,11 @@
  */
 package services;
 
-import businessLogic.content.ContentInterface;
 import businessLogic.customImage.CustomImageInterface;
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.WebTarget;
+import objects.CustomImage;
 
 /**
  * Jersey REST client generated for REST resource:CustomImageFacadeREST
@@ -43,7 +43,7 @@ public class CustomImageFacadeREST implements CustomImageInterface {
         webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).put(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_JSON));
     }
 
-    public void createCustomImage_XML(Object requestEntity) throws ClientErrorException {
+    public void createCustomImage_XML(CustomImage requestEntity) throws ClientErrorException {
         webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_XML).post(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_XML));
     }
 

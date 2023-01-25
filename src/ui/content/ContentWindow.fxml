@@ -119,12 +119,12 @@
                 <Cursor fx:constant="HAND" />
             </cursor>
         </Button>
-        <Button fx:id="bAddContent" layoutX="1014.0" layoutY="297.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="134.0" text="Add Content">
+        <Button fx:id="bAddContent" layoutX="1014.0" layoutY="297.0" mnemonicParsing="false" onAction="#handleAddContentButtonAction" prefHeight="25.0" prefWidth="134.0" text="Add Content">
             <cursor>
                 <Cursor fx:constant="HAND" />
             </cursor>
         </Button>
-        <Button fx:id="bModifyContent" layoutX="1014.0" layoutY="332.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="134.0" text="Modify Content">
+        <Button fx:id="bModifyContent" layoutX="1014.0" layoutY="332.0" mnemonicParsing="false" onAction="#handleModifyContentButtonAction" prefHeight="25.0" prefWidth="134.0" text="Modify Content">
             <cursor>
                 <Cursor fx:constant="HAND" />
             </cursor>

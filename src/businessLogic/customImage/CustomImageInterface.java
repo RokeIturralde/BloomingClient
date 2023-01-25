@@ -6,6 +6,7 @@
 package businessLogic.customImage;
 
 import exceptions.ClientErrorException;
+import objects.CustomImage;
 
 /**
  *
@@ -15,7 +16,7 @@ public interface CustomImageInterface {
 
     public void edit_XML(Object requestEntity) throws ClientErrorException;
 
-    public void createCustomImage_XML(Object requestEntity) throws ClientErrorException;
+    public void createCustomImage_XML(CustomImage requestEntity) throws ClientErrorException;
 
     public <T> T findCustomTextById_XML(Class<T> responseType, String id) throws ClientErrorException;
 }
