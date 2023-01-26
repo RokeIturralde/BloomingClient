@@ -112,9 +112,9 @@ public class AlbumsViewController {
     @FXML
     private Button btnFind;
     @FXML
-    private Button btPrintMyAlbums;
+    private Button btnPrintMyAlbums;
     @FXML
-    private Button btPrintSharedAlbums;
+    private Button btnPrintSharedAlbums;
     @FXML
     private Button btnHelp;
     @FXML

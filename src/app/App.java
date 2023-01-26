@@ -15,7 +15,7 @@ import javafx.scene.Parent;
 import javafx.stage.Stage;
 import view.album.AlbumsViewController;
 
-public abstract class App extends Application {
+public class App extends Application {
 
     public static void main(String[] args) {
         launch(args);
@@ -24,7 +24,7 @@ public abstract class App extends Application {
     @Override
     public void start(Stage stage) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/Album/UIAlbum.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/album/UIAlbum.fxml"));
             Parent root = (Parent) loader.load();
             //Obtain the Sign In window controller
             AlbumsViewController controller = (AlbumsViewController) loader.getController();
