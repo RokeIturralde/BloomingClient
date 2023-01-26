@@ -7,11 +7,13 @@ package logic.objects;
 
 import java.io.Serializable;
 import java.util.List;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
  * @author Eneko
  */
+@XmlRootElement
 public class MembershipPlan implements Serializable {
 
     private Integer id;
@@ -109,7 +111,7 @@ public class MembershipPlan implements Serializable {
 
     @Override
     public String toString() {
-        return "entities.MembershipPlan[ id=" + id + " ]";
+        return name;
     }
 
 }
