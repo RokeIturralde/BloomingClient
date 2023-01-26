@@ -1,9 +1,15 @@
 package user;
 
 import businessLogic.FactoryMember;
+import businessLogic.FactoryUser;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
+
+import javax.ws.rs.core.GenericType;
+
+
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -19,6 +25,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import logic.objects.Member;
+import logic.objects.Status;
 import logic.objects.User;
 
 /**
@@ -61,53 +68,23 @@ public class UserWindowController {
         "Full Name", "Privilege", "Status");
 
 
-
     
-
-    /**
-     * Prepare the stage for a change of scene
-     *
-     * @param stage where the window shows
-     */
-    public void setStage(Stage stage) {
-        this.stage = stage;
-    }
 
     private void textChanged(ObservableValue observable,
             String oldValue,
             String newValue) {
-        /*
-         * if (txtSearchValue.getText().trim().length() > 25) {
-         * txtSearchValue.setText(txtSearchValue.getText().substring(0, 25));
-         * new Alert(
-         * Alert.AlertType.ERROR,
-         * "The maximum length for the search parameter is 25 characters.");
-         * btnSearch.setDisable(true);
-         * }
-         * 
-         * //if (txtLogin.getText().trim().length() > 25)
-         */
-    }
-
-    private boolean weirdTextTester(String t) {
-        List<String> l = Arrays.asList(
-                "%", ":", ";", ",", "'",
-                "¡", "!", "?", "¿", "|",
-                "=", "-", "<", ">", "`",
-                "+", "@", "/", "[", "]",
-                "ç", "{", "}", "#", "º",
-                "ª", " ");
-
-        if (t == null)
-            return false;
-        return ((!t.equals("")) && (t.matches("^[a-zA-Z0-9]*$")));
+       
     }
 
     private void handlerWindowShowing(WindowEvent event) {
         LOGGER.info("Initializing UserWindowController::handlerWindowShowing");
         
+        
+        //FactoryMember.get().findMemberByLogin_XML(Member.class, "u3");
 
+        
     }
+
 
     @FXML
     private void handleSearchButtonAction() {
@@ -161,12 +138,15 @@ public class UserWindowController {
         txtFullName.textProperty().addListener(this::textChanged);
             txtFullName.setPromptText("Full name");
 
-        // Buttons
-
+        // buttons
         btnSearch.setDisable(true);
+            btnSearch.setText("Search");
         btnAddUser.setDisable(true);
+            btnAddUser.setText("Add user");
         btnModifyUser.setDisable(true);
+            btnModifyUser.setText("Modify user");
         btnDeleteUser.setDisable(true);
+            btnModifyUser.setText("Delete user");
 
         // texts
         txtSearchValue.setPromptText("Value");
@@ -202,7 +182,21 @@ public class UserWindowController {
                 new PropertyValueFactory<>("lastPasswordChange"));
 
         
+        FactoryMember.get().getEveryUser_XML(
+            new GenericType<List<Member>>(){}.getClass());
+
+        FactoryUser.get().findUserByStatus_XML(new GenericType<List<Member>>(){}.getClass(), Status.ENABLE.toString());
+
+        
         stage.show();
     }
 
+    /**
+     * Prepare the stage for a change of scene
+     *
+     * @param stage where the window shows
+     */
+    public void setStage(Stage stage) {
+        this.stage = stage;
+    }
 }
