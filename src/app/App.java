@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package app;
 
 import java.io.IOException;
@@ -13,6 +8,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.stage.Stage;
 import ui.membershipPlan.admin.AdminMembershipPlanController;
+import user.UserWindowController;
 
 public class App extends Application {
 
@@ -33,5 +29,4 @@ public class App extends Application {
             Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
 }

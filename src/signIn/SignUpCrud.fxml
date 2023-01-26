@@ -23,10 +23,13 @@
          </image>
       </ImageView>
       <PasswordField layoutX="445.0" layoutY="212.0" prefHeight="30.0" prefWidth="185.0" promptText="Password" />
-      <Button layoutX="549.0" layoutY="281.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="83.0" text="Sign In" />
+      <Button layoutX="560.0" layoutY="292.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="83.0" text="Sign In" />
       <Label layoutX="445.0" layoutY="251.0" prefHeight="17.0" prefWidth="83.0" text="No account?" />
       <Button layoutX="523.0" layoutY="247.0" mnemonicParsing="false" opacity="0.0" prefHeight="25.0" prefWidth="47.0" />
       <Label layoutX="523.0" layoutY="247.0" prefHeight="25.0" prefWidth="55.0" text="Register" textFill="#121af8" />
+      <Label layoutX="397.0" layoutY="354.0" prefHeight="17.0" prefWidth="97.0" text="Forgot password?" />
+      <Button layoutX="496.0" layoutY="350.0" mnemonicParsing="false" opacity="0.0" prefHeight="25.0" prefWidth="47.0" />
+      <Label layoutX="496.0" layoutY="350.0" prefHeight="25.0" prefWidth="55.0" text="Recover" textFill="#121af8" />
    </children>
    <rotationAxis>
       <Point3D />
