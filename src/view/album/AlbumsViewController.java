@@ -6,14 +6,18 @@ package view.album;
 
 import album.AlbumFactory;
 import album.AlbumInterface;
+import app.App;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -141,7 +145,7 @@ public class AlbumsViewController {
     //Logger for the aplication. 
     private static final Logger LOGGER = Logger.getLogger("package view.Album");
     private ObservableList<Album> clientsData;
-     User user;
+    User user;
 
     /**
      * Initializing the window method
@@ -166,14 +170,14 @@ public class AlbumsViewController {
         txtAlbumCreator.textProperty().addListener(this::textChanged);
         txtAddUser.textProperty().addListener(this::textChanged);
         taAlbumDesc.textProperty().addListener(this::textChanged);
-        
+
         //Charge tables data
         try {
             AlbumInterface client = AlbumFactory.getModel();
             clientsData = FXCollections.observableArrayList(client.findMyAllAlbums_XML(ArrayList.class, "u1"));
             tbMyAlbums.setItems(clientsData);
             tbMyAlbums.refresh();
-            
+
         } catch (Exception e) {
             LOGGER.info(e.getMessage());
         }
@@ -208,8 +212,11 @@ public class AlbumsViewController {
         btnAdd.setDisable(true);
         btnClearInfo.setDisable(true);
 
+        //Filds disabled at first
         txtAddUser.setDisable(true);
         taUsers.setDisable(true);
+        txtValue.setDisable(true);
+
         //Set factories for cell values in users table columns (My albums table)
         columnNameMyAlbums.setCellValueFactory(
                 new PropertyValueFactory<>("name"));
@@ -230,29 +237,171 @@ public class AlbumsViewController {
                 new PropertyValueFactory<>("users"));
         columnDescSharedAlbums.setCellValueFactory(
                 new PropertyValueFactory<>("description"));
-       
+
     }
 
     /**
-     * Method that handles the button "Create Album"
+     * Method that handles the button "Find"
+     *
+     * @param event The action event object
+     */
+    @FXML
+    private void handleFindAlbumButtonAction(ActionEvent event) {
+        LOGGER.info("Metodo de control del boton de Find");
+        String busqueda = (String) cbSearchType.getSelectionModel().getSelectedItem();
+        if (busqueda.equalsIgnoreCase("Name")) {
+
+        } else if ((busqueda.equalsIgnoreCase("Date"))) {
+
+        } else if ((busqueda.equalsIgnoreCase("Creator"))) {
+        } else {
+            //Exception
+        }
+    }
+
+    /**
+     * Method that handles the button "Add"
+     *
+     * @param event The action event object
+     */
+    @FXML
+    private void handleAddButtonAction(ActionEvent event) {
+        LOGGER.info("Metodo de control del boton de Add");
+        ArrayList<User> users = new ArrayList();
+        String login = txtAddUser.getText();
+        //buscar usuario por login
+        users.add(user);
+        taUsers.setText(arrayToString(users));
+    }
+
+    /**
+     * Method that take the array of users and pass it to string
+     *
+     * @param users An array list of users with the users who can see the album
+     * @return A String with the array passed to string.
+     */
+    private String arrayToString(ArrayList<User> users) {
+        String array = "Users logins: "
+                + "\n";
+        String userLogin = null;
+        for (int i = 0; i < users.size(); i++) {
+            userLogin = users.get(i).getLogin();
+            array = array.concat(userLogin + "\n");
+        }
+        return array;
+    }
+
+    /**
+     * Method that handles the button "Create a new Album"
      *
      * @param event The action event object
      */
     @FXML
     private void handleCreateAlbumButtonAction(ActionEvent event) {
-        LOGGER.info("Metodo de control del boton de Create Album");
+        LOGGER.info("Metodo de control del boton de Create a new Album");
+
     }
 
     /**
-     * Text changed event handler. Validate that all the fields and areas are
-     * not empty and that fields not surpass 25 characters and areas 150
-     * characters.
+     * Method that handles the button "Modify an Album"
+     *
+     * @param event The action event object
+     */
+    @FXML
+    private void handleModifyAlbumButtonAction(ActionEvent event) {
+        LOGGER.info("Metodo de control del boton de Modify an Album");
+    }
+
+    /**
+     * Method that handles the button "Delete an Album"
+     *
+     * @param event The action event object
+     */
+    @FXML
+    private void handleDeleteAlbumButtonAction(ActionEvent event) {
+        LOGGER.info("Metodo de control del boton de Delete an Album");
+    }
+
+    /**
+     * Method that handles the button "Albums" from menu
+     *
+     * @param event The action event object
+     */
+    @FXML
+    private void handleAlbumsButtonAction(ActionEvent event) {
+        LOGGER.info("Metodo de control del boton de Albums");
+        this.stage.close();
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("UIAlbum.fxml"));
+            Parent root = (Parent) loader.load();
+            //Obtain the Sign In window controller
+            AlbumsViewController controller = (AlbumsViewController) loader.getController();
+            controller.setStage(stage);
+            controller.initStage(root);
+        } catch (IOException ex) {
+            Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    /**
+     * Method that handles the button "Content" from menu
+     *
+     * @param event The action event object
+     */
+    @FXML
+    private void handleContentButtonAction(ActionEvent event) {
+        LOGGER.info("Metodo de control del boton de Content");
+        this.stage.close();
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("UIAlbum.fxml"));
+            Parent root = (Parent) loader.load();
+            //Obtain the Sign In window controller
+            AlbumsViewController controller = (AlbumsViewController) loader.getController();
+            controller.setStage(stage);
+            controller.initStage(root);
+        } catch (IOException ex) {
+            Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    /**
+     * Text changed event handler. Validate that the combobox has something
+     * selected to enable value fild and that value fild has text to enable the
+     * find button.
      *
      * @param observable The value being observed.
      * @param oldValue The old value of the observable.
      * @param newValue The new value of the observable.
      */
-    private void textChanged(ObservableValue observable,
+    private void searchTextPropertyChange(ObservableValue observable,
+            String oldValue,
+            String newValue) {
+        if (cbSearchType.getSelectionModel().getSelectedItem() == null && txtValue.getText().trim().isEmpty()) {
+            btnFind.setDisable(true);
+        } else {
+            txtValue.setDisable(false);
+        }
+
+        //If text field is empty disable  buttton
+        if (txtValue.getText().trim().isEmpty()) {
+            btnFind.setDisable(true);
+        } //Else, enable  button
+        else {
+            btnFind.setDisable(false);
+        }
+    }
+
+}
+
+/**
+ * Text changed event handler. Validate that all the fields and areas are not
+ * empty and that fields not surpass 25 characters and areas 150 characters.
+ *
+ * @param observable The value being observed.
+ * @param oldValue The old value of the observable.
+ * @param newValue The new value of the observable.
+ */
+private void textChanged(ObservableValue observable,
             String oldValue,
             String newValue) {
         //Checks if the lenght is above 25 characters, showing an alert if happens and erasing the las character
