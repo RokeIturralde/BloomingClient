@@ -5,10 +5,13 @@
  */
 package objects;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
 /**
  *
  * @author Roke
  */
+@XmlRootElement(name = "customText")
 public class CustomText extends Content {
 
     private String text;

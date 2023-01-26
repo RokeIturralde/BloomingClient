@@ -9,6 +9,8 @@ import businessLogic.content.ContentFactory;
 import businessLogic.content.ContentInterface;
 import businessLogic.customImage.CustomImageFactory;
 import businessLogic.customImage.CustomImageInterface;
+import businessLogic.customText.CustomTextFactory;
+import businessLogic.customText.CustomTextInterface;
 import exceptions.ClientErrorException;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
@@ -51,6 +53,9 @@ import javax.imageio.ImageIO;
 import javax.ws.rs.core.GenericType;
 import objects.CustomImage;
 import objects.Content;
+import objects.CustomText;
+import services.ContentFacadeREST;
+import services.CustomTextFacadeREST;
 
 /**
  * FXML Controller class
@@ -60,27 +65,27 @@ import objects.Content;
 public class ContentWindowController {
 
     @FXML
-    private Button bLogo;
+    private Button btnLogo;
     @FXML
-    private Button bAlbum;
+    private Button btnAlbum;
     @FXML
-    private Button bContent;
+    private Button btnContent;
     @FXML
-    private Button bMembership;
+    private Button btnMembership;
     @FXML
-    private Button bAboutUs;
+    private Button btnAboutUs;
     @FXML
-    private Button bProfile;
+    private Button btnProfile;
     @FXML
     private ImageView imagePreview;
     @FXML
     private ComboBox cboxParameter;
     @FXML
-    private TextField lblValue;
+    private TextField txtValue;
     @FXML
-    private Button bClear;
+    private Button btnClear;
     @FXML
-    private Button bFind;
+    private Button btnFind;
     @FXML
     private TableView tableCustomImage;
     @FXML
@@ -89,10 +94,10 @@ public class ContentWindowController {
     private TableColumn customImageLocation;
     @FXML
     private TableColumn customImageUploadDate;
-    /* @FXML
-    private TableView customImageImage;*/
     @FXML
-    private Button bPrintCustomImage;
+    private TableColumn customImageImage;
+    @FXML
+    private Button btnPrintCustomImage;
     @FXML
     private RadioButton rbCustomImage;
     @FXML
@@ -100,25 +105,33 @@ public class ContentWindowController {
     @FXML
     private ToggleGroup tgType;
     @FXML
-    private TextField lblName;
+    private TextField txtName;
     @FXML
     private DatePicker uploadDate;
     @FXML
-    private TextField lblLocation;
+    private TextField txtLocation;
     @FXML
-    private Button bFileChooser;
+    private Button btnFileChooser;
     @FXML
-    private TextArea lblDescription;
+    private TextArea taDescription;
     @FXML
-    private Button bAddContent;
+    private Button btnAddContent;
     @FXML
-    private Button bModifyContent;
+    private Button btnModifyContent;
     @FXML
-    private Button bDeleteContent;
+    private Button btnDeleteContent;
     @FXML
     private TableView tableCustomText;
     @FXML
-    private Button bPrintCustomText;
+    private TableColumn customTextName;
+    @FXML
+    private TableColumn customTextLocation;
+    @FXML
+    private TableColumn customTextUploadDate;
+    @FXML
+    private TableColumn customTextDescription;
+    @FXML
+    private Button btnPrintCustomText;
 
     private ObservableList<Content> clientsData;
     private final String tableImage = "Show Image";
@@ -151,10 +164,21 @@ public class ContentWindowController {
         //Set the Event handlers
         stage.setOnShowing(this::handlerWindowShowing);
         //Set the textfields with a listener
-        lblName.textProperty().addListener(this::textPropertyChange);
-        lblDescription.textProperty().addListener(this::textPropertyChange);
-        lblLocation.textProperty().addListener(this::textPropertyChange);
-        lblValue.textProperty().addListener(this::searchTextPropertyChange);
+        txtName.textProperty().addListener(this::textPropertyChange);
+        taDescription.textProperty().addListener(this::textPropertyChange);
+        txtLocation.textProperty().addListener(this::textPropertyChange);
+        txtValue.textProperty().addListener(this::searchTextPropertyChange);
+        //Set CustomImage table with listener
+        tableCustomImage.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            if (newSelection != null) {
+                tableCustomText.getSelectionModel().clearSelection();
+            }
+        });
+        tableCustomText.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            if (newSelection != null) {
+                tableCustomImage.getSelectionModel().clearSelection();
+            }
+        });
         //Set the tables with values
         tableCustomImage.setEditable(false);
         tableCustomText.setEditable(false);
@@ -164,13 +188,22 @@ public class ContentWindowController {
                 new PropertyValueFactory<>("location"));
         customImageUploadDate.setCellValueFactory(
                 new PropertyValueFactory<>("uploadDate"));
-        /* tableCustomImageImage.setCellValueFactory(
-                    new PropertyValueFactory<>("customImageName"));*/
+
+        customTextName.setCellValueFactory(
+                new PropertyValueFactory<>("name"));
+        customTextLocation.setCellValueFactory(
+                new PropertyValueFactory<>("location"));
+        customTextUploadDate.setCellValueFactory(
+                new PropertyValueFactory<>("uploadDate"));
+        customTextDescription.setCellValueFactory(
+                new PropertyValueFactory<>("text"));
+
         try {
             client = ContentFactory.getModel();
             clientsData = FXCollections.observableArrayList(client.findAllContents_XML(new GenericType<List<Content>>() {
             }));
             tableCustomImage.setItems(clientsData);
+            tableCustomText.setItems(clientsData);
             tableCustomImage.refresh();
         } catch (Exception e) {
             LOGGER.info(e.getMessage());
@@ -182,29 +215,77 @@ public class ContentWindowController {
     private void handleClearButtonAction(ActionEvent event
     ) {
         //Empty all the fields 
-        lblValue.setText("");
+        txtValue.setText("");
         cboxParameter.getSelectionModel().selectFirst();
     }
 
     @FXML
     private void handleAddContentButtonAction(ActionEvent event
     ) {
-        if (rbCustomImage.isSelected()) {
-            CustomImage customImage = new CustomImage();
-            customImage.setName(lblName.getText());
-            customImage.setLocation(lblLocation.getText());
-            LocalDate datePicker = uploadDate.getValue();
-            Date date = Date.from(datePicker.atStartOfDay(ZoneId.systemDefault()).toInstant());
-            customImage.setUploadDate(date);
-            customImage.setBytes(imageBytes);
-            CustomImageInterface customImageInterface = CustomImageFactory.getModel();
-            try {
-                customImageInterface.createCustomImage_XML(customImage);
-            } catch (ClientErrorException ex) {
-                Logger.getLogger(ContentWindowController.class.getName()).log(Level.SEVERE, null, ex);
+        LocalDate datePicker = uploadDate.getValue();
+        if (datePicker != null) {
+            if (rbCustomImage.isSelected()) {
+                if (imageBytes != null) {
+                    CustomImage customImage = new CustomImage();
+                    customImage.setName(txtName.getText());
+                    customImage.setLocation(txtLocation.getText());
+                    Date date = Date.from(datePicker.atStartOfDay(ZoneId.systemDefault()).toInstant());
+                    customImage.setUploadDate(date);
+                    customImage.setBytes(imageBytes);
+                    CustomImageInterface customImageInterface = CustomImageFactory.getModel();
+                    try {
+                        customImageInterface.createCustomImage_XML(customImage);
+                        new Alert(Alert.AlertType.INFORMATION, "Content Added", ButtonType.OK).showAndWait();
+                        txtLocation.setText("");
+                        txtName.setText("");
+                        uploadDate.getEditor().clear();
+                        imageBytes = null;
+                        imagePreview.setImage(null);
+                        btnModifyContent.setDisable(true);
+                        btnDeleteContent.setDisable(true);
+                        tgType.selectToggle(null);
+                        client = ContentFactory.getModel();
+                        clientsData = FXCollections.observableArrayList(client.findAllContents_XML(new GenericType<List<Content>>() {
+                        }));
+                        tableCustomImage.setItems(clientsData);
+                        tableCustomImage.refresh();
+                    } catch (ClientErrorException ex) {
+                        Logger.getLogger(ContentWindowController.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                } else {
+                    new Alert(Alert.AlertType.ERROR, "The Image is not set", ButtonType.OK).showAndWait();
+                }
+            } else if (rbCustomText.isSelected()) {
+                //Charge the CustomText with values
+                CustomText customText = new CustomText();
+                customText.setName(txtName.getText());
+                customText.setLocation(txtLocation.getText());
+                Date date = Date.from(datePicker.atStartOfDay(ZoneId.systemDefault()).toInstant());
+                customText.setUploadDate(date);
+                customText.setText(taDescription.getText());
+                CustomTextInterface customTextInterface = CustomTextFactory.getModel();
+                try {
+                    //Starting the talking with the server
+                    customTextInterface.create_XML(customText);
+                    new Alert(Alert.AlertType.INFORMATION, "Content Added", ButtonType.OK).showAndWait();
+                    txtLocation.setText("");
+                    txtName.setText("");
+                    uploadDate.getEditor().clear();
+                    taDescription.setText("");
+                    btnModifyContent.setDisable(true);
+                    btnDeleteContent.setDisable(true);
+                    tgType.selectToggle(null);
+                    client = ContentFactory.getModel();
+                    clientsData = FXCollections.observableArrayList(client.findAllContents_XML(new GenericType<List<Content>>() {
+                    }));
+                    tableCustomImage.setItems(clientsData);
+                    tableCustomImage.refresh();
+                } catch (ClientErrorException ex) {
+                    Logger.getLogger(ContentWindowController.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         } else {
-
+            new Alert(Alert.AlertType.ERROR, "The Upload Date is not set", ButtonType.OK).showAndWait();
         }
     }
 
@@ -216,32 +297,15 @@ public class ContentWindowController {
     @FXML
     private void handleDeleteContentButtonAction(ActionEvent event
     ) {
-        if (rbCustomImage.isSelected()) {
-            CustomImage customImage = new CustomImage();
-            customImage.setName(lblName.getText());
-            customImage.setLocation(lblLocation.getText());
-            LocalDate datePicker = uploadDate.getValue();
-            Date date = Date.from(datePicker.atStartOfDay(ZoneId.systemDefault()).toInstant());
-            customImage.setUploadDate(date);
-            customImage.setBytes(imageBytes);
-            CustomImageInterface customImageInterface = CustomImageFactory.getModel();
-            try {
-                customImageInterface.createCustomImage_XML(customImage);
-            } catch (ClientErrorException ex) {
-                Logger.getLogger(ContentWindowController.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        } else {
-
-        }
-        /*  Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setHeaderText("Delete Content");
         alert.setTitle("Confirmation");
         alert.setContentText("Are you sure you want to delete this content?");
         Optional<ButtonType> action = alert.showAndWait();
         //If you click on OK
         if (action.get() == ButtonType.OK) {
-            //Call the method
-        }*/
+
+        }
     }
 
     @FXML
@@ -304,7 +368,7 @@ public class ContentWindowController {
             ImageIO.write(buffImage, "jpg", baos);
             baos.flush();
             byte[] imageInbytes = baos.toByteArray();
-            //  imageBytes = Arrays.asList(imageInbytes).toArray(new Byte[imageInbytes.length]);
+            imageBytes = byteToByte(imageInbytes);
         } catch (IOException ex) {
             Logger.getLogger(ContentWindowController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -332,34 +396,34 @@ public class ContentWindowController {
 
     private void handlerWindowShowing(WindowEvent event) {
         LOGGER.info("Iniciando ContentWindowController::handlerWindowShowing");
-        bDeleteContent.setDisable(true);
-        bAddContent.setDisable(true);
-        bModifyContent.setDisable(true);
-        bFileChooser.setDisable(true);
-        lblName.setDisable(true);
-        lblDescription.setDisable(true);
-        lblLocation.setDisable(true);
+        btnDeleteContent.setDisable(true);
+        btnAddContent.setDisable(true);
+        btnModifyContent.setDisable(true);
+        btnFileChooser.setDisable(true);
+        txtName.setDisable(true);
+        taDescription.setDisable(true);
+        txtLocation.setDisable(true);
         uploadDate.setDisable(true);
-        bFind.setDisable(true);
+        btnFind.setDisable(true);
         cboxParameter.getItems().addAll(
                 "Location",
                 "Upload Date",
                 "Name");
         // Handle action events for the radio buttons. 
         rbCustomImage.setOnAction(e -> {
-            bFileChooser.setDisable(false);
-            lblName.setDisable(false);
-            lblLocation.setDisable(false);
+            btnFileChooser.setDisable(false);
+            txtName.setDisable(false);
+            txtLocation.setDisable(false);
             uploadDate.setDisable(false);
-            lblDescription.setDisable(true);
+            taDescription.setDisable(true);
         });
 
         rbCustomText.setOnAction(e -> {
-            bFileChooser.setDisable(true);
-            lblName.setDisable(false);
-            lblLocation.setDisable(false);
+            btnFileChooser.setDisable(true);
+            txtName.setDisable(false);
+            txtLocation.setDisable(false);
             uploadDate.setDisable(false);
-            lblDescription.setDisable(false);
+            taDescription.setDisable(false);
         });
 
     }
@@ -380,31 +444,31 @@ public class ContentWindowController {
 
         //If text fields values are longer than 25/100 (max value in Database), show error message and disable 
         //button
-        if (lblName.getText().trim().length() > 25) {
-            lblName.setText(lblName.getText().substring(0, 25));
+        if (txtName.getText().trim().length() > 25) {
+            txtName.setText(txtName.getText().substring(0, 25));
             new Alert(Alert.AlertType.ERROR, "The maximum length for the name is 25 characters", ButtonType.OK).showAndWait();
-            bAddContent.setDisable(true);
+            btnAddContent.setDisable(true);
         }
-        if (lblLocation.getText().trim().length() > 25) {
-            lblLocation.setText(lblLocation.getText().substring(0, 25));
+        if (txtLocation.getText().trim().length() > 25) {
+            txtLocation.setText(txtLocation.getText().substring(0, 25));
             new Alert(Alert.AlertType.ERROR, "The maximum length for the location is 25 characters", ButtonType.OK).showAndWait();
-            bAddContent.setDisable(true);
+            btnAddContent.setDisable(true);
         }
-        if (rb.equals(rbCustomText) && lblDescription.getText().trim().length() > 100) {
-            lblDescription.setText(lblDescription.getText().substring(0, 25));
+        if (rb.equals(rbCustomText) && taDescription.getText().trim().length() > 100) {
+            taDescription.setText(taDescription.getText().substring(0, 25));
             new Alert(Alert.AlertType.ERROR, "The maximum length for the description is 100 characters", ButtonType.OK).showAndWait();
-            bAddContent.setDisable(true);
+            btnAddContent.setDisable(true);
         }
         //If text fields are empty disable buttton
-        if (lblName.getText().trim().isEmpty()
-                || lblLocation.getText().trim().isEmpty()
-                || (rb.equals(rbCustomText) && lblDescription.getText().trim().isEmpty())) {
-            bAddContent.setDisable(true);
+        if (txtName.getText().trim().isEmpty()
+                || txtLocation.getText().trim().isEmpty()
+                || (rb.equals(rbCustomText) && taDescription.getText().trim().isEmpty())) {
+            btnAddContent.setDisable(true);
         } //Else, enable button
         else {
-            bAddContent.setDisable(false);
-            bDeleteContent.setDisable(false);
-            bModifyContent.setDisable(false);
+            btnAddContent.setDisable(false);
+            btnDeleteContent.setDisable(false);
+            btnModifyContent.setDisable(false);
         }
 
     }
@@ -412,16 +476,16 @@ public class ContentWindowController {
     private void searchTextPropertyChange(ObservableValue observable,
             String oldValue,
             String newValue) {
-        if (cboxParameter.getSelectionModel().getSelectedItem() == null && lblValue.getText().trim().isEmpty()) {
-            bFind.setDisable(true);
+        if (cboxParameter.getSelectionModel().getSelectedItem() == null && txtValue.getText().trim().isEmpty()) {
+            btnFind.setDisable(true);
         }
 
         //If text field is empty disable  buttton
-        if (lblValue.getText().trim().isEmpty()) {
-            bFind.setDisable(true);
+        if (txtValue.getText().trim().isEmpty()) {
+            btnFind.setDisable(true);
         } //Else, enable  button
         else {
-            bFind.setDisable(false);
+            btnFind.setDisable(false);
         }
     }
 
