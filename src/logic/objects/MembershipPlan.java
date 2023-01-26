@@ -7,11 +7,13 @@ package logic.objects;
 
 import java.io.Serializable;
 import java.util.List;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
  * @author Eneko
  */
+@XmlRootElement(name="membershipPlan")
 public class MembershipPlan implements Serializable {
 
     private Integer id;
