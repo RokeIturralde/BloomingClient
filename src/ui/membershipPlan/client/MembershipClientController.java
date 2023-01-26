@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package signIn;
+package ui.membershipPlan.client;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -12,9 +12,9 @@ import javafx.fxml.Initializable;
 /**
  * FXML Controller class
  *
- * @author Roke
+ * @author minyb
  */
-public class SignInController implements Initializable {
+public class MembershipClientController implements Initializable {
 
     /**
      * Initializes the controller class.
@@ -22,6 +22,6 @@ public class SignInController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-    }
-
+    }    
+    
 }

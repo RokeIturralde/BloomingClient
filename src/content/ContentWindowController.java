@@ -49,11 +49,13 @@ public class ContentWindowController {
         stage.setResizable(false);
         stage.showAndWait();
         
+        /**
         //Establish the values of each field in the table
         tbcolName.setCellValueFactory(new PropertyValueFactory<>("name"));
         tbcolUploadDate.setCellValueFactory(new PropertyValueFactory<>("uploadDate"));
         tbcolLocation.setCellValueFactory(new PropertyValueFactory<>("location"));
         tbcolImage.setCellValueFactory(new PropertyValueFactory<>("bytes"));
         tbcolDescription.setCellValueFactory(new PropertyValueFactory<>("text"));
+        * **/
     }
 }
