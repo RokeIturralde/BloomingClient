@@ -11,9 +11,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * @author Roke
+ * @author dani
  */
+
 @XmlRootElement(name="member")
+
 public class Member extends User implements Serializable {
 
     private static final long serialVersionUID = 1L;
