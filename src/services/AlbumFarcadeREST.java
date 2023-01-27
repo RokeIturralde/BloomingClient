@@ -9,6 +9,7 @@ import businessLogic.album.AlbumInterface;
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.GenericType;
 
 /**
  * Jersey REST client generated for REST resource:AlbumFacadeREST
@@ -52,16 +53,17 @@ public class AlbumFarcadeREST implements AlbumInterface{
     /**
      *
      * @param <T>
+     * @param genericType
      * @param responseType
      * @param userLogin
      * @return
      * @throws ClientErrorException
      */
     @Override
-    public <T> T findMyAllAlbums_XML(Class<T> responseType, String userLogin) throws ClientErrorException {
+    public <T> T findMyAllAlbums_XML(GenericType<T> genericType, String userLogin) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("findMyAllAlbums/{0}", new Object[]{userLogin}));
-        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
+        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(genericType);
     }
 
     public <T> T findMyAllAlbums_JSON(Class<T> responseType, String userLogin) throws ClientErrorException {

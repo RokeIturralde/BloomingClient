@@ -5,7 +5,10 @@
  */
 package businessLogic.album;
 
+import java.util.List;
 import javax.ws.rs.ClientErrorException;
+import javax.ws.rs.core.GenericType;
+import logic.objects.Album;
 
 /**
  *
@@ -21,7 +24,7 @@ public interface AlbumInterface {
 
     public <T> T findAlbumByID_XML(Class<T> responseType, String id) throws ClientErrorException;
 
-    public <T> T findMyAllAlbums_XML(Class<T> responseType, String userLogin) throws ClientErrorException;
+    public <T> T findMyAllAlbums_XML(GenericType<T> genericType, String userLogin) throws ClientErrorException;
 
     public <T> T findMyAlbumsByName_XML(Class<T> responseType, String userLogin, String name) throws ClientErrorException;
 

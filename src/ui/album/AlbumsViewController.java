@@ -151,6 +151,7 @@ public class AlbumsViewController {
      * Initializing the window method
      *
      * @param root root object with the DOM charged
+     * @param loggedUser
      */
     public void initStage(Parent root, User loggedUser) {
         LOGGER.info("Initializing Albums window");
@@ -171,11 +172,12 @@ public class AlbumsViewController {
         txtAlbumCreator.textProperty().addListener(this::textChanged);
         txtAddUser.textProperty().addListener(this::textChanged);
         taAlbumDesc.textProperty().addListener(this::textChanged);
+        //checkShare.selectedProperty().addListener(this::shareAlbum);
 
         //Charge tables data
         try {
             client = FactoryAlbum.getModel();
-            clientsData = FXCollections.observableArrayList(client.findMyAllAlbums_XML(ArrayList.class, loggedUser.getLogin()));
+            clientsData = FXCollections.observableArrayList(client.findMyAllAlbums_XML(new GenericType<List<Album>>(){}, loggedUser.getLogin()));
             tbMyAlbums.setItems(clientsData);
             tbMyAlbums.refresh();
 
@@ -375,7 +377,18 @@ public class AlbumsViewController {
         else {
             btnFind.setDisable(false);
         }
-    }
+    }/**
+     * Text changed event handler. Validate that all the fields and areas are
+     * not empty and that fields not surpass 25 characters and areas 150
+     * characters.
+     *
+     * @param observable The value being observed.
+     * @param oldValue The old value of the observable.
+     * @param newValue The new value of the observable.
+     */
+    private void shareAlbum(ObservableValue observable,
+            String oldValue,
+            String newValue) {}
 
     /**
      * Text changed event handler. Validate that all the fields and areas are
