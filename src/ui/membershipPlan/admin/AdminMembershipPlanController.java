@@ -5,10 +5,11 @@
  */
 package ui.membershipPlan.admin;
 
-import businessLogic.FactoryMember;
-import businessLogic.MemberInterface;
+import businessLogic.users.MemberInterface;
 import businessLogic.membership.MembershipPlanFactory;
 import businessLogic.membership.MembershipPlanInterface;
+import businessLogic.users.FactoryMember;
+
 import java.util.List;
 import java.util.logging.Logger;
 import javafx.beans.value.ObservableValue;
@@ -127,7 +128,7 @@ public class AdminMembershipPlanController {
                 
         try{
             membershipClient = MembershipPlanFactory.getModel();
-            membershipPlanData = FXCollections.observableArrayList(membershipClient.findAll_XML(new GenericType<List<MembershipPlan>>() {}));
+            //membershipPlanData = FXCollections.observableArrayList(membershipClient.findAll_XML(new GenericType<List<MembershipPlan>>() {}));
             memberClient = FactoryMember.get();
             for(int i = 0; i < membershipPlanData.size();i++){
                 membershipPlanData.get(i).setMembers(memberClient.findMembersByPlan_XML(new GenericType<List<Member>>(){}, membershipPlanData.get(i).getId()+""));

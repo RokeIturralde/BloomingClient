@@ -1,5 +1,6 @@
-package businessLogic;
+package businessLogic.users;
 
+import businessLogic.users.MemberInterface;
 import services.MemberFacadeREST;
 
 /**

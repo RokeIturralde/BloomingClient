@@ -1,8 +1,10 @@
 package user;
 
-import businessLogic.FactoryMember;
-
-import businessLogic.FactoryUser;
+import businessLogic.users.MemberInterface;
+import businessLogic.membership.MembershipPlanFactory;
+import businessLogic.membership.MembershipPlanInterface;
+import businessLogic.users.FactoryMember;
+import businessLogic.users.FactoryUser;
 
 import java.util.Arrays;
 import java.util.List;
@@ -188,12 +190,21 @@ public class UserWindowController {
                 new PropertyValueFactory<>("lastPasswordChange"));
 
         
-        //FactoryMember.get().getEveryUser_XML(new GenericType<List<Member>>(){}.getClass());
-
-        //FactoryUser.get().findUserByStatus_XML(new GenericType<List<Member>>(){}.getClass(), Status.ENABLE.toString());
-
         
-        
+       /* List <Member> l = 
+            FactoryUser.get().findUserByStatus_XML(new GenericType<List<Member>>(){}.getClass(), Status.ENABLE.toString());
+
+        */
+        /*
+        ObservableList <MembershipPlan> l = FXCollections.observableArrayList(
+            MembershipPlanFactory
+            .getModel()
+                .findAll_XML(new GenericType<List<MembershipPlan>> () {}));
+       
+
+        MembershipPlanFactory
+            .getModel().find_XML(MembershipPlan.class, "3");
+        */
         stage.show();
     }
 

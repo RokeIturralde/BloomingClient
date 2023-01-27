@@ -1,9 +1,10 @@
 package services;
 
-import businessLogic.UserInterface;
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.WebTarget;
+
+import businessLogic.users.UserInterface;
 
 /**
  * Jersey REST client generated for REST resource:UserFacadeREST
@@ -18,7 +19,7 @@ import javax.ws.rs.client.WebTarget;
  *
  * @author dani
  */
-public class UserFacadeREST implements UserInterface {
+public class UserFacadeREST {
 
     private WebTarget webTarget;
     private Client client;

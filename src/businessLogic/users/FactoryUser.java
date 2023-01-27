@@ -1,4 +1,4 @@
-package businessLogic;
+package businessLogic.users;
 
 import services.UserFacadeREST;
 
