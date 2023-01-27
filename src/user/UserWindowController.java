@@ -25,6 +25,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import logic.objects.Member;
+import logic.objects.MembershipPlan;
 import logic.objects.Status;
 import logic.objects.User;
 
@@ -182,11 +183,11 @@ public class UserWindowController {
                 new PropertyValueFactory<>("lastPasswordChange"));
 
         
-        FactoryMember.get().getEveryUser_XML(
-            new GenericType<List<Member>>(){}.getClass());
+        //FactoryMember.get().getEveryUser_XML(new GenericType<List<Member>>(){}.getClass());
 
-        FactoryUser.get().findUserByStatus_XML(new GenericType<List<Member>>(){}.getClass(), Status.ENABLE.toString());
+        //FactoryUser.get().findUserByStatus_XML(new GenericType<List<Member>>(){}.getClass(), Status.ENABLE.toString());
 
+        
         
         stage.show();
     }
