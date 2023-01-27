@@ -1,4 +1,6 @@
-package businessLogic.users;
+package factories;
+
+import logic.MemberManager;
 
 
 /**

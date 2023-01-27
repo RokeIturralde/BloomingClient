@@ -16,7 +16,7 @@
 
 
 
-<Pane prefHeight="688.0" prefWidth="1187.0" style="-fx-background-color: FF926A;" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="user.UserWindowController">
+<Pane prefHeight="688.0" prefWidth="1187.0" style="-fx-background-color: FF926A;" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.userdata.admin.AdminUserDataWindowController">
    <children>
       <Pane fx:id="paneBar" layoutX="-7.0" layoutY="-8.0" prefHeight="694.0" prefWidth="134.0" style="-fx-background-color: #FA7C4E;">
          <children>

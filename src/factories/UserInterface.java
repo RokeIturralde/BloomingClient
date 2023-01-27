@@ -1,4 +1,4 @@
-package businessLogic.users;
+package factories;
 
 import java.util.List;
 

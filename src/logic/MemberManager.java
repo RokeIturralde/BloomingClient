@@ -1,5 +1,6 @@
-package businessLogic.users;
+package logic;
 
+import factories.MemberInterface;
 import java.util.Collection;
 import java.util.List;
 import java.util.logging.Level;

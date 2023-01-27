@@ -5,10 +5,10 @@
  */
 package ui.membershipPlan.admin;
 
-import businessLogic.users.MemberInterface;
+import factories.MemberInterface;
 import businessLogic.membership.MembershipPlanFactory;
 import businessLogic.membership.MembershipPlanInterface;
-import businessLogic.users.FactoryMember;
+import factories.FactoryMember;
 
 import java.util.Arrays;
 import java.util.List;

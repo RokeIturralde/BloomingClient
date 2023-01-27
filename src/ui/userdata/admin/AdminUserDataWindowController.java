@@ -1,4 +1,4 @@
-package user;
+package ui.userdata.admin;
 
 
 import java.util.Arrays;
@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
-import businessLogic.users.FactoryMember;
+import factories.FactoryMember;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -31,7 +31,7 @@ import logic.objects.User;
 /**
  * @author dani
  */
-public class UserWindowController {
+public class AdminUserDataWindowController {
 
 
     // FXML (window elements)
