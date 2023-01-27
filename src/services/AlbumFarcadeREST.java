@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package bloomingclient;
+package services;
 
-import album.AlbumInterface;
+import businessLogic.album.AlbumInterface;
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.WebTarget;
@@ -21,20 +21,26 @@ import javax.ws.rs.client.WebTarget;
  *        client.close();
  * </pre>
  *
- * @author 2dam
+ * @author nerea
  */
-public class AlbumRESTfullClient implements AlbumInterface{
+public class AlbumFarcadeREST implements AlbumInterface{
 
-    private WebTarget webTarget;
-    private Client client;
+    private final WebTarget webTarget;
+    private final Client client;
     //Mover a Archivo de Propiedades!!!!
     private static final String BASE_URI = "http://localhost:8080/BloomingWeb/webresources";
 
-    public AlbumRESTfullClient() {
+    public AlbumFarcadeREST() {
         client = javax.ws.rs.client.ClientBuilder.newClient();
         webTarget = client.target(BASE_URI).path("entities.album");
     }
 
+    /**
+     *
+     * @param requestEntity
+     * @throws ClientErrorException
+     */
+    @Override
     public void updateAlbum_XML(Object requestEntity) throws ClientErrorException {
         webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_XML).put(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_XML));
     }
@@ -43,6 +49,15 @@ public class AlbumRESTfullClient implements AlbumInterface{
         webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).put(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_JSON));
     }
 
+    /**
+     *
+     * @param <T>
+     * @param responseType
+     * @param userLogin
+     * @return
+     * @throws ClientErrorException
+     */
+    @Override
     public <T> T findMyAllAlbums_XML(Class<T> responseType, String userLogin) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("findMyAllAlbums/{0}", new Object[]{userLogin}));
@@ -55,6 +70,15 @@ public class AlbumRESTfullClient implements AlbumInterface{
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(responseType);
     }
 
+    /**
+     *
+     * @param <T>
+     * @param responseType
+     * @param id
+     * @return
+     * @throws ClientErrorException
+     */
+    @Override
     public <T> T findAlbumByID_XML(Class<T> responseType, String id) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("{0}", new Object[]{id}));
@@ -67,6 +91,16 @@ public class AlbumRESTfullClient implements AlbumInterface{
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(responseType);
     }
 
+    /**
+     *
+     * @param <T>
+     * @param responseType
+     * @param userLogin
+     * @param creatorLogin
+     * @return
+     * @throws ClientErrorException
+     */
+    @Override
     public <T> T findMySharedAlbumsByCreator_XML(Class<T> responseType, String userLogin, String creatorLogin) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("findMySharedAlbumsByCreator/{0}/{1}", new Object[]{userLogin, creatorLogin}));
@@ -79,6 +113,16 @@ public class AlbumRESTfullClient implements AlbumInterface{
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(responseType);
     }
 
+    /**
+     *
+     * @param <T>
+     * @param responseType
+     * @param userLogin
+     * @param stringDate
+     * @return
+     * @throws ClientErrorException
+     */
+    @Override
     public <T> T findMySharedAlbumsByDate_XML(Class<T> responseType, String userLogin, String stringDate) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("findMySharedAlbumsByDate/{0}/{1}", new Object[]{userLogin, stringDate}));
@@ -91,6 +135,12 @@ public class AlbumRESTfullClient implements AlbumInterface{
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(responseType);
     }
 
+    /**
+     *
+     * @param requestEntity
+     * @throws ClientErrorException
+     */
+    @Override
     public void createAlbum_XML(Object requestEntity) throws ClientErrorException {
         webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_XML).post(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_XML));
     }
@@ -99,6 +149,15 @@ public class AlbumRESTfullClient implements AlbumInterface{
         webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).post(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_JSON));
     }
 
+    /**
+     *
+     * @param <T>
+     * @param responseType
+     * @param userLogin
+     * @return
+     * @throws ClientErrorException
+     */
+    @Override
     public <T> T findMyAllSharedAlbums_XML(Class<T> responseType, String userLogin) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("findMyAllSharedAlbums/{0}", new Object[]{userLogin}));
@@ -111,6 +170,16 @@ public class AlbumRESTfullClient implements AlbumInterface{
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(responseType);
     }
 
+    /**
+     *
+     * @param <T>
+     * @param responseType
+     * @param userLogin
+     * @param name
+     * @return
+     * @throws ClientErrorException
+     */
+    @Override
     public <T> T findMyAlbumsByName_XML(Class<T> responseType, String userLogin, String name) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("findMyAlbumsByName/{0}/{1}", new Object[]{userLogin, name}));

@@ -2,18 +2,21 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/javafx/FXML2.java to edit this template
  */
-package view.album;
+package ui.album;
 
-import album.AlbumFactory;
-import album.AlbumInterface;
+import businessLogic.album.FactoryAlbum;
+import businessLogic.album.AlbumInterface;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -31,6 +34,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import static javax.ws.rs.HttpMethod.GET;
 import logic.objects.Album;
 import logic.objects.User;
 
@@ -141,15 +145,17 @@ public class AlbumsViewController {
     //Logger for the aplication. 
     private static final Logger LOGGER = Logger.getLogger("package view.Album");
     private ObservableList<Album> clientsData;
-     User user;
+    private static User loggedUser;
+    private AlbumInterface client;
 
     /**
      * Initializing the window method
      *
      * @param root root object with the DOM charged
      */
-    public void initStage(Parent root) {
+    public void initStage(Parent root, User loggedUser) {
         LOGGER.info("Initializing Albums window");
+        this.loggedUser = loggedUser;
         //Creates an scene
         Scene scene = new Scene(root);
         //Establishes an scene
@@ -166,14 +172,14 @@ public class AlbumsViewController {
         txtAlbumCreator.textProperty().addListener(this::textChanged);
         txtAddUser.textProperty().addListener(this::textChanged);
         taAlbumDesc.textProperty().addListener(this::textChanged);
-        
+
         //Charge tables data
         try {
-            AlbumInterface client = AlbumFactory.getModel();
-            clientsData = FXCollections.observableArrayList(client.findMyAllAlbums_XML(ArrayList.class, "u1"));
+            client = FactoryAlbum.getModel();
+            clientsData = FXCollections.observableArrayList(client.findMyAllAlbums_XML(ArrayList.class, loggedUser.getLogin()));
             tbMyAlbums.setItems(clientsData);
             tbMyAlbums.refresh();
-            
+
         } catch (Exception e) {
             LOGGER.info(e.getMessage());
         }
@@ -198,18 +204,19 @@ public class AlbumsViewController {
         txtAddUser.setText("");
         taAlbumDesc.setText("");
         taUsers.setText("");
-        //All buttons despite the menus ones, prints and help, are disable at first
+        //All buttons despite the menus ones, prints, clears and help, are disable at first
         btnFind.setDisable(true);
-        btnClearShearch.setDisable(true);
         btnAdd.setDisable(true);
         btnCreateAlbum.setDisable(true);
         btnModifyAlbum.setDisable(true);
         btnDeleteAlbum.setDisable(true);
         btnAdd.setDisable(true);
-        btnClearInfo.setDisable(true);
 
+        //Filds disabled at first
         txtAddUser.setDisable(true);
         taUsers.setDisable(true);
+        txtValue.setDisable(true);
+
         //Set factories for cell values in users table columns (My albums table)
         columnNameMyAlbums.setCellValueFactory(
                 new PropertyValueFactory<>("name"));
@@ -230,7 +237,69 @@ public class AlbumsViewController {
                 new PropertyValueFactory<>("users"));
         columnDescSharedAlbums.setCellValueFactory(
                 new PropertyValueFactory<>("description"));
-       
+
+    }
+
+    /**
+     * Method that handles the button "Find"
+     *
+     * @param event The action event object
+     */
+    @FXML
+    private void handleFindAlbumButtonAction(ActionEvent event) {
+        LOGGER.info("Metodo de control del boton de Find");
+        String busqueda = (String) cbSearchType.getSelectionModel().getSelectedItem();
+        String text = txtValue.getText();
+        if (busqueda.equalsIgnoreCase("Name")) {
+            if (checkShared.isSelected()) {
+                clientsData = FXCollections.observableArrayList(client.findMySharedAlbumsByName_XML(ArrayList.class, loggedUser.getLogin(), text));
+            } else {
+                clientsData = FXCollections.observableArrayList(client.findMyAlbumsByName_XML(ArrayList.class, loggedUser.getLogin(), text));
+            }
+        } else if ((busqueda.equalsIgnoreCase("Date"))) {
+            if (checkShared.isSelected()) {
+                clientsData = FXCollections.observableArrayList(client.findMySharedAlbumsByDate_XML(ArrayList.class, loggedUser.getLogin(), text));
+            } else {
+                clientsData = FXCollections.observableArrayList(client.findMyAlbumsByDate_XML(ArrayList.class, loggedUser.getLogin(), text));
+            }
+        } else if ((busqueda.equalsIgnoreCase("Creator"))) {
+            clientsData = FXCollections.observableArrayList(client.findMySharedAlbumsByCreator_XML(ArrayList.class, loggedUser.getLogin(), text));
+        } else {
+            //Exception
+        }
+    }
+
+    /**
+     * Method that handles the button "Add"
+     *
+     * @param event The action event object
+     */
+    @FXML
+    private void handleAddButtonAction(ActionEvent event) {
+        LOGGER.info("Metodo de control del boton de Add");
+        ArrayList<User> users = new ArrayList();
+        String login = txtAddUser.getText();
+        //buscar usuario por login
+        User user = null;
+        users.add(user);
+        taUsers.setText(arrayToString(users));
+    }
+
+    /**
+     * Method that take the array of users and pass it to string
+     *
+     * @param users An array list of users with the users who can see the album
+     * @return A String with the array passed to string.
+     */
+    private String arrayToString(ArrayList<User> users) {
+        String array = "Users logins: "
+                + "\n";
+        String userLogin = null;
+        for (int i = 0; i < users.size(); i++) {
+            userLogin = users.get(i).getLogin();
+            array = array.concat(userLogin + "\n");
+        }
+        return array;
     }
 
     /**
@@ -241,6 +310,68 @@ public class AlbumsViewController {
     @FXML
     private void handleCreateAlbumButtonAction(ActionEvent event) {
         LOGGER.info("Metodo de control del boton de Create Album");
+    }
+
+    /**
+     * Method that handles the button "Modify an Album"
+     *
+     * @param event The action event object
+     */
+    @FXML
+    private void handleModifyAlbumButtonAction(ActionEvent event) {
+        LOGGER.info("Metodo de control del boton de Modify an Album");
+    }
+
+    /**
+     * Method that handles the button "Delete an Album"
+     *
+     * @param event The action event object
+     */
+    @FXML
+    private void handleDeleteAlbumButtonAction(ActionEvent event) {
+        LOGGER.info("Metodo de control del boton de Delete an Album");
+    }
+
+    /**
+     * Method that handles the button "Albums" from menu
+     *
+     * @param event The action event object
+     */
+    @FXML
+    private void handleAlbumsButtonAction(ActionEvent event) {
+        LOGGER.info("Metodo de control del boton de Albums");
+        this.stage.close();
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("UIAlbum.fxml"));
+            Parent root = (Parent) loader.load();
+            //Obtain the Sign In window controller
+            AlbumsViewController controller = (AlbumsViewController) loader.getController();
+            controller.setStage(stage);
+            controller.initStage(root, loggedUser);
+        } catch (IOException ex) {
+            Logger.getLogger(AlbumsViewController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    /**
+     * Method that handles the button "Content" from menu
+     *
+     * @param event The action event object
+     */
+    @FXML
+    private void handleContentButtonAction(ActionEvent event) {
+        LOGGER.info("Metodo de control del boton de Content");
+        /*this.stage.close();
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("UIAlbum.fxml"));
+            Parent root = (Parent) loader.load();
+            //Obtain the Sign In window controller
+            AlbumsViewController controller = (AlbumsViewController) loader.getController();
+            controller.setStage(stage);
+            controller.initStage(root);
+        } catch (IOException ex) {
+            Logger.getLogger(AlbumsViewController.class.getName()).log(Level.SEVERE, null, ex);
+        }*/
     }
 
     /**
@@ -281,6 +412,33 @@ public class AlbumsViewController {
             txtAddUser.setText(txtAddUser.getText().substring(0, 25));
             new Alert(Alert.AlertType.ERROR, "The maximum lenght for the login is 25 characters.", ButtonType.OK).showAndWait();
             btnAdd.setDisable(true);
+        }
+    }
+
+    /**
+     * Text changed event handler. Validate that the combobox has something
+     * selected to enable value fild and that value fild has text to enable the
+     * find button.
+     *
+     * @param observable The value being observed.
+     * @param oldValue The old value of the observable.
+     * @param newValue The new value of the observable.
+     */
+    private void searchTextPropertyChange(ObservableValue observable,
+            String oldValue,
+            String newValue) {
+        if (cbSearchType.getSelectionModel().getSelectedItem() == null && txtValue.getText().trim().isEmpty()) {
+            btnFind.setDisable(true);
+        } else {
+            txtValue.setDisable(false);
+        }
+
+        //If text field is empty disable  buttton
+        if (txtValue.getText().trim().isEmpty()) {
+            btnFind.setDisable(true);
+        } //Else, enable  button
+        else {
+            btnFind.setDisable(false);
         }
     }
 

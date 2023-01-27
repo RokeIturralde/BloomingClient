@@ -15,7 +15,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<Pane prefHeight="688.0" prefWidth="1187.0" style="-fx-background-color: FF926A;" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.album.AlbumsViewController">
+<Pane prefHeight="688.0" prefWidth="1187.0" style="-fx-background-color: FF926A;" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.album.AlbumsViewController">
    <children>
       <Pane layoutX="-7.0" layoutY="-3.0" prefHeight="688.0" prefWidth="134.0" style="-fx-background-color: #FA7C4E;">
          <children>
@@ -41,7 +41,7 @@
                </font>
             </Text>
             <Button fx:id="btnMembership" layoutX="6.0" layoutY="306.0" mnemonicParsing="false" opacity="0.0" prefHeight="35.0" prefWidth="127.0" />
-            <Button fx:id="btnAlbums" layoutX="4.0" layoutY="149.0" mnemonicParsing="false" opacity="0.0" prefHeight="35.0" prefWidth="127.0" underline="true" />
+            <Button fx:id="btnAlbums"  onAction="#handleAlbumsButtonAction" layoutX="4.0" layoutY="149.0" mnemonicParsing="false" opacity="0.0" prefHeight="35.0" prefWidth="127.0" underline="true" />
             <ImageView fx:id="imageProfile" fitHeight="49.0" fitWidth="55.0" layoutX="43.0" layoutY="589.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../../resources/user.png" />
@@ -57,7 +57,7 @@
                   <Font name="Microsoft YaHei" size="18.0" />
                </font>
             </Text>
-            <Button fx:id="btnContent" layoutX="4.0" layoutY="229.0" mnemonicParsing="false" opacity="0.0" prefHeight="35.0" prefWidth="127.0" />
+            <Button fx:id="btnContent"  onAction="#handleContentButtonAction" layoutX="4.0" layoutY="229.0" mnemonicParsing="false" opacity="0.0" prefHeight="35.0" prefWidth="127.0" />
             <Button fx:id="btnLogo" layoutX="4.0" layoutY="8.0" mnemonicParsing="false" opacity="0.0" prefHeight="111.0" prefWidth="127.0" />
             <Button fx:id="btnAboutUs" layoutX="6.0" layoutY="384.0" mnemonicParsing="false" opacity="0.0" prefHeight="35.0" prefWidth="127.0" underline="true" />
          </children>
@@ -89,14 +89,14 @@
             <Label layoutX="14.0" layoutY="206.0" prefHeight="17.0" prefWidth="149.0" text="Album Description:" />
             <Label layoutX="14.0" layoutY="144.0" prefHeight="17.0" prefWidth="149.0" text="Album Creator" />
             <TextField fx:id="txtAlbumCreator" layoutX="14.0" layoutY="169.0" />
-            <Button fx:id="btnCreateAlbum" layoutX="321.0" layoutY="351.0" mnemonicParsing="false" onAction="#handleCreateAlbumButtonAction" text="Create a new Album" />
+            <Button fx:id="btnCreateAlbum" onAction="#handleCreateAlbumButtonAction" layoutX="321.0" layoutY="351.0" mnemonicParsing="false"  text="Create a new Album" />
             <Button fx:id="btnClearInfo" layoutX="406.0" layoutY="459.0" mnemonicParsing="false" text="Clear" />
-            <Button fx:id="btnModifyAlbum" layoutX="337.0" layoutY="384.0" mnemonicParsing="false" text="Modify an Album" />
-            <Button fx:id="btnDeleteAlbum" layoutX="342.0" layoutY="417.0" mnemonicParsing="false" text="Delete an Album" />
+            <Button fx:id="btnModifyAlbum" onAction="#handleModifyAlbumButtonAction" layoutX="337.0" layoutY="384.0" mnemonicParsing="false" text="Modify an Album" />
+            <Button fx:id="btnDeleteAlbum" onAction="#handleDeleteAlbumButtonAction" layoutX="342.0" layoutY="417.0" mnemonicParsing="false" text="Delete an Album" />
             <TextArea fx:id="taAlbumDesc" layoutX="14.0" layoutY="230.0" prefHeight="229.0" prefWidth="212.0" />
             <Label layoutX="247.0" layoutY="18.0" prefHeight="17.0" prefWidth="149.0" text="Aloweed People:" />
             <TextField fx:id="txtAddUser" layoutX="246.0" layoutY="71.0" />
-            <Button fx:id="btnAdd" layoutX="408.0" layoutY="71.0" mnemonicParsing="false" text="Add" />
+            <Button fx:id="btnAdd" onAction="#handleAddButtonAction" layoutX="408.0" layoutY="71.0" mnemonicParsing="false" text="Add" />
             <Label layoutX="247.0" layoutY="46.0" prefHeight="17.0" prefWidth="181.0" text="Add a User Login to Share with:" />
             <CheckBox fx:id="checkShare" layoutX="398.0" layoutY="18.0" mnemonicParsing="false" prefHeight="17.0" prefWidth="58.0" text="Share" />
          </children>
@@ -113,7 +113,7 @@
       </Label>
       <TextField fx:id="txtValue" layoutX="958.0" layoutY="69.0" />
       <Button fx:id="btnClearShearch" layoutX="716.0" layoutY="109.0" mnemonicParsing="false" text="Clear" />
-      <Button fx:id="btnFind" layoutX="1115.0" layoutY="69.0" mnemonicParsing="false" text="Find" />
+      <Button fx:id="btnFind" onAction="#handleFindAlbumButtonAction" layoutX="1115.0" layoutY="69.0" mnemonicParsing="false" text="Find" />
       <Label layoutX="716.0" layoutY="24.0" prefHeight="17.0" prefWidth="149.0" text="Search:" underline="true">
          <font>
             <Font size="15.0" />
