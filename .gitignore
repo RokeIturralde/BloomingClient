@@ -1,8 +1,13 @@
 /build/
 /dist/
 
-lib/**
-build.xml
+
 nbproject/**
-*.mf
+build.xml
+lib/**
+*.zip
+
 .vscode/**
+*.properties
+
+*.mf

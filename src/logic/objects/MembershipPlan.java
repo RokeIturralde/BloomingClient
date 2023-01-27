@@ -13,7 +13,9 @@ import javax.xml.bind.annotation.XmlRootElement;
  *
  * @author Eneko
  */
+
 @XmlRootElement(name="membershipPlan")
+
 public class MembershipPlan implements Serializable {
 
     private Integer id;
@@ -111,7 +113,7 @@ public class MembershipPlan implements Serializable {
 
     @Override
     public String toString() {
-        return "entities.MembershipPlan[ id=" + id + " ]";
+        return name;
     }
 
 }
