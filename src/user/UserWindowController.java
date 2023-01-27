@@ -9,6 +9,7 @@ import businessLogic.users.FactoryUser;
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 
 import javax.ws.rs.core.GenericType;
 
@@ -19,7 +20,9 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 
 import javafx.scene.control.TableColumn;
@@ -34,6 +37,7 @@ import logic.objects.MembershipPlan;
 import logic.objects.Status;
 
 import logic.objects.User;
+import services.MembershipPlanFacadeREST;
 
 /**
  * @author dani
@@ -70,18 +74,61 @@ public class UserWindowController {
 
     private Stage stage;
 
-    // options of the combobox
-    private final List<String> searchParametersList = 
-        Arrays.asList("Login", "Email", 
-        "Full Name", "Privilege", "Status");
+
+    private void textPropertyChange(
+    ObservableValue observable, 
+    String oldValue, String newValue) {
+
+        if (txtSearchValue.getText().length() > 100 
+        || txtSearchValue.getText().isEmpty()) {
+            new Alert(Alert.AlertType.ERROR,
+            "Please enter a valid text.\n",
+            ButtonType.OK).showAndWait();
+            btnSearch.setDisable(true);
+        } else {
+            switch (
+            comboBoxSearchParameter
+            .getSelectionModel()
+            .getSelectedItem().toString()) {
+                case "":
+                break;
+            }
+        }
+            
+
+     
+        if (isLoginFormat(txtLogin.getText()))
 
 
-    
 
-    private void textChanged(ObservableValue observable,
-            String oldValue,
-            String newValue) {
+        if(txtEmail)
+
+        if(txtFullName)
+
+        
        
+    }
+
+    /**
+     * TODO: it has to tell you wether it contains weird characters
+     * @param login
+     * @return
+     */
+    private boolean isLoginFormat(String login) {
+        if (login.contains(" "))
+            return false;
+        return true;
+    }
+
+    // TODO: recomendable make this method static from another class
+    private boolean isEmailFormat(String email) {
+        String patternEmail = 
+            "([a-z0-9]*)@([a-z]*).(com|org|cn|net|gov|eus)";
+
+        if (!Pattern.matches(patternEmail, email) || email.contains(" ")) 
+            return false;
+        else 
+            return true;
     }
 
     private void handlerWindowShowing(WindowEvent event) {
@@ -93,11 +140,37 @@ public class UserWindowController {
         
     }
 
+    // options of the combobox
+    private final List<String> searchParametersList = 
+    Arrays.asList("Login", "Email", 
+    "Full Name", "Privilege", "Status");
 
     @FXML
     private void handleSearchButtonAction() {
+        
+        switch (comboBoxSearchParameter.getSelectionModel().getSelectedItem().toString()) {
+            case "Login":
+            break;
 
+            /*case "Email":
+                if (isEmailFormat(txtSearchValue.getText()))
+                    btnSearch
+            break;*/
+
+            case "Full name":
+            break;
+
+            case "Privilege":
+            break;
+
+            case "Status":
+            break;
+        }
+        
+        System.out.println(comboBoxSearchParameter.getSelectionModel().getSelectedItem());
     }
+
+
 
     @FXML
     private void handleClearButtonAction() {
@@ -137,13 +210,13 @@ public class UserWindowController {
         stage.setOnShowing(this::handlerWindowShowing);
 
         // listeners
-        txtSearchValue.textProperty().addListener(this::textChanged);
-            txtSearchValue.setPromptText("");
-        txtLogin.textProperty().addListener(this::textChanged);
+        txtSearchValue.textProperty().addListener(this::textPropertyChange);
+            txtSearchValue.setPromptText("Search by");
+        txtLogin.textProperty().addListener(this::textPropertyChange);
             txtLogin.setPromptText("Login");
-        txtEmail.textProperty().addListener(this::textChanged);
+        txtEmail.textProperty().addListener(this::textPropertyChange);
             txtEmail.setPromptText("Email");
-        txtFullName.textProperty().addListener(this::textChanged);
+        txtFullName.textProperty().addListener(this::textPropertyChange);
             txtFullName.setPromptText("Full name");
 
         // buttons
@@ -188,23 +261,10 @@ public class UserWindowController {
 
         tbColLastPasswordChange.setCellValueFactory(
                 new PropertyValueFactory<>("lastPasswordChange"));
+      
 
         
-        
-       /* List <Member> l = 
-            FactoryUser.get().findUserByStatus_XML(new GenericType<List<Member>>(){}.getClass(), Status.ENABLE.toString());
 
-        */
-        /*
-        ObservableList <MembershipPlan> l = FXCollections.observableArrayList(
-            MembershipPlanFactory
-            .getModel()
-                .findAll_XML(new GenericType<List<MembershipPlan>> () {}));
-       
-
-        MembershipPlanFactory
-            .getModel().find_XML(MembershipPlan.class, "3");
-        */
         stage.show();
     }
 

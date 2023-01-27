@@ -37,63 +37,101 @@ public class MemberManager implements MemberInterface {
                     ex.getMessage());
             throw new ClientErrorException("Error updating user:\n" + ex.getMessage());
         }
-        
     }
 
     @Override
     public Collection<Member> getEveryMember() throws ClientErrorException {
-        // TODO Auto-generated method stub
-        return null;
+        List<Member> users = null;
+        try{
+            LOGGER.info("MemberManager: Finding all members from REST service (XML).");
+            //Ask webClient for all members' data.
+            users = 
+                webClient.getEveryMember_XML(new GenericType<List<Member>>() {});
+        }catch(Exception ex){
+            LOGGER.log(Level.SEVERE,
+                    "UsersManager: Exception finding all members, {0}",
+                    ex.getMessage());
+            throw new ClientErrorException("Error finding all members:\n"+ex.getMessage());
+        }
+        return users;
     }
 
     @Override
     public Collection<Member> getEveryUser() throws ClientErrorException {
         List<Member> users = null;
         try{
-            LOGGER.info("MemberManager: Finding all members from REST service (XML).");
-            //Ask webClient for all departments' data.
+            LOGGER.info("MemberManager: Finding all users (as members) from REST service (XML).");
+            //Ask webClient for all members' data.
             users = 
                 webClient.getEveryUser_XML(new GenericType<List<Member>>() {});
         }catch(Exception ex){
             LOGGER.log(Level.SEVERE,
-                    "UsersManager: Exception finding all departments, {0}",
+                    "UsersManager: Exception finding all users (as members), {0}",
                     ex.getMessage());
-            throw new ClientErrorException("Error finding all departments:\n"+ex.getMessage());
+            throw new ClientErrorException("Error finding all users (as members):\n"+ex.getMessage());
         }
         return users;
     }
 
     @Override
     public Member findMemberByLogin(String login) throws ClientErrorException {
-        // TODO Auto-generated method stub
-        return null;
+        Member m;
+        try{
+            LOGGER.info("MemberManager: Finding all members by login from REST service (XML).");
+            //Ask webClient for all members' data.
+            m = webClient.findMemberByLogin_XML(Member.class, login);
+        }catch(Exception ex){
+            LOGGER.log(Level.SEVERE,
+                    "UsersManager: Exception finding members, {0}",
+                    ex.getMessage());
+            throw new ClientErrorException("Error finding members:\n"+ex.getMessage());
+        }
+        return m;
     }
 
     @Override
     public void createMember(Member member) throws ClientErrorException {
         try {
-            LOGGER.log(Level.INFO,"MemberManager: Creating user {0}.",member.getLogin());
+            LOGGER.log(Level.INFO,"MemberManager: creating member {0}.", member.getLogin());
             //Send user data to web client for creation. 
             webClient.create_XML(member);
         } catch(Exception ex){
             LOGGER.log(Level.SEVERE,
-                    "UsersManager: Exception creating user, {0}",
+                    "UsersManager: Exception creating member, {0}",
                     ex.getMessage());
-            throw new ClientErrorException("Error creating user:\n" + ex.getMessage());
+            throw new ClientErrorException("Error creating member:\n" + ex.getMessage());
         }
         
     }
 
     @Override
     public Collection<Member> findMembersByPlan(String plan) throws ClientErrorException {
-        // TODO Auto-generated method stub
-        return null;
+        List <Member> l;
+        try {
+            LOGGER.info("MemberManager: Finding all members from REST service (XML).");
+            //Ask webClient for all members' data.
+            l = webClient.findMembersByPlan_XML(new GenericType<List<Member>>() {}, plan);
+        } catch(Exception ex){
+            LOGGER.log(Level.SEVERE,
+                    "UsersManager: Exception finding all members, {0}",
+                    ex.getMessage());
+            throw new ClientErrorException("Error finding all members:\n"+ex.getMessage());
+        }
+        return l;
     }
 
     @Override
     public void remove(String id) throws ClientErrorException {
-        // TODO Auto-generated method stub
-        
+        try {
+            LOGGER.log(Level.INFO,"UsersManager: Deleting member {0}.",id);
+           // 
+           webClient.remove(id);
+        } catch(Exception ex){
+            LOGGER.log(Level.SEVERE,
+                    "UsersManager: Exception deleting member, {0}",
+                    ex.getMessage());
+            throw new ClientErrorException("Error finding deleting member:\n"+ex.getMessage());
+        }      
     }
     
 }

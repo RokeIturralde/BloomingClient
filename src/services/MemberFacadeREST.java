@@ -1,6 +1,5 @@
 package services;
 
-import businessLogic.users.MemberInterface;
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.WebTarget;

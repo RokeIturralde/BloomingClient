@@ -1,23 +1,26 @@
 package businessLogic.users;
 
-import javax.ws.rs.ClientErrorException;
+import java.util.List;
+
+import exceptions.ClientErrorException;
+import logic.objects.User;
 
 /**
- *
  * @author dani
  */
 public interface UserInterface {
-    public <T> T findUserByName_XML(Class<T> responseType, String name) throws ClientErrorException ;
 
-    public void edit_XML(Object requestEntity) throws ClientErrorException ;
+    public List <User> findUserByName(String name) throws ClientErrorException ;
 
-    public <T> T findUserByStatus_XML(Class<T> responseType, String status) throws ClientErrorException ;
+    public void editUser(User user) throws ClientErrorException ;
 
-    public void create_XML(Object requestEntity) throws ClientErrorException ;
+    public List <User> findUserByStatus(String status) throws ClientErrorException ;
 
-    public <T> T findUserByEmail_XML(Class<T> responseType, String email) throws ClientErrorException ;
+    public void createUser(User user) throws ClientErrorException ;
 
-    public void remove(String id) throws ClientErrorException;
+    public User findUserByEmail(String email) throws ClientErrorException ;
 
-    public <T> T findUserByLogin_XML(Class<T> responseType, String login) throws ClientErrorException ;
+    public void removeUser(String id) throws ClientErrorException;
+
+    public User findUserByLogin(String login) throws ClientErrorException ;
 }

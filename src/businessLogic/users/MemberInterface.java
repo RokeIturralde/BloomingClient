@@ -1,12 +1,9 @@
 package businessLogic.users;
 
-import businessLogic.*;
 import exceptions.ClientErrorException;
 import logic.objects.Member;
 
 import java.util.Collection;
-
-import javax.ws.rs.core.GenericType;
 
 /**
  *
