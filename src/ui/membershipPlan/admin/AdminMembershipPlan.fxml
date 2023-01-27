@@ -29,12 +29,12 @@
                   <Image url="@../../resources/bloomingPNG.png" />
                </image>
             </ImageView>
-            <Button fx:id="btnMembership" layoutX="4.0" layoutY="225.0" mnemonicParsing="false" opacity="0.0" prefHeight="35.0" prefWidth="127.0">
+            <Button fx:id="btnMembership" layoutX="4.0" layoutY="225.0" mnemonicParsing="false" opacity="0.0" prefHeight="35.0" prefWidth="127.0" onAction="#handleMembershipButtonAction">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
-            <Button fx:id="btnLogo" layoutX="4.0" layoutY="14.0" mnemonicParsing="false" opacity="0.0" prefHeight="111.0" prefWidth="127.0">
+            <Button fx:id="btnLogo" layoutX="4.0" layoutY="14.0" mnemonicParsing="false" opacity="0.0" prefHeight="111.0" prefWidth="127.0" onAction="#handleLogoButtonAction">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
@@ -64,15 +64,15 @@
       <TextField fx:id="txtDuration" layoutX="477.0" layoutY="135.0" />
       <CheckBox fx:id="cbShareable" layoutX="678.0" layoutY="79.0" mnemonicParsing="false" prefHeight="17.0" prefWidth="7.0" />
       <TextField fx:id="txtPrice" layoutX="673.0" layoutY="135.0" />
-      <Button fx:id="btnDelete" layoutX="916.0" layoutY="57.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="89.0" text="Delete" />
-      <Button fx:id="btnModify" layoutX="916.0" layoutY="135.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="89.0" text="Modify" />
-      <Button fx:id="btnCreate" layoutX="1050.0" layoutY="60.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="89.0" text="Create" />
-      <Button fx:id="btnPrint" layoutX="1078.0" layoutY="458.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="81.0" text="Print" />
+      <Button fx:id="btnDelete" layoutX="916.0" layoutY="57.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="89.0" text="Delete" onAction="#handleDeleteButtonAction" />
+      <Button fx:id="btnModify" layoutX="916.0" layoutY="135.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="89.0" text="Modify" onAction="#handleModifyDeleteButtonAction" />
+      <Button fx:id="btnCreate" layoutX="1050.0" layoutY="60.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="89.0" text="Create" onAction="#handleCreateButtonAction" />
+      <Button fx:id="btnPrint" layoutX="1078.0" layoutY="458.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="81.0" text="Print" onAction="#handlePrintButtonAction" />
       <TextArea fx:id="txtaDescription" layoutX="251.0" layoutY="140.0" prefHeight="68.0" prefWidth="193.0" />
       <TextField fx:id="txtSearch" layoutX="362.0" layoutY="247.0" />
-      <Button fx:id="btnSearch" layoutX="600.0" layoutY="247.0" mnemonicParsing="false" text="Search" />
+      <Button fx:id="btnSearch" layoutX="600.0" layoutY="247.0" mnemonicParsing="false" text="Search" onAction="#handleSearchButtonAction" />
       <ComboBox fx:id="cboxParameter" layoutX="195.0" layoutY="247.0" prefWidth="150.0" />
-      <Button fx:id="btnClear" layoutX="718.0" layoutY="247.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="59.0" text="Clear" />
+      <Button fx:id="btnClear" layoutX="718.0" layoutY="247.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="59.0" text="Clear" onAction="#handleClearButtonAction" />
       <Label layoutX="1119.0" layoutY="21.0" prefHeight="24.0" prefWidth="39.0" text="Help" textFill="#3c75df" underline="true">
          <font>
             <Font size="15.0" />
