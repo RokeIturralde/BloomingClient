@@ -6,8 +6,7 @@
 package services;
 
 import businessLogic.content.ContentInterface;
-import java.util.ResourceBundle;
-import exceptions.ClientErrorException;
+import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.GenericType;
@@ -23,16 +22,13 @@ import javax.ws.rs.core.GenericType;
  *        client.close();
  * </pre>
  *
- * @author Roke
+ * @author 2dam
  */
 public class ContentFacadeREST implements ContentInterface {
 
     private WebTarget webTarget;
     private Client client;
-    // access to the BASE_URI information
-    /* private static final ResourceBundle config
-            = ResourceBundle.getBundle("URLCredentials.properties");*/
-    private static final String BASE_URI = "http://localhost:8080/bloomingweb/webresources"/*config.getString("BASE_URI")*/;
+    private static final String BASE_URI = "http://localhost:8080/bloomingweb/webresources";
 
     public ContentFacadeREST() {
         client = javax.ws.rs.client.ClientBuilder.newClient();
@@ -51,7 +47,7 @@ public class ContentFacadeREST implements ContentInterface {
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(responseType);
     }
 
-    public <T> T findContentByLocation_XML(Class<T> responseType, String contentLocation) throws ClientErrorException {
+    public <T> T findContentByLocation_XML(GenericType<T> responseType, String contentLocation) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("findByLocation/{0}", new Object[]{contentLocation}));
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);

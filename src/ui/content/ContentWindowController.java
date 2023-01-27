@@ -16,9 +16,9 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -54,8 +54,6 @@ import javax.ws.rs.core.GenericType;
 import objects.CustomImage;
 import objects.Content;
 import objects.CustomText;
-import services.ContentFacadeREST;
-import services.CustomTextFacadeREST;
 
 /**
  * FXML Controller class
@@ -133,12 +131,16 @@ public class ContentWindowController {
     @FXML
     private Button btnPrintCustomText;
 
-    private ObservableList<Content> clientsData;
+    private ObservableList<Content> contentList;
+    private ArrayList<CustomImage> customImageList;
+    private ArrayList<CustomText> customTextList;
     private final String tableImage = "Show Image";
     private Byte[] imageBytes = null;
     private Stage stage;
     private ContentInterface client;
     private static final Logger LOGGER = Logger.getLogger("package ui.content");
+    private boolean customImageTableIsSelected = false;
+    private boolean customTextTableIsSelected = false;
 
     /**
      * Initializes the controller class.
@@ -172,11 +174,34 @@ public class ContentWindowController {
         tableCustomImage.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
                 tableCustomText.getSelectionModel().clearSelection();
+                rbCustomImage.setSelected(true);
+                int selectedRow = tableCustomImage.getSelectionModel().getSelectedIndex();
+                txtName.setText(customImageList.get(selectedRow).getName());
+                txtName.setDisable(false);
+                txtLocation.setText(customImageList.get(selectedRow).getLocation());
+                txtLocation.setDisable(false);
+                uploadDate.setValue(customImageList.get(selectedRow).getUploadDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+                uploadDate.setDisable(false);
+                customImageTableIsSelected = true;
+                customTextTableIsSelected = false;
             }
         });
         tableCustomText.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
                 tableCustomImage.getSelectionModel().clearSelection();
+                rbCustomText.setSelected(true);
+                btnAddContent.setDisable(true);
+                int selectedRow = tableCustomText.getSelectionModel().getSelectedIndex();
+                txtName.setText(customTextList.get(selectedRow).getName());
+                txtName.setDisable(false);
+                txtLocation.setText(customTextList.get(selectedRow).getLocation());
+                txtLocation.setDisable(false);
+                uploadDate.setValue(customTextList.get(selectedRow).getUploadDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+                uploadDate.setDisable(false);
+                taDescription.setText(customTextList.get(selectedRow).getText());
+                taDescription.setDisable(false);
+                customImageTableIsSelected = false;
+                customTextTableIsSelected = true;
             }
         });
         //Set the tables with values
@@ -188,7 +213,8 @@ public class ContentWindowController {
                 new PropertyValueFactory<>("location"));
         customImageUploadDate.setCellValueFactory(
                 new PropertyValueFactory<>("uploadDate"));
-
+        /* customImageImage.setCellValueFactory(
+                new PropertyValueFactory<>(tableImage));*/
         customTextName.setCellValueFactory(
                 new PropertyValueFactory<>("name"));
         customTextLocation.setCellValueFactory(
@@ -200,12 +226,15 @@ public class ContentWindowController {
 
         try {
             client = ContentFactory.getModel();
-            clientsData = FXCollections.observableArrayList(client.findAllContents_XML(new GenericType<List<Content>>() {
+            contentList = FXCollections.observableArrayList(client.findAllContents_XML(new GenericType<List<Content>>() {
             }));
-            tableCustomImage.setItems(clientsData);
-            tableCustomText.setItems(clientsData);
-            tableCustomImage.refresh();
-        } catch (Exception e) {
+            customImageList = findAllCustomImages(contentList);
+            customTextList = findAllCustomTexts(contentList);
+            ObservableList<CustomImage> listCustomImage = FXCollections.observableArrayList(customImageList);
+            ObservableList<CustomText> listCustomText = FXCollections.observableArrayList(customTextList);
+            tableCustomImage.setItems(listCustomImage);
+            tableCustomText.setItems(listCustomText);
+        } catch (ClientErrorException e) {
             LOGGER.info(e.getMessage());
         }
         stage.show();
@@ -245,9 +274,11 @@ public class ContentWindowController {
                         btnDeleteContent.setDisable(true);
                         tgType.selectToggle(null);
                         client = ContentFactory.getModel();
-                        clientsData = FXCollections.observableArrayList(client.findAllContents_XML(new GenericType<List<Content>>() {
+                        contentList = FXCollections.observableArrayList(client.findAllContents_XML(new GenericType<List<Content>>() {
                         }));
-                        tableCustomImage.setItems(clientsData);
+                        customImageList = findAllCustomImages(contentList);
+                        ObservableList<CustomImage> listCustomImage = FXCollections.observableArrayList(customImageList);
+                        tableCustomImage.setItems(listCustomImage);
                         tableCustomImage.refresh();
                     } catch (ClientErrorException ex) {
                         Logger.getLogger(ContentWindowController.class.getName()).log(Level.SEVERE, null, ex);
@@ -276,10 +307,12 @@ public class ContentWindowController {
                     btnDeleteContent.setDisable(true);
                     tgType.selectToggle(null);
                     client = ContentFactory.getModel();
-                    clientsData = FXCollections.observableArrayList(client.findAllContents_XML(new GenericType<List<Content>>() {
+                    contentList = FXCollections.observableArrayList(client.findAllContents_XML(new GenericType<List<Content>>() {
                     }));
-                    tableCustomImage.setItems(clientsData);
-                    tableCustomImage.refresh();
+                    customTextList = findAllCustomTexts(contentList);
+                    ObservableList<CustomText> listCustomText = FXCollections.observableArrayList(customTextList);
+                    tableCustomText.setItems(listCustomText);
+                    tableCustomText.refresh();
                 } catch (ClientErrorException ex) {
                     Logger.getLogger(ContentWindowController.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -292,6 +325,51 @@ public class ContentWindowController {
     @FXML
     private void handleModifyContentButtonAction(ActionEvent event
     ) {
+        if (customImageTableIsSelected) {
+            int selectedRow = tableCustomImage.getSelectionModel().getSelectedIndex();
+            CustomImageInterface customImageInterface = CustomImageFactory.getModel();
+            CustomImage customImage = new CustomImage();
+            customImage.setContentId(customImageList.get(selectedRow).getContentId());
+            customImage.setName(txtName.getText());
+            customImage.setLocation(txtLocation.getText());
+            Date date = Date.from(uploadDate.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
+            customImage.setUploadDate(date);
+            customImage.setBytes(imageBytes);
+            try {
+                customImageInterface.edit_XML(customImage);
+                contentList = FXCollections.observableArrayList(client.findAllContents_XML(new GenericType<List<Content>>() {
+                }));
+            } catch (ClientErrorException ex) {
+                Logger.getLogger(ContentWindowController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            customImageList = findAllCustomImages(contentList);
+            ObservableList<CustomImage> listCustomImage = FXCollections.observableArrayList(customImageList);
+            tableCustomImage.setItems(listCustomImage);
+            tableCustomImage.refresh();
+            new Alert(Alert.AlertType.INFORMATION, "Content Modified", ButtonType.OK).showAndWait();
+        } else if (customTextTableIsSelected) {
+            int selectedRow = tableCustomText.getSelectionModel().getSelectedIndex();
+            CustomTextInterface customTextInterface = CustomTextFactory.getModel();
+            CustomText customText = new CustomText();
+            customText.setContentId(customTextList.get(selectedRow).getContentId());
+            customText.setName(txtName.getText());
+            customText.setLocation(txtLocation.getText());
+            Date date = Date.from(uploadDate.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
+            customText.setUploadDate(date);
+            customText.setText(taDescription.getText());
+            try {
+                customTextInterface.edit_XML(customText);
+                contentList = FXCollections.observableArrayList(client.findAllContents_XML(new GenericType<List<Content>>() {
+                }));
+            } catch (ClientErrorException ex) {
+                Logger.getLogger(ContentWindowController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            customTextList = findAllCustomTexts(contentList);
+            ObservableList<CustomText> listCustomText = FXCollections.observableArrayList(customTextList);
+            tableCustomText.setItems(listCustomText);
+            tableCustomText.refresh();
+            new Alert(Alert.AlertType.INFORMATION, "Content Modified", ButtonType.OK).showAndWait();
+        }
     }
 
     @FXML
@@ -304,7 +382,35 @@ public class ContentWindowController {
         Optional<ButtonType> action = alert.showAndWait();
         //If you click on OK
         if (action.get() == ButtonType.OK) {
-
+            if (customImageTableIsSelected) {
+                int selectedRow = tableCustomImage.getSelectionModel().getSelectedIndex();
+                ContentInterface contentInterface = ContentFactory.getModel();
+                try {
+                    contentInterface.remove(customImageList.get(selectedRow).getContentId() + "");
+                    contentList = FXCollections.observableArrayList(contentInterface.findAllContents_XML(new GenericType<List<Content>>() {
+                    }));
+                } catch (ClientErrorException ex) {
+                    Logger.getLogger(ContentWindowController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                customImageList = findAllCustomImages(contentList);
+                ObservableList<CustomImage> listCustomImage = FXCollections.observableArrayList(customImageList);
+                tableCustomImage.setItems(listCustomImage);
+                tableCustomImage.refresh();
+            } else if (customTextTableIsSelected) {
+                int selectedRow = tableCustomText.getSelectionModel().getSelectedIndex();
+                ContentInterface contentInterface = ContentFactory.getModel();
+                try {
+                    contentInterface.remove(customTextList.get(selectedRow).getContentId() + "");
+                    contentList = FXCollections.observableArrayList(contentInterface.findAllContents_XML(new GenericType<List<Content>>() {
+                    }));
+                } catch (ClientErrorException ex) {
+                    Logger.getLogger(ContentWindowController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                customTextList = findAllCustomTexts(contentList);
+                ObservableList<CustomText> listCustomText = FXCollections.observableArrayList(customTextList);
+                tableCustomText.setItems(listCustomText);
+                tableCustomText.refresh();
+            }
         }
     }
 
@@ -312,7 +418,16 @@ public class ContentWindowController {
     private void handleFindButtonAction(ActionEvent event
     ) {
         if (cboxParameter.getSelectionModel().getSelectedItem().equals("Location")) {
-
+            try {
+                contentList = FXCollections.observableArrayList(client.findContentByLocation_XML(new GenericType<List<Content>>() {
+                }, txtValue.getText()));
+                customImageList = findCustomImageByLocation(contentList, txtValue);
+                ObservableList<CustomImage> listCustomImage = FXCollections.observableArrayList(customImageList);
+                tableCustomImage.setItems(listCustomImage);
+                tableCustomImage.refresh();
+            } catch (ClientErrorException ex) {
+                Logger.getLogger(ContentWindowController.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
 
         if (cboxParameter.getSelectionModel().getSelectedItem().equals("Name")) {
@@ -493,5 +608,56 @@ public class ContentWindowController {
         Byte[] bytes = new Byte[bytesPrim.length];
         Arrays.setAll(bytes, n -> bytesPrim[n]);
         return bytes;
+    }
+
+    public ArrayList<CustomImage> findAllCustomImages(ObservableList<Content> contentList) {
+        ArrayList<CustomImage> customImageList = new ArrayList<>();
+        CustomImage customImage = new CustomImage();
+        CustomImageInterface customImageInterface = CustomImageFactory.getModel();
+        for (int i = 0; i < contentList.size(); i++) {
+            try {
+                customImage = customImageInterface.findCustomTextById_XML(CustomImage.class, contentList.get(i).getContentId() + "");
+            } catch (ClientErrorException ex) {
+                Logger.getLogger(ContentWindowController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            if (customImage != null) {
+                customImageList.add(customImage);
+            }
+        }
+        return customImageList;
+    }
+
+    public ArrayList<CustomText> findAllCustomTexts(ObservableList<Content> contentList) {
+        ArrayList<CustomText> customTextList = new ArrayList<>();
+        CustomText customText = new CustomText();
+        CustomTextInterface customTextInterface = CustomTextFactory.getModel();
+        for (int i = 0; i < contentList.size(); i++) {
+            try {
+                customText = customTextInterface.findCustomTextById_XML(CustomText.class, contentList.get(i).getContentId() + "");
+            } catch (ClientErrorException ex) {
+                Logger.getLogger(ContentWindowController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            if (customText != null) {
+                customTextList.add(customText);
+            }
+        }
+        return customTextList;
+    }
+
+    private ArrayList<CustomImage> findCustomImageByLocation(ObservableList<Content> contentList, TextField txtValue) {
+        ArrayList<CustomImage> customImageList = new ArrayList<>();
+        CustomImage customImage = new CustomImage();
+        CustomImageInterface customImageInterface = CustomImageFactory.getModel();
+        for (int i = 0; i < contentList.size(); i++) {
+            if (contentList.get(i).getLocation().equalsIgnoreCase(txtValue.toString())) {
+                try {
+                    customImage = customImageInterface.findCustomTextById_XML(CustomImage.class, contentList.get(i).getContentId() + "");
+                } catch (ClientErrorException ex) {
+                    Logger.getLogger(ContentWindowController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                customImageList.add(customImage);
+            }
+        }
+        return customImageList;
     }
 }

@@ -6,7 +6,7 @@
 package services;
 
 import businessLogic.customText.CustomTextInterface;
-import exceptions.ClientErrorException;
+import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.WebTarget;
 
@@ -21,9 +21,9 @@ import javax.ws.rs.client.WebTarget;
  *        client.close();
  * </pre>
  *
- * @author Roke
+ * @author 2dam
  */
-public class CustomTextFacadeREST implements CustomTextInterface{
+public class CustomTextFacadeREST implements CustomTextInterface {
 
     private WebTarget webTarget;
     private Client client;
@@ -65,5 +65,5 @@ public class CustomTextFacadeREST implements CustomTextInterface{
     public void close() {
         client.close();
     }
-    
+
 }

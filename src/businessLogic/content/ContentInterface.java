@@ -16,16 +16,15 @@ public interface ContentInterface {
 
     public <T> T findContentByDate_XML(Class<T> responseType, String date) throws ClientErrorException;
 
-    public <T> T findContentByLocation_XML(Class<T> responseType, String contentLocation) throws ClientErrorException;
+    public <T> T findContentByLocation_XML(GenericType<T> responseType, String contentLocation) throws ClientErrorException;
 
     public <T> T findContentById_XML(Class<T> responseType, String id) throws ClientErrorException;
 
     public <T> T findAllContents_XML(GenericType<T> responseType) throws ClientErrorException;
 
+    public void remove(String id) throws ClientErrorException;
+
     public <T> T findContentByName_XML(Class<T> responseType, String name) throws ClientErrorException;
 
     public <T> T findContentByAlbum_XML(Class<T> responseType, String albumId) throws ClientErrorException;
-
-    public void remove(String id) throws ClientErrorException;
-
 }
