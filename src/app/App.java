@@ -7,6 +7,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.stage.Stage;
+import view.album.AlbumsViewController;
 
 
 import user.UserWindowController;
@@ -21,6 +22,7 @@ public class App extends Application {
     public void start(Stage stage) {
         try {
 
+
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/user/UserWindow.fxml"));
             Parent root = (Parent) loader.load();
             //Obtain the Sign In window controller
@@ -32,4 +34,5 @@ public class App extends Application {
             Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
 }

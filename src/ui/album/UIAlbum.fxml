@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<Pane prefHeight="688.0" prefWidth="1187.0" style="-fx-background-color: FF926A;" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.album.AlbumsViewController">
+   <children>
+      <Pane layoutX="-7.0" layoutY="-3.0" prefHeight="688.0" prefWidth="134.0" style="-fx-background-color: #FA7C4E;">
+         <children>
+            <Text fontSmoothingType="LCD" layoutX="28.0" layoutY="174.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx background color:: D66136;" text="Albums" underline="true" wrappingWidth="81.33673095703125">
+               <font>
+                  <Font name="Microsoft YaHei" size="20.0" />
+               </font>
+            </Text>
+            <Text fontSmoothingType="LCD" layoutX="-10.0" layoutY="330.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Membership" textAlignment="CENTER" wrappingWidth="158.13672637939453">
+               <font>
+                  <Font name="Microsoft YaHei" size="18.0" />
+               </font>
+            </Text>
+            <Button fx:id="btnProfile" layoutX="6.0" layoutY="569.0" mnemonicParsing="false" opacity="0.0" prefHeight="111.0" prefWidth="127.0" />
+            <ImageView fx:id="imageLogo" fitHeight="105.0" fitWidth="130.0" layoutX="6.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../resources/bloomingPNG.png" />
+               </image>
+            </ImageView>
+            <Text fontSmoothingType="LCD" layoutX="25.0" layoutY="254.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Content" wrappingWidth="98.6097540203009">
+               <font>
+                  <Font name="Microsoft YaHei" size="20.0" />
+               </font>
+            </Text>
+            <Button fx:id="btnMembership" layoutX="6.0" layoutY="306.0" mnemonicParsing="false" opacity="0.0" prefHeight="35.0" prefWidth="127.0" />
+            <Button fx:id="btnAlbums"  onAction="#handleAlbumsButtonAction" layoutX="4.0" layoutY="149.0" mnemonicParsing="false" opacity="0.0" prefHeight="35.0" prefWidth="127.0" underline="true" />
+            <ImageView fx:id="imageProfile" fitHeight="49.0" fitWidth="55.0" layoutX="43.0" layoutY="589.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../resources/user.png" />
+               </image>
+            </ImageView>
+            <Text fontSmoothingType="LCD" layoutX="-10.0" layoutY="668.0" strokeType="OUTSIDE" strokeWidth="0.0" text="My profile" textAlignment="CENTER" wrappingWidth="158.13672637939453">
+               <font>
+                  <Font name="Microsoft YaHei" size="18.0" />
+               </font>
+            </Text>
+            <Text fontSmoothingType="LCD" layoutX="-12.0" layoutY="409.0" strokeType="OUTSIDE" strokeWidth="0.0" text="About us" textAlignment="CENTER" wrappingWidth="158.13672637939453">
+               <font>
+                  <Font name="Microsoft YaHei" size="18.0" />
+               </font>
+            </Text>
+            <Button fx:id="btnContent" layoutX="4.0" layoutY="229.0" mnemonicParsing="false" opacity="0.0" prefHeight="35.0" prefWidth="127.0" />
+            <Button fx:id="btnLogo" layoutX="4.0" layoutY="8.0" mnemonicParsing="false" opacity="0.0" prefHeight="111.0" prefWidth="127.0" />
+            <Button fx:id="btnAboutUs" layoutX="6.0" layoutY="384.0" mnemonicParsing="false" opacity="0.0" prefHeight="35.0" prefWidth="127.0" underline="true" />
+         </children>
+      </Pane>
+      <TableView fx:id="tbMyAlbums" layoutX="155.0" layoutY="50.0" prefHeight="288.0" prefWidth="547.0">
+         <columns>
+            <TableColumn fx:id="columnNameMyAlbums" prefWidth="129.0" text="Name" />
+            <TableColumn fx:id="columnCreationDateMyAlbums" prefWidth="148.0" text="Creation Date" />
+            <TableColumn fx:id="columnPeopleMyAlbums" prefWidth="122.0" text="Allowed People" />
+            <TableColumn fx:id="columnDescMyAlbums" prefWidth="147.0" text="Description" />
+         </columns>
+      </TableView>
+      <TableView fx:id="tbSharedAlbums" layoutX="155.0" layoutY="386.0" prefHeight="288.0" prefWidth="547.0">
+         <columns>
+            <TableColumn fx:id="columnNameSharedAlbums" prefWidth="127.0" text="Name" />
+            <TableColumn fx:id="columnCreatorSharedAlbums" prefWidth="85.0" text="Creator" />
+            <TableColumn fx:id="columnCreationDateSharedAlbums" prefWidth="107.0" text="Creation Date" />
+            <TableColumn fx:id="columnPeopleSharedAlbums" prefWidth="110.0" text="Allowed People" />
+            <TableColumn fx:id="columnDescSharedAlbums" prefWidth="117.0" text="Description" />
+         </columns>
+      </TableView>
+      <Pane layoutX="711.0" layoutY="176.0" prefHeight="498.0" prefWidth="467.0" style="-fx-background-color: #FA7C4E;">
+         <children>
+            <DatePicker fx:id="dpCreationDate" layoutX="14.0" layoutY="108.0" />
+            <TextField fx:id="txtAlbumName" layoutX="14.0" layoutY="42.0" />
+            <Label layoutX="14.0" layoutY="14.0" prefHeight="17.0" prefWidth="149.0" text="Album Name:" />
+            <Label layoutX="14.0" layoutY="82.0" prefHeight="17.0" prefWidth="149.0" text="Creation Date:" />
+            <TextArea fx:id="taUsers" layoutX="246.0" layoutY="108.0" prefHeight="229.0" prefWidth="199.0" promptText="Users:" />
+            <Label layoutX="14.0" layoutY="206.0" prefHeight="17.0" prefWidth="149.0" text="Album Description:" />
+            <Label layoutX="14.0" layoutY="144.0" prefHeight="17.0" prefWidth="149.0" text="Album Creator" />
+            <TextField fx:id="txtAlbumCreator" layoutX="14.0" layoutY="169.0" />
+            <Button fx:id="btnCreateAlbum" onAction="#handleCreateAlbumButtonAction" layoutX="321.0" layoutY="351.0" mnemonicParsing="false"  text="Create a new Album" />
+            <Button fx:id="btnClearInfo" layoutX="406.0" layoutY="459.0" mnemonicParsing="false" text="Clear" />
+            <Button fx:id="btnModifyAlbum" onAction="#handleModifyAlbumButtonAction" layoutX="337.0" layoutY="384.0" mnemonicParsing="false" text="Modify an Album" />
+            <Button fx:id="btnDeleteAlbum" onAction="#handleDeleteAlbumButtonAction" layoutX="342.0" layoutY="417.0" mnemonicParsing="false" text="Delete an Album" />
+            <TextArea fx:id="taAlbumDesc" layoutX="14.0" layoutY="230.0" prefHeight="229.0" prefWidth="212.0" />
+            <Label layoutX="247.0" layoutY="18.0" prefHeight="17.0" prefWidth="149.0" text="Aloweed People:" />
+            <TextField fx:id="txtAddUser" layoutX="246.0" layoutY="71.0" />
+            <Button fx:id="btnAdd" onAction="#handleAddButtonAction" layoutX="408.0" layoutY="71.0" mnemonicParsing="false" text="Add" />
+            <Label layoutX="247.0" layoutY="46.0" prefHeight="17.0" prefWidth="181.0" text="Add a User Login to Share with:" />
+            <CheckBox fx:id="checkShare" layoutX="398.0" layoutY="18.0" mnemonicParsing="false" prefHeight="17.0" prefWidth="58.0" text="Share" />
+         </children>
+      </Pane>
+      <Label layoutX="155.0" layoutY="18.0" text="My Albums" underline="true">
+         <font>
+            <Font name="System Bold" size="22.0" />
+         </font>
+      </Label>
+      <Label layoutX="155.0" layoutY="354.0" text="Shared Albums" underline="true">
+         <font>
+            <Font name="System Bold" size="22.0" />
+         </font>
+      </Label>
+      <TextField fx:id="txtValue" layoutX="958.0" layoutY="69.0" />
+      <Button fx:id="btnClearShearch" layoutX="716.0" layoutY="109.0" mnemonicParsing="false" text="Clear" />
+      <Button fx:id="btnFind" onAction="#handleFindAlbumButtonAction" layoutX="1115.0" layoutY="69.0" mnemonicParsing="false" text="Find" />
+      <Label layoutX="716.0" layoutY="24.0" prefHeight="17.0" prefWidth="149.0" text="Search:" underline="true">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Label>
+      <Label layoutX="716.0" layoutY="48.0" prefHeight="17.0" prefWidth="149.0" text="Search Type:" />
+      <CheckBox fx:id="checkShared" layoutX="887.0" layoutY="73.0" mnemonicParsing="false" text="Shared" />
+      <ComboBox fx:id="cbSearchType" layoutX="716.0" layoutY="69.0" prefWidth="150.0" />
+      <Label layoutX="958.0" layoutY="48.0" prefHeight="17.0" prefWidth="149.0" text="Value:" />
+      <Button fx:id="btnPrintMyAlbums" layoutX="661.0" layoutY="22.0" mnemonicParsing="false" text="Print" />
+      <Button fx:id="btnPrintSharedAlbums" layoutX="661.0" layoutY="358.0" mnemonicParsing="false" text="Print" />
+      <Label layoutX="1141.0" layoutY="16.0" text="Help" textFill="#101dd7" underline="true" />
+      <Button fx:id="btnHelp" layoutX="1133.0" layoutY="12.0" mnemonicParsing="false" opacity="0.0" text="Help" underline="true" />
+   </children>
+</Pane>

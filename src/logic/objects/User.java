@@ -42,8 +42,7 @@ public class User implements Serializable {
     public void setSharedAlbums(List<Album> sharedAlbums) {
         this.sharedAlbums = sharedAlbums;
     }
-
-
+    
     public String getEmail() {
         return email;
     }
@@ -122,7 +121,7 @@ public class User implements Serializable {
 
     @Override
     public String toString() {
-        return "entities.User[ id=" + login + " ]";
+        return "entities.User[ login=" + login + " ]";
     }
 
 }
