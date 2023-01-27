@@ -8,11 +8,13 @@ package logic.objects;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * @author Roke
+ * @author dani
  */
+@XmlRootElement
 public class User implements Serializable {
 
     private String email;
@@ -40,7 +42,7 @@ public class User implements Serializable {
     public void setSharedAlbums(List<Album> sharedAlbums) {
         this.sharedAlbums = sharedAlbums;
     }
-
+    
     public String getEmail() {
         return email;
     }

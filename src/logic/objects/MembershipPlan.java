@@ -7,11 +7,15 @@ package logic.objects;
 
 import java.io.Serializable;
 import java.util.List;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
  * @author Eneko
  */
+
+@XmlRootElement(name="membershipPlan")
+
 public class MembershipPlan implements Serializable {
 
     private Integer id;
@@ -22,6 +26,10 @@ public class MembershipPlan implements Serializable {
     private String name;
     private Float price;
     private Boolean shareable;
+    private Integer cont;
+
+    public MembershipPlan() {
+    }
 
     public Integer getId() {
         return id;
@@ -61,6 +69,7 @@ public class MembershipPlan implements Serializable {
 
     public void setMembers(List<Member> members) {
         this.members = members;
+        this.cont = members.size();
     }
 
     public String getName() {
@@ -87,6 +96,14 @@ public class MembershipPlan implements Serializable {
         this.shareable = shareable;
     }
 
+    public Integer getCont() {
+        return cont;
+    }
+
+    public void setCont(Integer cont) {
+        this.cont = cont;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -109,7 +126,7 @@ public class MembershipPlan implements Serializable {
 
     @Override
     public String toString() {
-        return "entities.MembershipPlan[ id=" + id + " ]";
+        return name;
     }
 
 }

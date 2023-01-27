@@ -100,9 +100,9 @@
             <children>
                 <ComboBox fx:id="cboxParameter" layoutX="14.0" layoutY="43.0" prefHeight="25.0" prefWidth="134.0" visibleRowCount="3" />
                 <Label layoutX="14.0" layoutY="22.0" prefHeight="17.0" prefWidth="81.0" text="Parameter:" />
-                <TextField id="lblValue" layoutX="193.0" layoutY="43.0" prefHeight="25.0" prefWidth="134.0" />
+                <TextField fx:id="lblValue" layoutX="193.0" layoutY="43.0" prefHeight="25.0" prefWidth="134.0" />
                 <Text layoutX="193.0" layoutY="35.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Value:" />
-                <Button fx:id="bFind" layoutX="401.0" layoutY="43.0" mnemonicParsing="false" text="Find">
+                <Button fx:id="bFind" layoutX="401.0" layoutY="43.0" mnemonicParsing="false" onAction="#handleFindButtonAction" text="Find">
                     <cursor>
                         <Cursor fx:constant="HAND" />
                     </cursor>
@@ -114,7 +114,7 @@
                 </Button>
             </children>
         </Pane>
-        <Button fx:id="bDeleteContent" layoutX="1014.0" layoutY="366.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="134.0" text="Delete Content">
+        <Button fx:id="bDeleteContent" layoutX="1014.0" layoutY="366.0" mnemonicParsing="false" onAction="#handleDeleteContentButtonAction" prefHeight="25.0" prefWidth="134.0" text="Delete Content">
             <cursor>
                 <Cursor fx:constant="HAND" />
             </cursor>
@@ -144,7 +144,7 @@
         <TextField fx:id="lblLocation" layoutX="772.0" layoutY="218.0" prefHeight="20.0" prefWidth="149.0" />
         <Text layoutX="772.0" layoutY="149.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Name" wrappingWidth="46.0933837890625" />
         <Text layoutX="769.0" layoutY="214.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Location" wrappingWidth="66.55665323272115" />
-        <Button fx:id="bFileChooser" layoutX="976.0" layoutY="218.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="120.0" text="Choose Image">
+        <Button fx:id="bFileChooser" layoutX="976.0" layoutY="218.0" mnemonicParsing="false" onAction="#handleFileChooserButtonAction" prefHeight="25.0" prefWidth="120.0" text="Choose Image">
             <cursor>
                 <Cursor fx:constant="HAND" />
             </cursor>
@@ -183,5 +183,15 @@
                 <Font size="18.0" />
             </font>
         </Label>
+      <Label layoutX="1136.0" layoutY="24.0" text="Help" textFill="#0c02a4" underline="true">
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Label>
+      <Button id="bHelp" layoutX="1129.0" layoutY="20.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="39.0" text="Button" visible="false">
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Button>
     </children>
 </Pane>
