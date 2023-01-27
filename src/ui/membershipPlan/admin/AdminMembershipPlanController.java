@@ -5,6 +5,8 @@
  */
 package ui.membershipPlan.admin;
 
+import businessLogic.FactoryMember;
+import businessLogic.MemberInterface;
 import businessLogic.membership.MembershipPlanFactory;
 import businessLogic.membership.MembershipPlanInterface;
 import java.util.List;
@@ -12,6 +14,7 @@ import java.util.logging.Logger;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -28,6 +31,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javax.ws.rs.core.GenericType;
+import logic.objects.Member;
 import logic.objects.MembershipPlan;
 import logic.objects.User;
 
@@ -90,6 +94,7 @@ public class AdminMembershipPlanController {
     private ObservableList<MembershipPlan> membershipPlanData;
     private Stage stage;
     private MembershipPlanInterface membershipClient;
+    private MemberInterface memberClient;
     private static final Logger LOGGER = Logger.getLogger("package membership.admin");
     
     public void initStage(Parent root) {
@@ -117,13 +122,23 @@ public class AdminMembershipPlanController {
         cLimit.setCellValueFactory(new PropertyValueFactory<>("albumLimit"));
         cDuration.setCellValueFactory(new PropertyValueFactory<>("duration"));
         cShareable.setCellValueFactory(new PropertyValueFactory<>("shareable"));
-        cUsers.setCellValueFactory(new PropertyValueFactory<>("members"));
+        cUsers.setCellValueFactory(new PropertyValueFactory<>("cont"));
         cPrice.setCellValueFactory(new PropertyValueFactory<>("price"));
                 
         try{
             membershipClient = MembershipPlanFactory.getModel();
-            membershipPlanData = FXCollections.observableArrayList(membershipClient.findAll_XML(new GenericType<List<MembershipPlan>>() {
-            }));
+            membershipPlanData = FXCollections.observableArrayList(membershipClient.findAll_XML(new GenericType<List<MembershipPlan>>() {}));
+            memberClient = FactoryMember.get();
+            for(int i = 0; i < membershipPlanData.size();i++){
+                membershipPlanData.get(i).setMembers(memberClient.findMembersByPlan_XML(new GenericType<List<Member>>(){}, membershipPlanData.get(i).getId()+""));
+            }
+            
+            
+           /*
+            for (MembershipPlan plan : membershipPlanData) {
+                plan.setMembers(FactoryMember.get().findMembersByPlan_XML(new GenericType<List<Member>>() {}, plan.getId() + ""));
+            }
+            */
             tbPlans.setItems(membershipPlanData);
             tbPlans.refresh();
         } catch(Exception e){
@@ -155,5 +170,42 @@ public class AdminMembershipPlanController {
         btnModify.setDisable(true);
         btnSearch.setDisable(true);
         btnDelete.setDisable(true);        
+    }
+    
+    @FXML
+    public void handleSearchButtonAction(ActionEvent event){
+        
+    }
+    @FXML
+    public void handleDeleteButtonAction(ActionEvent event){
+        
+    }
+    @FXML
+    public void handleModifyDeleteButtonAction(ActionEvent event){
+        
+    }
+    @FXML
+    public void handleCreateButtonAction(ActionEvent event){
+        
+    }
+    @FXML
+    public void handleClearButtonAction(ActionEvent event){
+        
+    }
+    @FXML
+    public void handlePrintButtonAction(ActionEvent event){
+        
+    }@FXML
+    
+    public void handleMembershipButtonAction(ActionEvent event){
+        
+    }
+    @FXML
+    public void handleUsersButtonAction(ActionEvent event){
+        
+    }
+    @FXML
+    public void handleLogoButtonAction(ActionEvent event){
+        
     }
 }

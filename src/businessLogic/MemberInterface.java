@@ -1,6 +1,7 @@
 package businessLogic;
 
 import javax.ws.rs.ClientErrorException;
+import javax.ws.rs.core.GenericType;
 
 /**
  *
@@ -18,7 +19,7 @@ public interface MemberInterface {
 
     public void create_XML(Object requestEntity) throws ClientErrorException ;
 
-    public <T> T findMembersByPlan_XML(Class<T> responseType, String plan) throws ClientErrorException ;
+    public <T> T findMembersByPlan_XML(GenericType<T> responseType, String plan) throws ClientErrorException ;
 
     public void remove(String id) throws ClientErrorException ;
 }

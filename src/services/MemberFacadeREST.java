@@ -4,6 +4,7 @@ import businessLogic.MemberInterface;
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.GenericType;
 
 /**
  * Jersey REST client generated for REST resource:MemberFacadeREST
@@ -81,13 +82,13 @@ public class MemberFacadeREST implements MemberInterface {
         webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).post(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_JSON));
     }
 
-    public <T> T findMembersByPlan_XML(Class<T> responseType, String plan) throws ClientErrorException {
+    public <T> T findMembersByPlan_XML(GenericType<T> responseType, String plan) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("findByPlan/{0}", new Object[]{plan}));
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
     }
 
-    public <T> T findMembersByPlan_JSON(Class<T> responseType, String plan) throws ClientErrorException {
+    public <T> T findMembersByPlan_JSON(GenericType<T> responseType, String plan) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("findByPlan/{0}", new Object[]{plan}));
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(responseType);

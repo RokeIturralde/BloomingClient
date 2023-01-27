@@ -26,6 +26,10 @@ public class MembershipPlan implements Serializable {
     private String name;
     private Float price;
     private Boolean shareable;
+    private Integer cont;
+
+    public MembershipPlan() {
+    }
 
     public Integer getId() {
         return id;
@@ -65,6 +69,7 @@ public class MembershipPlan implements Serializable {
 
     public void setMembers(List<Member> members) {
         this.members = members;
+        this.cont = members.size();
     }
 
     public String getName() {
@@ -89,6 +94,14 @@ public class MembershipPlan implements Serializable {
 
     public void setShareable(Boolean shareable) {
         this.shareable = shareable;
+    }
+
+    public Integer getCont() {
+        return cont;
+    }
+
+    public void setCont(Integer cont) {
+        this.cont = cont;
     }
 
     @Override
