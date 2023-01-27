@@ -79,6 +79,18 @@ public class ContentWindowController {
         stage.setTitle("Content");
         //Not resizable window
         stage.setResizable(false);
+
+        stage.showAndWait();
+        
+        /**
+        //Establish the values of each field in the table
+        tbcolName.setCellValueFactory(new PropertyValueFactory<>("name"));
+        tbcolUploadDate.setCellValueFactory(new PropertyValueFactory<>("uploadDate"));
+        tbcolLocation.setCellValueFactory(new PropertyValueFactory<>("location"));
+        tbcolImage.setCellValueFactory(new PropertyValueFactory<>("bytes"));
+        tbcolDescription.setCellValueFactory(new PropertyValueFactory<>("text"));
+        * **/
+        
         //Set the Event handlers
         stage.setOnShowing(this::handlerWindowShowing);
         //Set the textfields with a listener

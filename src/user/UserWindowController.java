@@ -1,6 +1,7 @@
 package user;
 
 import businessLogic.FactoryMember;
+
 import businessLogic.FactoryUser;
 
 import java.util.Arrays;
@@ -18,21 +19,25 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import logic.objects.Member;
 import logic.objects.MembershipPlan;
 import logic.objects.Status;
+
 import logic.objects.User;
 
 /**
  * @author dani
  */
 public class UserWindowController {
+
 
     // FXML (window elements)
 
@@ -193,6 +198,7 @@ public class UserWindowController {
     }
 
     /**
+
      * Prepare the stage for a change of scene
      *
      * @param stage where the window shows
@@ -200,4 +206,7 @@ public class UserWindowController {
     public void setStage(Stage stage) {
         this.stage = stage;
     }
+
+
+
 }
