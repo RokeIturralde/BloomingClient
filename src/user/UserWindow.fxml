@@ -99,7 +99,7 @@
             <CheckBox fx:id="checkBoxPrivilegeAdmin" layoutX="48.0" layoutY="334.0" mnemonicParsing="false" text="Admin" />
             <CheckBox fx:id="checkBoxPrivilegeUser" layoutX="130.0" layoutY="334.0" mnemonicParsing="false" text="Client" />
             <CheckBox fx:id="checkBoxPrivilegeMember" layoutX="194.0" layoutY="333.0" mnemonicParsing="false" text="Member" />
-            <ComboBox fx:id="comboBoxMembershipPlan" layoutX="41.0" layoutY="426.0" prefWidth="150.0" promptText="Membership plan" />
+            <ComboBox fx:id="comboBoxMembershipPlans" layoutX="41.0" layoutY="426.0" prefWidth="150.0" promptText="Membership plan" />
             <DatePicker fx:id="datePickerStart" layoutX="42.0" layoutY="476.0" prefHeight="25.0" prefWidth="181.0" promptText="Membership starting date" />
             <DatePicker fx:id="datePickerEnd" layoutX="40.0" layoutY="517.0" prefHeight="25.0" prefWidth="181.0" promptText="Membership ending date" />
 

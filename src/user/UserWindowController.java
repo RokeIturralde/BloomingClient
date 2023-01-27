@@ -1,19 +1,13 @@
 package user;
 
-import businessLogic.users.MemberInterface;
-import businessLogic.membership.MembershipPlanFactory;
-import businessLogic.membership.MembershipPlanInterface;
-import businessLogic.users.FactoryMember;
-import businessLogic.users.FactoryUser;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
-import javax.ws.rs.core.GenericType;
-
-
+import businessLogic.users.FactoryMember;
+import businessLogic.users.FactoryUser;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -23,8 +17,9 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
-
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -32,12 +27,8 @@ import javafx.scene.control.cell.PropertyValueFactory;
 
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-import logic.objects.Member;
-import logic.objects.MembershipPlan;
-import logic.objects.Status;
 
 import logic.objects.User;
-import services.MembershipPlanFacadeREST;
 
 /**
  * @author dani
@@ -58,13 +49,25 @@ public class UserWindowController {
         txtEmail, txtFullName;
 
     @FXML
-    private ComboBox comboBoxSearchParameter;
+    private ComboBox <String> 
+        comboBoxSearchParameter,
+        comboBoxMembershipPlans;
 
     @FXML
-    private TableView tableUsers;
+    private DatePicker
+        datePickerStart,
+        datePickerEnd;
 
     @FXML
-    private TableColumn 
+    private CheckBox checkBoxStatusEnabled, 
+    checkBoxStatusDisabled, checkBoxPrivilegeAdmin,
+    checkBoxPrivilegeUser, checkBoxPrivilegeMember;
+
+    @FXML
+    private TableView <User> tableUsers;
+
+    @FXML
+    private TableColumn <User, String>
         tbColLogin, tbColFullName, tbColEmail,tbColStatus,
         tbColPrivilege, tbColMembershipPlan, tbColLastPasswordChange;
 
@@ -95,16 +98,16 @@ public class UserWindowController {
             }
         }
             
-
+        /*
      
         if (isLoginFormat(txtLogin.getText()))
 
-
+        
 
         if(txtEmail)
 
         if(txtFullName)
-
+        */
         
        
     }
@@ -135,9 +138,18 @@ public class UserWindowController {
         LOGGER.info("Initializing UserWindowController::handlerWindowShowing");
         
         
-        //FactoryMember.get().findMemberByLogin_XML(Member.class, "u3");
+        try {
+            tableUsers.setItems(
+                FXCollections
+                .observableArrayList()
+            );
+        } catch (Exception e) {
+            LOGGER.severe(e.getMessage());
+        }
 
-        
+
+
+        //FactoryUser.get().findUserByEmail("email");
     }
 
     // options of the combobox
@@ -168,6 +180,24 @@ public class UserWindowController {
         }
         
         System.out.println(comboBoxSearchParameter.getSelectionModel().getSelectedItem());
+    }
+
+    private void handleUsersTableSelectionChanged(
+    ObservableValue observable,
+    Object oldValue, Object newValue) {
+
+        User u;
+        if (newValue != null) {
+            u = User.class.cast(newValue);
+            txtLogin.setText(u.getLogin());
+            txtEmail.setText(u.getEmail());
+            txtFullName.setText(u.getFullName());
+            
+            
+        }
+            
+
+
     }
 
 
@@ -240,7 +270,10 @@ public class UserWindowController {
             FXCollections
             .observableArrayList(searchParametersList));
 
+            tableUsers.getSelectionModel().selectedItemProperty()
+                .addListener(this::handleUsersTableSelectionChanged);
         
+
         tbColLogin.setCellValueFactory(
                 new PropertyValueFactory<>("login"));
 
