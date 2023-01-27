@@ -25,7 +25,6 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
@@ -34,7 +33,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-import static javax.ws.rs.HttpMethod.GET;
+import javax.ws.rs.core.GenericType;
 import logic.objects.Album;
 import logic.objects.User;
 
@@ -237,7 +236,6 @@ public class AlbumsViewController {
                 new PropertyValueFactory<>("users"));
         columnDescSharedAlbums.setCellValueFactory(
                 new PropertyValueFactory<>("description"));
-
     }
 
     /**
@@ -303,13 +301,14 @@ public class AlbumsViewController {
     }
 
     /**
-     * Method that handles the button "Create Album"
+     * Method that handles the button "Create a new Album"
      *
      * @param event The action event object
      */
     @FXML
     private void handleCreateAlbumButtonAction(ActionEvent event) {
-        LOGGER.info("Metodo de control del boton de Create Album");
+        LOGGER.info("Metodo de control del boton de Create a new Album");
+
     }
 
     /**
@@ -354,24 +353,28 @@ public class AlbumsViewController {
     }
 
     /**
-     * Method that handles the button "Content" from menu
+     * Text changed event handler. Validate that the combobox has something
+     * selected to enable value fild and that value fild has text to enable the
+     * find button.
      *
-     * @param event The action event object
+     * @param observable The value being observed.
+     * @param oldValue The old value of the observable.
+     * @param newValue The new value of the observable.
      */
-    @FXML
-    private void handleContentButtonAction(ActionEvent event) {
-        LOGGER.info("Metodo de control del boton de Content");
-        /*this.stage.close();
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("UIAlbum.fxml"));
-            Parent root = (Parent) loader.load();
-            //Obtain the Sign In window controller
-            AlbumsViewController controller = (AlbumsViewController) loader.getController();
-            controller.setStage(stage);
-            controller.initStage(root);
-        } catch (IOException ex) {
-            Logger.getLogger(AlbumsViewController.class.getName()).log(Level.SEVERE, null, ex);
-        }*/
+    private void searchTextPropertyChange(ObservableValue observable, String oldValue, String newValue) {
+        if (cbSearchType.getSelectionModel().getSelectedItem() == null && txtValue.getText().trim().isEmpty()) {
+            btnFind.setDisable(true);
+        } else {
+            txtValue.setDisable(false);
+        }
+
+        //If text field is empty disable  buttton
+        if (txtValue.getText().trim().isEmpty()) {
+            btnFind.setDisable(true);
+        } //Else, enable  button
+        else {
+            btnFind.setDisable(false);
+        }
     }
 
     /**
@@ -412,33 +415,6 @@ public class AlbumsViewController {
             txtAddUser.setText(txtAddUser.getText().substring(0, 25));
             new Alert(Alert.AlertType.ERROR, "The maximum lenght for the login is 25 characters.", ButtonType.OK).showAndWait();
             btnAdd.setDisable(true);
-        }
-    }
-
-    /**
-     * Text changed event handler. Validate that the combobox has something
-     * selected to enable value fild and that value fild has text to enable the
-     * find button.
-     *
-     * @param observable The value being observed.
-     * @param oldValue The old value of the observable.
-     * @param newValue The new value of the observable.
-     */
-    private void searchTextPropertyChange(ObservableValue observable,
-            String oldValue,
-            String newValue) {
-        if (cbSearchType.getSelectionModel().getSelectedItem() == null && txtValue.getText().trim().isEmpty()) {
-            btnFind.setDisable(true);
-        } else {
-            txtValue.setDisable(false);
-        }
-
-        //If text field is empty disable  buttton
-        if (txtValue.getText().trim().isEmpty()) {
-            btnFind.setDisable(true);
-        } //Else, enable  button
-        else {
-            btnFind.setDisable(false);
         }
     }
 
