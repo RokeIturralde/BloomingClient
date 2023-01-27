@@ -7,10 +7,8 @@ import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 import businessLogic.users.FactoryMember;
-import businessLogic.users.FactoryUser;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -83,7 +81,7 @@ public class UserWindowController {
     String oldValue, String newValue) {
 
         if (txtSearchValue.getText().length() > 100 
-        || txtSearchValue.getText().isEmpty()) {
+        /*|| txtSearchValue.getText().isEmpty() */) {
             new Alert(Alert.AlertType.ERROR,
             "Please enter a valid text.\n",
             ButtonType.OK).showAndWait();
@@ -141,7 +139,7 @@ public class UserWindowController {
         try {
             tableUsers.setItems(
                 FXCollections
-                .observableArrayList()
+                .observableArrayList(FactoryMember.get().getEveryUser())
             );
         } catch (Exception e) {
             LOGGER.severe(e.getMessage());
@@ -295,8 +293,6 @@ public class UserWindowController {
         tbColLastPasswordChange.setCellValueFactory(
                 new PropertyValueFactory<>("lastPasswordChange"));
       
-
-        
 
         stage.show();
     }
