@@ -8,11 +8,13 @@ package logic.objects;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * @author Roke
+ * @author dani
  */
+@XmlRootElement
 public class User implements Serializable {
 
     private String email;
