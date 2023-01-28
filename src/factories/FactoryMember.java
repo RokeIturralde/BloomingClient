@@ -1,13 +1,12 @@
 package factories;
 
-import logic.MemberManager;
-
+import logic.AntiServerTestDataMember;
 
 /**
  * @author dani
  */
 public class FactoryMember {
     public static MemberInterface get() {
-        return new MemberManager();
+        return new AntiServerTestDataMember();
     }
 }

@@ -1,7 +1,6 @@
 package logic;
 
 import factories.MemberInterface;
-import java.util.Collection;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -41,7 +40,7 @@ public class MemberManager implements MemberInterface {
     }
 
     @Override
-    public Collection<Member> getEveryMember() throws ClientErrorException {
+    public List<Member> getEveryMember() throws ClientErrorException {
         List<Member> users = null;
         try{
             LOGGER.info("MemberManager: Finding all members from REST service (XML).");
@@ -58,7 +57,7 @@ public class MemberManager implements MemberInterface {
     }
 
     @Override
-    public Collection<Member> getEveryUser() throws ClientErrorException {
+    public List<Member> getEveryUser() throws ClientErrorException {
         List<Member> users = null;
         try{
             LOGGER.info("MemberManager: Finding all users (as members) from REST service (XML).");
@@ -106,7 +105,7 @@ public class MemberManager implements MemberInterface {
     }
 
     @Override
-    public Collection<Member> findMembersByPlan(String plan) throws ClientErrorException {
+    public List<Member> findMembersByPlan(String plan) throws ClientErrorException {
         List <Member> l;
         try {
             LOGGER.info("MemberManager: Finding all members from REST service (XML).");

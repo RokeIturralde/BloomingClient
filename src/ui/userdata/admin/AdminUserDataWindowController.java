@@ -1,38 +1,28 @@
 package ui.userdata.admin;
 
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
-import java.util.regex.Pattern;
 
 import factories.FactoryMember;
+import factories.FactoryUser;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-
+import logic.AntiServerTestDataMember;
 import logic.objects.User;
 
 /**
  * @author dani
  */
 public class AdminUserDataWindowController {
-
 
     // FXML (window elements)
 
@@ -49,7 +39,7 @@ public class AdminUserDataWindowController {
     @FXML
     private ComboBox <String> 
         comboBoxSearchParameter,
-        comboBoxMembershipPlans;
+        comboBoxMemberStatusSearch, comboBoxMembershipPlans;
 
     @FXML
     private DatePicker
@@ -69,32 +59,53 @@ public class AdminUserDataWindowController {
         tbColLogin, tbColFullName, tbColEmail,tbColStatus,
         tbColPrivilege, tbColMembershipPlan, tbColLastPasswordChange;
 
+    private Stage stage;
+
     // LOGGER that will be used to note every event of the window.
     private static final Logger LOGGER =
         Logger.getLogger("package user;");
 
-    private Stage stage;
 
+    /**
+     * 
+     * @param observable
+     * @param oldValue
+     * @param newValue
+     */
 
-    private void textPropertyChange(
-    ObservableValue observable, 
+    private void handleTextChanged(
+    ObservableValue observable,
     String oldValue, String newValue) {
 
-        if (txtSearchValue.getText().length() > 100 
+        boolean nicely = false;
+
+        if (txtSearchValue.getText().length() > AUDW.MAX_LENGTH
         /*|| txtSearchValue.getText().isEmpty() */) {
             new Alert(Alert.AlertType.ERROR,
             "Please enter a valid text.\n",
             ButtonType.OK).showAndWait();
             btnSearch.setDisable(true);
-        } else {
+        } else 
             switch (
             comboBoxSearchParameter
             .getSelectionModel()
             .getSelectedItem().toString()) {
-                case "":
+
+                case "Login": nicely = AUDW.isLoginFormat(txtSearchValue.getText());
+                break;
+
+                case "Email": nicely = AUDW.isEmailFormat(txtSearchValue.getText());
+                break;
+
+                case "Full Name": nicely = AUDW.isFullNameFormat(txtSearchValue.getText());
+                break;
+
+                default: // TODO: alert -> select the searching parameter :)
                 break;
             }
-        }
+        
+        btnSearch.setDisable(!nicely);
+        
             
         /*
      
@@ -110,28 +121,9 @@ public class AdminUserDataWindowController {
        
     }
 
-    /**
-     * TODO: it has to tell you wether it contains weird characters
-     * @param login
-     * @return
-     */
-    private boolean isLoginFormat(String login) {
-        if (login.contains(" "))
-            return false;
-        return true;
-    }
+    
 
-    // TODO: recomendable make this method static from another class
-    private boolean isEmailFormat(String email) {
-        String patternEmail = 
-            "([a-z0-9]*)@([a-z]*).(com|org|cn|net|gov|eus)";
-
-        if (!Pattern.matches(patternEmail, email) || email.contains(" ")) 
-            return false;
-        else 
-            return true;
-    }
-
+    
     private void handlerWindowShowing(WindowEvent event) {
         LOGGER.info("Initializing UserWindowController::handlerWindowShowing");
         
@@ -150,8 +142,8 @@ public class AdminUserDataWindowController {
         //FactoryUser.get().findUserByEmail("email");
     }
 
-    // options of the combobox
-    private final List<String> searchParametersList = 
+    // options of the search combobox
+    private final List <String> searchParametersList = 
     Arrays.asList("Login", "Email", 
     "Full Name", "Privilege", "Status");
 
@@ -238,13 +230,13 @@ public class AdminUserDataWindowController {
         stage.setOnShowing(this::handlerWindowShowing);
 
         // listeners
-        txtSearchValue.textProperty().addListener(this::textPropertyChange);
+        txtSearchValue.textProperty().addListener(this::handleTextChanged);
             txtSearchValue.setPromptText("Search by");
-        txtLogin.textProperty().addListener(this::textPropertyChange);
+        txtLogin.textProperty().addListener(this::handleTextChanged);
             txtLogin.setPromptText("Login");
-        txtEmail.textProperty().addListener(this::textPropertyChange);
+        txtEmail.textProperty().addListener(this::handleTextChanged);
             txtEmail.setPromptText("Email");
-        txtFullName.textProperty().addListener(this::textPropertyChange);
+        txtFullName.textProperty().addListener(this::handleTextChanged);
             txtFullName.setPromptText("Full name");
 
         // buttons
@@ -264,49 +256,96 @@ public class AdminUserDataWindowController {
         txtFullName.setPromptText("Full name");
 
         // combobox
+            comboBoxSearchParameter.setOnAction((event) -> {
+                comboBoxMemberStatusSearch.getItems().clear();
+
+                switch (comboBoxSearchParameter.getSelectionModel().getSelectedItem()) {
+                    case "Privilege":
+                        comboBoxMemberStatusSearch.setPromptText("Privilege");
+                            comboBoxMemberStatusSearch.getItems().add("Client");
+                            comboBoxMemberStatusSearch.getItems().add("Member");
+                            comboBoxMemberStatusSearch.getItems().add("Admin");
+                        txtSearchValue.setVisible(false);
+                        comboBoxMemberStatusSearch.setVisible(true);
+                    break;
+
+                    case "Status":
+                        comboBoxMemberStatusSearch.setPromptText("Status");
+                            comboBoxMemberStatusSearch.getItems().add("Enable");
+                            comboBoxMemberStatusSearch.getItems().add("Disable");
+                        txtSearchValue.setVisible(false);
+                        comboBoxMemberStatusSearch.setVisible(true);
+                    break;
+
+                    default:
+                        comboBoxMemberStatusSearch.setVisible(false);
+                        txtSearchValue.setVisible(true);
+                        txtSearchValue.setPromptText("Value");
+                        handleTextChanged(null, null, null);
+                    break;
+                }
+            
+
+                btnSearch.setDisable(true);
+                
+            });
+        
+
+
+           
         comboBoxSearchParameter.setItems(
             FXCollections
             .observableArrayList(searchParametersList));
 
-            tableUsers.getSelectionModel().selectedItemProperty()
-                .addListener(this::handleUsersTableSelectionChanged);
-        
+        // TODO: listener of parameter change
 
+        comboBoxMemberStatusSearch.setVisible(false);
+
+        // table users
+        
+        tableUsers.getSelectionModel().selectedItemProperty()
+            .addListener(this::handleUsersTableSelectionChanged);
+    
         tbColLogin.setCellValueFactory(
-                new PropertyValueFactory<>("login"));
+            new PropertyValueFactory<>("login"));
 
         tbColEmail.setCellValueFactory(
-                new PropertyValueFactory<>("email"));
+            new PropertyValueFactory<>("email"));
 
         tbColFullName.setCellValueFactory(
-                new PropertyValueFactory<>("fullName"));
+            new PropertyValueFactory<>("fullName"));
 
         tbColStatus.setCellValueFactory(
-                new PropertyValueFactory<>("status"));
+            new PropertyValueFactory<>("status"));
 
         tbColPrivilege.setCellValueFactory(
-                new PropertyValueFactory<>("privilege"));
+            new PropertyValueFactory<>("privilege"));
 
         tbColMembershipPlan.setCellValueFactory(
-                new PropertyValueFactory<>("plan"));
+            new PropertyValueFactory<>("plan"));
 
         tbColLastPasswordChange.setCellValueFactory(
-                new PropertyValueFactory<>("lastPasswordChange"));
-      
+            new PropertyValueFactory<>("lastPasswordChange"));
+
+       
+
+
+        try {
+            System.out.println(FactoryUser.get().findUserByEmail("danielbarrios2002@gmail.com"));
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
+            
 
         stage.show();
     }
 
     /**
-
      * Prepare the stage for a change of scene
-     *
      * @param stage where the window shows
      */
+
     public void setStage(Stage stage) {
         this.stage = stage;
     }
-
-
-
 }

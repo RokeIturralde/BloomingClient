@@ -5,16 +5,13 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
-
-
 
 <Pane prefHeight="688.0" prefWidth="1187.0" style="-fx-background-color: FF926A;" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.userdata.admin.AdminUserDataWindowController">
    <children>
@@ -60,8 +57,8 @@
       </Text>
 
       <ComboBox fx:id="comboBoxSearchParameter" layoutX="148.0" layoutY="117.0" prefWidth="150.0" promptText="Parameter" />
-      <Button fx:id="btnClear" layoutX="603.0" layoutY="117.0" mnemonicParsing="false" onAction="#handleClearButtonAction" text="Clear" />
-      <Button fx:id="btnSearch" layoutX="534.0" layoutY="117.0" mnemonicParsing="false" onAction="#handleSearchButtonAction" text="Search" />
+      <Button fx:id="btnClear" layoutX="647.0" layoutY="117.0" mnemonicParsing="false" onAction="#handleClearButtonAction" text="Clear" />
+      <Button fx:id="btnSearch" layoutX="578.0" layoutY="117.0" mnemonicParsing="false" onAction="#handleSearchButtonAction" text="Search" />
       <TableView fx:id="tableUsers" layoutX="148.0" layoutY="216.0" prefHeight="359.0" prefWidth="703.0">
         <columns>
           <TableColumn fx:id="tbColLogin" prefWidth="75.0" text="Login" />
@@ -117,7 +114,8 @@
       <Button fx:id="btnAddUser" layoutX="881.0" layoutY="621.0" mnemonicParsing="false" onAction="#handleAddUserButtonAction" text="Add user" />
       <Button fx:id="btnModifyUser" layoutX="983.0" layoutY="621.0" mnemonicParsing="false" onAction="#handleModifyUserButtonAction" text="Modify user" />
       <Button fx:id="btnDeleteUser" layoutX="1087.0" layoutY="621.0" mnemonicParsing="false" onAction="#handleDeleteUserButtonAction" text="Delete user" />
-      <TextField fx:id="txtSearchValue" layoutX="330.0" layoutY="117.0" promptText="Value" />
+      <TextField fx:id="txtSearchValue" layoutX="330.0" layoutY="117.0" prefHeight="25.0" prefWidth="227.0" promptText="Value" />
+      <ComboBox fx:id="comboBoxMemberStatusSearch" layoutX="330.0" layoutY="117.0" prefWidth="150.0" promptText="Param/Status" />
 
    </children>
 </Pane>
