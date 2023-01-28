@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Point3D?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.Pane?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="385.0" prefWidth="662.0" style="-fx-background-color: #FA7C4E;" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.signIn.SignInController">
+   <children>
+      <ImageView fitHeight="403.0" fitWidth="398.0" layoutX="-14.0" layoutY="-11.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../resources/SignUpAtardecer.png" />
+         </image>
+      </ImageView>
+      <TextField fx:id="txtLogin" layoutX="445.0" layoutY="154.0" prefHeight="30.0" prefWidth="185.0" promptText="Login" />
+      <ImageView fitHeight="105.0" fitWidth="130.0" layoutX="474.0" layoutY="32.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../resources/bloomingPNG.png" />
+         </image>
+      </ImageView>
+      <PasswordField fx:id="cpPassword" layoutX="445.0" layoutY="212.0" prefHeight="30.0" prefWidth="185.0" promptText="Password" />
+      <Button fx:id="btnSignIn" layoutX="560.0" layoutY="292.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="83.0" text="Sign In" />
+      <Label layoutX="445.0" layoutY="251.0" prefHeight="17.0" prefWidth="83.0" text="No account?" />
+      <Button fx:id="btnRegister" onAction="#handleRegisterButtonAction" layoutX="523.0" layoutY="247.0" mnemonicParsing="false" opacity="0.0" prefHeight="25.0" prefWidth="47.0" />
+      <Label layoutX="523.0" layoutY="247.0" prefHeight="25.0" prefWidth="55.0" text="Register" textFill="#121af8" />
+      <Label layoutX="397.0" layoutY="354.0" prefHeight="17.0" prefWidth="97.0" text="Forgot password?" />
+      <Button fx:id="btnRecover" layoutX="496.0" layoutY="350.0" mnemonicParsing="false" opacity="0.0" prefHeight="25.0" prefWidth="47.0" />
+      <Label layoutX="496.0" layoutY="350.0" prefHeight="25.0" prefWidth="55.0" text="Recover" textFill="#121af8" />
+   </children>
+   <rotationAxis>
+      <Point3D />
+   </rotationAxis>
+</Pane>

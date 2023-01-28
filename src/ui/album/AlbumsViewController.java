@@ -15,6 +15,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -167,17 +168,17 @@ public class AlbumsViewController {
         //Set the Event handlers
         stage.setOnShowing(this::handlerWindowShowing);
         //Set the textfields with a listener
-        txtValue.textProperty().addListener(this::textChanged);
+        txtValue.textProperty().addListener(this::searchTextPropertyChange);
         txtAlbumName.textProperty().addListener(this::textChanged);
         txtAlbumCreator.textProperty().addListener(this::textChanged);
         txtAddUser.textProperty().addListener(this::textChanged);
         taAlbumDesc.textProperty().addListener(this::textChanged);
-        //checkShare.selectedProperty().addListener(this::shareAlbum);
 
         //Charge tables data
         try {
             client = FactoryAlbum.getModel();
-            clientsData = FXCollections.observableArrayList(client.findMyAllAlbums_XML(new GenericType<List<Album>>(){}, loggedUser.getLogin()));
+            clientsData = FXCollections.observableArrayList(client.findMyAllAlbums_XML(new GenericType<List<Album>>() {
+            }, loggedUser.getLogin()));
             tbMyAlbums.setItems(clientsData);
             tbMyAlbums.refresh();
 
@@ -216,7 +217,12 @@ public class AlbumsViewController {
         //Filds disabled at first
         txtAddUser.setDisable(true);
         taUsers.setDisable(true);
-        txtValue.setDisable(true);
+
+        //Charge into the combobox the select actions and selecting the first.
+        cbSearchType.getItems().set(1, "Name");
+        cbSearchType.getItems().set(2, "Date");
+        cbSearchType.getItems().set(3, "Creator");
+        cbSearchType.getSelectionModel().selectFirst();
 
         //Set factories for cell values in users table columns (My albums table)
         columnNameMyAlbums.setCellValueFactory(
@@ -278,11 +284,14 @@ public class AlbumsViewController {
     private void handleAddButtonAction(ActionEvent event) {
         LOGGER.info("Metodo de control del boton de Add");
         ArrayList<User> users = new ArrayList();
-        String login = txtAddUser.getText();
-        //buscar usuario por login
-        User user = null;
-        users.add(user);
-        taUsers.setText(arrayToString(users));
+        try {
+            String login = txtAddUser.getText();
+            //buscar usuario por login
+            User user = null;
+            users.add(user);
+            taUsers.setText(arrayToString(users));
+        } catch (Exception e) {
+        }
     }
 
     /**
@@ -355,6 +364,35 @@ public class AlbumsViewController {
     }
 
     /**
+     * Method that handles the btnClearShearch button.
+     *
+     * @param event The action event object
+     */
+    @FXML
+    private void handleClearShearchButtonAction(ActionEvent event) {
+        LOGGER.info("Metodo de control del boton de Clear search");
+        cbSearchType.getSelectionModel().selectFirst();
+        checkShared.setSelected(false);
+        txtValue.setText("");
+    }
+
+    /**
+     * Method that handles the btnClearInfo button.
+     *
+     * @param event The action event object
+     */
+    @FXML
+    private void handleClearInfoButtonAction(ActionEvent event) {
+        LOGGER.info("Metodo de control del boton de Clear info");
+        txtAlbumName.setText("");
+        txtAlbumCreator.setText("");
+        taAlbumDesc.setText("");
+        checkShare.setSelected(false);
+        txtAddUser.setText("");
+        taUsers.setText("");
+    }
+
+    /**
      * Text changed event handler. Validate that the combobox has something
      * selected to enable value fild and that value fild has text to enable the
      * find button.
@@ -377,18 +415,34 @@ public class AlbumsViewController {
         else {
             btnFind.setDisable(false);
         }
-    }/**
-     * Text changed event handler. Validate that all the fields and areas are
-     * not empty and that fields not surpass 25 characters and areas 150
-     * characters.
+
+        if (txtAlbumName.getText().trim().length() > 25) {
+            txtAlbumName.setText(txtAlbumName.getText().substring(0, 25));
+            new Alert(Alert.AlertType.ERROR, "The maximum lenght for the login is 25 characters.", ButtonType.OK).showAndWait();
+            btnCreateAlbum.setDisable(true);
+            btnModifyAlbum.setDisable(true);
+        }
+    }
+
+    /**
+     * Check share or shared change. Validate that the checkbox share is
+     * selected to enable add users field and add button or Validate that the
+     * checkbox shared is selected to charge the search options into the
+     * combobox SearchType.
      *
      * @param observable The value being observed.
      * @param oldValue The old value of the observable.
      * @param newValue The new value of the observable.
      */
-    private void shareAlbum(ObservableValue observable,
-            String oldValue,
-            String newValue) {}
+    private void shareAlbum(ObservableValue observable, String oldValue, String newValue) {
+        if (checkShare.isSelected()) {
+
+        }
+
+        if (checkShared.isSelected()) {
+
+        }
+    }
 
     /**
      * Text changed event handler. Validate that all the fields and areas are
@@ -428,36 +482,6 @@ public class AlbumsViewController {
             txtAddUser.setText(txtAddUser.getText().substring(0, 25));
             new Alert(Alert.AlertType.ERROR, "The maximum lenght for the login is 25 characters.", ButtonType.OK).showAndWait();
             btnAdd.setDisable(true);
-        }
-    }
-
-    /**
-     * Enable button Create Album when all the filds to create an album are not
-     * empty.
-     *
-     */
-    private void enableCreateAlbumButton() {
-        //Validates that the fields are not empty
-        if (txtAlbumName.getText().trim().isEmpty() || txtAlbumCreator.getText().trim().isEmpty() || taAlbumDesc.getText().trim().isEmpty() && btnModifyAlbum.getText().equalsIgnoreCase("Accept")) {
-            btnCreateAlbum.setDisable(true);
-        } else {
-            //All the data is filled correctly and the button is enabled
-            btnCreateAlbum.setDisable(false);
-        }
-    }
-
-    /**
-     * Enable button Modify Album when all the filds to create an album are not
-     * empty.
-     *
-     */
-    private void enableModifyAlbumButton() {
-        //Validates that the fields are not empty
-        if (txtAlbumName.getText().trim().isEmpty() || txtAlbumCreator.getText().trim().isEmpty() || taAlbumDesc.getText().trim().isEmpty()) {
-            btnModifyAlbum.setDisable(true);
-        } else {
-            //All the data is filled correctly and the button is enabled
-            btnModifyAlbum.setDisable(false);
         }
     }
 
