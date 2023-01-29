@@ -14,7 +14,7 @@ import javax.ws.rs.core.GenericType;
  */
 public interface ContentInterface {
 
-    public <T> T findContentByDate_XML(Class<T> responseType, String date) throws ClientErrorException;
+    public <T> T findContentByDate_XML(GenericType<T> responseType, String date) throws ClientErrorException;
 
     public <T> T findContentByLocation_XML(GenericType<T> responseType, String contentLocation) throws ClientErrorException;
 
@@ -24,7 +24,7 @@ public interface ContentInterface {
 
     public void remove(String id) throws ClientErrorException;
 
-    public <T> T findContentByName_XML(Class<T> responseType, String name) throws ClientErrorException;
+    public <T> T findContentByName_XML(GenericType<T> responseType, String name) throws ClientErrorException;
 
     public <T> T findContentByAlbum_XML(Class<T> responseType, String albumId) throws ClientErrorException;
 }

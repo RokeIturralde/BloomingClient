@@ -35,7 +35,7 @@ public class ContentFacadeREST implements ContentInterface {
         webTarget = client.target(BASE_URI).path("entities.content");
     }
 
-    public <T> T findContentByDate_XML(Class<T> responseType, String date) throws ClientErrorException {
+    public <T> T findContentByDate_XML(GenericType<T> responseType, String date) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("date/{0}", new Object[]{date}));
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
@@ -85,7 +85,7 @@ public class ContentFacadeREST implements ContentInterface {
         webTarget.path(java.text.MessageFormat.format("{0}", new Object[]{id})).request().delete();
     }
 
-    public <T> T findContentByName_XML(Class<T> responseType, String name) throws ClientErrorException {
+    public <T> T findContentByName_XML(GenericType<T> responseType, String name) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("findByName/{0}", new Object[]{name}));
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
