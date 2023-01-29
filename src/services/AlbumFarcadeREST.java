@@ -54,7 +54,6 @@ public class AlbumFarcadeREST implements AlbumInterface{
      *
      * @param <T>
      * @param genericType
-     * @param responseType
      * @param userLogin
      * @return
      * @throws ClientErrorException
@@ -66,75 +65,75 @@ public class AlbumFarcadeREST implements AlbumInterface{
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(genericType);
     }
 
-    public <T> T findMyAllAlbums_JSON(Class<T> responseType, String userLogin) throws ClientErrorException {
+    public <T> T findMyAllAlbums_JSON(GenericType<T> genericType, String userLogin) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("findMyAllAlbums/{0}", new Object[]{userLogin}));
-        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(responseType);
+        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(genericType);
     }
 
     /**
      *
      * @param <T>
-     * @param responseType
+     * @param genericType
      * @param id
      * @return
      * @throws ClientErrorException
      */
     @Override
-    public <T> T findAlbumByID_XML(Class<T> responseType, String id) throws ClientErrorException {
+    public <T> T findAlbumByID_XML(GenericType<T> genericType, String id) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("{0}", new Object[]{id}));
-        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
+        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(genericType);
     }
 
-    public <T> T findAlbumByID_JSON(Class<T> responseType, String id) throws ClientErrorException {
+    public <T> T findAlbumByID_JSON(GenericType<T> genericType, String id) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("{0}", new Object[]{id}));
-        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(responseType);
+        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(genericType);
     }
 
     /**
      *
      * @param <T>
-     * @param responseType
+     * @param genericType
      * @param userLogin
      * @param creatorLogin
      * @return
      * @throws ClientErrorException
      */
     @Override
-    public <T> T findMySharedAlbumsByCreator_XML(Class<T> responseType, String userLogin, String creatorLogin) throws ClientErrorException {
+    public <T> T findMySharedAlbumsByCreator_XML(GenericType<T> genericType, String userLogin, String creatorLogin) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("findMySharedAlbumsByCreator/{0}/{1}", new Object[]{userLogin, creatorLogin}));
-        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
+        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(genericType);
     }
 
-    public <T> T findMySharedAlbumsByCreator_JSON(Class<T> responseType, String userLogin, String creatorLogin) throws ClientErrorException {
+    public <T> T findMySharedAlbumsByCreator_JSON(GenericType<T> genericType, String userLogin, String creatorLogin) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("findMySharedAlbumsByCreator/{0}/{1}", new Object[]{userLogin, creatorLogin}));
-        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(responseType);
+        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(genericType);
     }
 
     /**
      *
      * @param <T>
-     * @param responseType
+     * @param genericType
      * @param userLogin
      * @param stringDate
      * @return
      * @throws ClientErrorException
      */
     @Override
-    public <T> T findMySharedAlbumsByDate_XML(Class<T> responseType, String userLogin, String stringDate) throws ClientErrorException {
+    public <T> T findMySharedAlbumsByDate_XML(GenericType<T> genericType, String userLogin, String stringDate) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("findMySharedAlbumsByDate/{0}/{1}", new Object[]{userLogin, stringDate}));
-        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
+        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(genericType);
     }
 
-    public <T> T findMySharedAlbumsByDate_JSON(Class<T> responseType, String userLogin, String stringDate) throws ClientErrorException {
+    public <T> T findMySharedAlbumsByDate_JSON(GenericType<T> genericType, String userLogin, String stringDate) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("findMySharedAlbumsByDate/{0}/{1}", new Object[]{userLogin, stringDate}));
-        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(responseType);
+        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(genericType);
     }
 
     /**
@@ -154,72 +153,84 @@ public class AlbumFarcadeREST implements AlbumInterface{
     /**
      *
      * @param <T>
-     * @param responseType
+     * @param genericType
      * @param userLogin
      * @return
      * @throws ClientErrorException
      */
     @Override
-    public <T> T findMyAllSharedAlbums_XML(Class<T> responseType, String userLogin) throws ClientErrorException {
+    public <T> T findMyAllSharedAlbums_XML(GenericType<T> genericType, String userLogin) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("findMyAllSharedAlbums/{0}", new Object[]{userLogin}));
-        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
+        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(genericType);
     }
 
-    public <T> T findMyAllSharedAlbums_JSON(Class<T> responseType, String userLogin) throws ClientErrorException {
+    public <T> T findMyAllSharedAlbums_JSON(GenericType<T> genericType, String userLogin) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("findMyAllSharedAlbums/{0}", new Object[]{userLogin}));
-        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(responseType);
+        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(genericType);
     }
 
     /**
      *
      * @param <T>
-     * @param responseType
+     * @param genericType
      * @param userLogin
      * @param name
      * @return
      * @throws ClientErrorException
      */
     @Override
-    public <T> T findMyAlbumsByName_XML(Class<T> responseType, String userLogin, String name) throws ClientErrorException {
+    public <T> T findMyAlbumsByName_XML(GenericType<T> genericType, String userLogin, String name) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("findMyAlbumsByName/{0}/{1}", new Object[]{userLogin, name}));
-        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
+        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(genericType);
     }
 
-    public <T> T findMyAlbumsByName_JSON(Class<T> responseType, String userLogin, String name) throws ClientErrorException {
+    public <T> T findMyAlbumsByName_JSON(GenericType<T> genericType, String userLogin, String name) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("findMyAlbumsByName/{0}/{1}", new Object[]{userLogin, name}));
-        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(responseType);
+        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(genericType);
     }
 
+    @Override
     public void removeAlbum(String id) throws ClientErrorException {
         webTarget.path(java.text.MessageFormat.format("{0}", new Object[]{id})).request().delete();
     }
 
-    public <T> T findMyAlbumsByDate_XML(Class<T> responseType, String userLogin, String stringDate) throws ClientErrorException {
+    @Override
+    public <T> T findMyAlbumsByDate_XML(GenericType<T> genericType, String userLogin, String stringDate) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("findMyAlbumsByDate/{0}/{1}", new Object[]{userLogin, stringDate}));
-        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
+        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(genericType);
     }
 
-    public <T> T findMyAlbumsByDate_JSON(Class<T> responseType, String userLogin, String stringDate) throws ClientErrorException {
+    public <T> T findMyAlbumsByDate_JSON(GenericType<T> genericType, String userLogin, String stringDate) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("findMyAlbumsByDate/{0}/{1}", new Object[]{userLogin, stringDate}));
-        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(responseType);
+        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(genericType);
     }
 
-    public <T> T findMySharedAlbumsByName_XML(Class<T> responseType, String userLogin, String name) throws ClientErrorException {
+    /**
+     *
+     * @param <T>
+     * @param genericType
+     * @param userLogin
+     * @param name
+     * @return
+     * @throws ClientErrorException
+     */
+    @Override
+    public <T> T findMySharedAlbumsByName_XML(GenericType<T> genericType, String userLogin, String name) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("findMySharedAlbumsByName/{0}/{1}", new Object[]{userLogin, name}));
-        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
+        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(genericType);
     }
 
-    public <T> T findMySharedAlbumsByName_JSON(Class<T> responseType, String userLogin, String name) throws ClientErrorException {
+    public <T> T findMySharedAlbumsByName_JSON(GenericType<T> genericType, String userLogin, String name) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("findMySharedAlbumsByName/{0}/{1}", new Object[]{userLogin, name}));
-        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(responseType);
+        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(genericType);
     }
 
     public void close() {
