@@ -150,7 +150,7 @@ public class AdminUserDataWindowController {
 
     /**
      * check that every parameter is full
-     * @return
+     * @return true if 
      */
     private boolean everyUserParamAreFull() {
         
