@@ -11,6 +11,13 @@ import logic.objects.User;
 public class AntiServerTestDataUser implements UserInterface {
 
     @Override
+    public List <User> find(SearchParameter sp, String value) throws ClientErrorException {
+        // TODO: hahahaha
+        
+        return null;
+    }
+
+    @Override
     public User findUserByEmail(String email) throws ClientErrorException {
         return UserList.everyUser
             .stream()

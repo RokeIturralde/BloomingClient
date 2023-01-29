@@ -10,6 +10,25 @@ import logic.objects.User;
  */
 public interface UserInterface {
 
+    public static enum SearchParameter {
+        LOGIN, 
+        EMAIL,
+        NAME,
+        STATUS,
+        PRIVILEGE
+    }
+
+    public List <User> find(SearchParameter sp, String value) throws ClientErrorException;   
+
+
+    /*
+     * TODO:
+     * LA IDEA ES UN SISTEMA QUE HACE LA BUSQUEDA DE FORMA MUCHO MAS AUTOMATICA.
+     * LAS LLAMADAS AL MÉTODO RESULTARÍAN MUCHO MAS FACILES
+     */
+
+     
+
     public List <User> findUserByName(String name) throws ClientErrorException ;
 
     public void editUser(User user) throws ClientErrorException ;

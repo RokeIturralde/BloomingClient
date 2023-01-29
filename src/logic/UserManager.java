@@ -25,6 +25,18 @@ public class UserManager implements UserInterface {
     public UserManager(){
         webClient = new UserFacadeREST();
     }
+
+    @Override
+    public List <User> find(SearchParameter sp, String value) throws ClientErrorException {
+        
+        // TODO:
+        
+        
+        
+        
+        return null;
+    }
+
     @Override
     public List<User> findUserByName(String name) throws ClientErrorException {
         List <User> l;

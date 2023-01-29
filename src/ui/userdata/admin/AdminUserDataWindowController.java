@@ -4,8 +4,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
 
-import factories.FactoryMember;
-import factories.FactoryUser;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -14,11 +12,14 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+
+import factories.FactoryMember;
 import logic.objects.Member;
 import logic.objects.User;
+import logic.objects.Privilege;
+import logic.objects.Status;
 
 /**
  * @author dani
@@ -89,9 +90,18 @@ public class AdminUserDataWindowController {
         "Full Name", "Privilege", "Status");
 
 
+
     /**
-     * handle change of any text from the window.
+     * HANDLERS OF EVERY CHANGE IN THE WINDOW ------------------------------------------------------------------------------------------
      */
+
+
+     /**
+      * handle change of any text from the window.
+      * @param observable
+      * @param oldValue
+      * @param newValue
+      */
 
     private void handleTextChanged(
     ObservableValue observable,
@@ -100,45 +110,48 @@ public class AdminUserDataWindowController {
         // search value has changed
 
         boolean nicely = false;
-        switch (
+        String message = "";
+
+        if (!txtSearchValue.getText().isEmpty()) {
+            
+            switch (
             comboBoxSearchParameter
             .getSelectionModel()
             .getSelectedItem().toString()) {
 
-            case "Login": nicely = AUDW.isLoginFormat(txtSearchValue.getText());
-            break;
+                case "Login": nicely = AUDW.isLoginFormat(txtSearchValue.getText());
+                    
+                break;
 
-            case "Email": nicely = AUDW.isEmailFormat(txtSearchValue.getText());
-            break;
+                case "Email": nicely = AUDW.isEmailFormat(txtSearchValue.getText());
+                break;
 
-            case "Full Name": nicely = AUDW.isFullNameFormat(txtSearchValue.getText());
-            break;
+                case "Full Name": nicely = AUDW.isFullNameFormat(txtSearchValue.getText());
+                break;
 
-            default:
-            break;
+                default:
+                break;
+            }
+
+            btnSearch.setDisable(!nicely);
+        
+        } else {
+            txtSearchValue.setPromptText(txtSearchValuePromptText);
+            btnSearch.setDisable(true);
         }
 
-        btnSearch.setDisable(!nicely);
-        btnClear.setDisable(nicely);
-        
-            
-        
-       // login has changed     
-     
-        if (AUDW.isLoginFormat(txtLogin.getText())) {
 
-        }
 
-          /*
-
-        if(txtEmail)
-
-        if(txtFullName)
-        */
-        
-       
+        // TODO: fix this, message and look if the loogin exists or not.
+        btnAddUser.setDisable(!everyUserParamAreFull());
+        btnModifyUser.setDisable(!everyUserParamAreFull());
+        btnDeleteUser.setDefaultButton(!everyUserParamAreFull());   
     }
 
+    /**
+     * check that every parameter is full
+     * @return
+     */
     private boolean everyUserParamAreFull() {
         
         return 
@@ -176,9 +189,6 @@ public class AdminUserDataWindowController {
             
             !(datePickerStart.isArmed() &&
             datePickerEnd.isArmed());
-
-
-
     }
 
     
@@ -194,8 +204,7 @@ public class AdminUserDataWindowController {
             );
         } catch (Exception e) {
             LOGGER.severe(e.getMessage());
-        }
-        
+        }   
     }
 
 
@@ -203,67 +212,12 @@ public class AdminUserDataWindowController {
     @FXML
     private void handleSearchButtonAction() {
         ObservableList <User> l;
+
+        // do i have to check?
+
+
         
-        switch (comboBoxSearchParameter.getSelectionModel().getSelectedItem().toString()) {
-            case "Login": 
-                try {
-                    l = FXCollections.observableArrayList(
-                            FactoryMember.get()
-                                .findMemberByLogin(txtLogin.getText()));
-                    
-                } catch (Exception e) {
-                    // TODO: handle exception
-                }
-                
-            break;
-
-            case "Email":
-                try {
-                    l = FXCollections.observableArrayList(
-                            FactoryUser.get()
-                                .findUserByEmail(txtEmail.getText()));
-                    
-                } catch (Exception e) {
-                    // TODO: handle exception
-                }
-            break;
-
-            case "Full name":
-                try {
-                    l = FXCollections.observableArrayList(
-                            FactoryUser.get()
-                                .findUserByName(txtFullName.getText()));
-                    
-                } catch (Exception e) {
-                    // TODO: handle exception
-                }
-            break;
-
-            case "Privilege":/* 
-                try {
-                    l = FXCollections.observableArrayList(
-                            FactoryUser.get()
-                                .findUserByStatus(txtLogin.getText()));
-                    
-                } catch (Exception e) {
-                    // TODO: handle exception
-                }*/
-            break;
-
-            case "Status":
-                try {
-                    l = FXCollections.observableArrayList(
-                            FactoryUser.get()
-                                .findUserByStatus(
-                                    comboBoxMemberStatusSearch
-                                    .getSelectionModel()
-                                    .getSelectedItem()));
-                    
-                } catch (Exception e) {
-                    // TODO: handle exception
-                }
-            break;
-        }
+        
     }
 
     private void handleUsersTableSelectionChanged(
@@ -275,35 +229,30 @@ public class AdminUserDataWindowController {
             u = User.class.cast(newValue);
             txtLogin.setText(u.getLogin());
             txtEmail.setText(u.getEmail());
-            txtFullName.setText(u.getFullName());
-            
-            
+            txtFullName.setText(u.getFullName()); 
         }
-            
-
-
     }
-
-
-
     @FXML
     private void handleClearButtonAction() {
     }
-
     @FXML
     private void handleAddUserButtonAction() {
     }
-
     @FXML
     private void handleModifyUserButtonAction() {
     }
-
     @FXML
     private void handleDeleteUserButtonAction() {
     }
-
     @FXML
     private void handlePrintButtonAction() {
+    }
+
+    private String formatNormal(String s) {
+        return 
+            Character.toUpperCase(
+                s.charAt(0)) + 
+            s.substring(1);
     }
 
     /**
@@ -363,8 +312,11 @@ public class AdminUserDataWindowController {
         comboBoxSearchParameter.setOnAction((event) -> {
             comboBoxMemberStatusSearch.getItems().clear();
 
+
+
             switch (comboBoxSearchParameter.getSelectionModel().getSelectedItem()) {
                 case "Privilege":
+
                     comboBoxMemberStatusSearch.setPromptText("Privilege");
                         comboBoxMemberStatusSearch.getItems().add("Client");
                         comboBoxMemberStatusSearch.getItems().add("Member");
@@ -406,10 +358,13 @@ public class AdminUserDataWindowController {
         
         tableUsers.getSelectionModel().selectedItemProperty()
             .addListener(this::handleUsersTableSelectionChanged);
+
+        List <String> tableColumns = 
+            Arrays.asList("login", "email", "fullName", "status", "privilege", "plan", "lastPasswordChange");
     
+        
         tbColLogin.setCellValueFactory(
             new PropertyValueFactory<>("login"));
-
         tbColEmail.setCellValueFactory(
             new PropertyValueFactory<>("email"));
 
