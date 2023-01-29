@@ -13,7 +13,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<Pane prefHeight="688.0" prefWidth="1187.0" style="-fx-background-color: FF926A;" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.userdata.admin.AdminUserDataWindowController">
+<Pane prefHeight="688.0" prefWidth="1360.0" style="-fx-background-color: FF926A;" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.userdata.admin.AdminUserDataWindowController">
    <children>
       <Pane fx:id="paneBar" layoutX="-7.0" layoutY="-8.0" prefHeight="694.0" prefWidth="134.0" style="-fx-background-color: #FA7C4E;">
          <children>
@@ -59,18 +59,18 @@
       <ComboBox fx:id="comboBoxSearchParameter" layoutX="148.0" layoutY="117.0" prefWidth="150.0" promptText="Parameter" />
       <Button fx:id="btnClear" layoutX="647.0" layoutY="117.0" mnemonicParsing="false" onAction="#handleClearButtonAction" text="Clear" />
       <Button fx:id="btnSearch" layoutX="578.0" layoutY="117.0" mnemonicParsing="false" onAction="#handleSearchButtonAction" text="Search" />
-      <TableView fx:id="tableUsers" layoutX="148.0" layoutY="216.0" prefHeight="359.0" prefWidth="703.0">
+      <TableView fx:id="tableUsers" layoutX="148.0" layoutY="216.0" prefHeight="359.0" prefWidth="815.0">
         <columns>
           <TableColumn fx:id="tbColLogin" prefWidth="75.0" text="Login" />
-          <TableColumn fx:id="tbColFullName" prefWidth="75.0" text="Full name" />
-            <TableColumn fx:id="tbColEmail" prefWidth="131.20004272460938" text="Email" />
-            <TableColumn fx:id="tbColStatus" prefWidth="61.60003662109375" text="Status" />
-            <TableColumn fx:id="tbColPrivilege" prefWidth="71.19998168945312" text="Privilege" />
-            <TableColumn fx:id="tbColMembershipPlan" prefWidth="116.79998779296875" text="Membership plan" />
-            <TableColumn fx:id="tbColLastPasswordChange" prefWidth="148.79998779296875" text="Last password change" />
+          <TableColumn fx:id="tbColFullName" prefWidth="100.99996948242188" text="Full name" />
+            <TableColumn fx:id="tbColEmail" prefWidth="145.0" text="Email" />
+            <TableColumn fx:id="tbColStatus" prefWidth="83.0" text="Status" />
+            <TableColumn fx:id="tbColPrivilege" prefWidth="76.0" text="Privilege" />
+            <TableColumn fx:id="tbColMembershipPlan" prefWidth="151.0" text="Membership plan" />
+            <TableColumn fx:id="tbColLastPasswordChange" prefWidth="172.0" text="Last password change" />
         </columns>
       </TableView>
-      <Pane fx:id="paneUserData" layoutX="881.0" layoutY="45.0" prefHeight="564.0" prefWidth="282.0" style="-fx-background-color: #FA7C4E;">
+      <Pane fx:id="paneUserData" layoutX="1022.0" layoutY="57.0" prefHeight="564.0" prefWidth="282.0" style="-fx-background-color: #FA7C4E;">
 
          <children>
             <Text fontSmoothingType="LCD" layoutX="37.0" layoutY="44.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Credentials" wrappingWidth="158.13672637939453">
@@ -111,9 +111,9 @@
             <TextField fx:id="txtFullName" layoutX="38.0" layoutY="165.0" promptText="Full name" />
          </children></Pane>
       <Button fx:id="btnPrint" layoutX="479.0" layoutY="609.0" mnemonicParsing="false" onAction="#handlePrintButtonAction" text="Print" />
-      <Button fx:id="btnAddUser" layoutX="881.0" layoutY="621.0" mnemonicParsing="false" onAction="#handleAddUserButtonAction" text="Add user" />
-      <Button fx:id="btnModifyUser" layoutX="983.0" layoutY="621.0" mnemonicParsing="false" onAction="#handleModifyUserButtonAction" text="Modify user" />
-      <Button fx:id="btnDeleteUser" layoutX="1087.0" layoutY="621.0" mnemonicParsing="false" onAction="#handleDeleteUserButtonAction" text="Delete user" />
+      <Button fx:id="btnAddUser" layoutX="1022.0" layoutY="634.0" mnemonicParsing="false" onAction="#handleAddUserButtonAction" text="Add user" />
+      <Button fx:id="btnModifyUser" layoutX="1124.0" layoutY="634.0" mnemonicParsing="false" onAction="#handleModifyUserButtonAction" text="Modify user" />
+      <Button fx:id="btnDeleteUser" layoutX="1228.0" layoutY="634.0" mnemonicParsing="false" onAction="#handleDeleteUserButtonAction" text="Delete user" />
       <TextField fx:id="txtSearchValue" layoutX="330.0" layoutY="117.0" prefHeight="25.0" prefWidth="227.0" promptText="Value" />
       <ComboBox fx:id="comboBoxMemberStatusSearch" layoutX="330.0" layoutY="117.0" prefWidth="150.0" promptText="Param/Status" />
 

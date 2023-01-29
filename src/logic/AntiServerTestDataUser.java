@@ -5,14 +5,14 @@ import java.util.stream.Collectors;
 
 import exceptions.ClientErrorException;
 import factories.UserInterface;
+import logic.objects.Status;
 import logic.objects.User;
 
 public class AntiServerTestDataUser implements UserInterface {
 
     @Override
     public User findUserByEmail(String email) throws ClientErrorException {
-        return 
-            UserList.everything
+        return UserList.everyUser
             .stream()
             .filter(u -> 
                 u.getEmail()
@@ -22,8 +22,7 @@ public class AntiServerTestDataUser implements UserInterface {
 
     @Override
     public User findUserByLogin(String login) throws ClientErrorException {
-        return 
-            UserList.everything
+        return UserList.everyUser
             .stream()
             .filter(u -> 
                 u.getLogin()
@@ -33,8 +32,7 @@ public class AntiServerTestDataUser implements UserInterface {
 
     @Override
     public List<User> findUserByName(String name) throws ClientErrorException {
-        return 
-            UserList.everything
+        return UserList.everyUser
             .stream()
             .filter(u -> 
                 u.getFullName()
@@ -47,17 +45,14 @@ public class AntiServerTestDataUser implements UserInterface {
 
     @Override
     public List<User> findUserByStatus(String status) throws ClientErrorException {
-        return 
-            UserList.everything
+        return UserList.everyUser
             .stream()
             .filter(u -> 
                 u.getStatus()
-                .toString()
-                .equals(status))
+                .equals(Status.ENABLE))
             .collect(Collectors.toList());
     }
 
- 
     @Override
     public void createUser(User user) throws ClientErrorException {}
     @Override

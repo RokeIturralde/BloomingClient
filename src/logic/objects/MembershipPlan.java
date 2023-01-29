@@ -28,8 +28,9 @@ public class MembershipPlan implements Serializable {
     private Boolean shareable;
     private Integer cont;
 
-    public MembershipPlan() {
-    }
+    public MembershipPlan() {}
+
+    public MembershipPlan(int id) {this.id = id;}
 
     public Integer getId() {
         return id;
