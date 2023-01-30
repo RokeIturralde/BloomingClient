@@ -74,6 +74,7 @@ import objects.CustomText;
  */
 public class ContentWindowController {
 
+    //Defined the attributes for the window controller
     @FXML
     private Button btnLogo;
     @FXML
@@ -157,12 +158,6 @@ public class ContentWindowController {
     private boolean customTextTableIsSelected = false;
 
     /**
-     * Initializes the controller class.
-     */
-    /**
-     * @Override public void initialize(URL url, ResourceBundle rb) { // TODO }
-     */
-    /**
      * Initializing method
      *
      * @param root root object with the DOM charged
@@ -187,6 +182,10 @@ public class ContentWindowController {
         //Set CustomImage table with listener
         tableCustomImage.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
+                /**
+                 * If the table of Image is selected the fields are introduced
+                 * in the designated textfields and an image preview appears
+                 */
                 rbCustomText.setDisable(true);
                 rbCustomImage.setDisable(false);
                 tableCustomText.getSelectionModel().clearSelection();
@@ -216,6 +215,10 @@ public class ContentWindowController {
         });
         tableCustomText.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
+                /**
+                 * If the Text table is selected something similar happens, but
+                 * the image part is eluded
+                 */
                 rbCustomText.setDisable(false);
                 rbCustomImage.setDisable(true);
                 tableCustomImage.getSelectionModel().clearSelection();
@@ -256,8 +259,14 @@ public class ContentWindowController {
                 new PropertyValueFactory<>("uploadDate"));
         customTextDescription.setCellValueFactory(
                 new PropertyValueFactory<>("text"));
-
+        /**
+         * Here the tables are loaded with data
+         */
         try {
+            /**
+             * After getting the interface, which has the REST, we call to the
+             * server in order to gather the information
+             */
             client = ContentFactory.getModel();
             contentList = FXCollections.observableArrayList(client.findAllContents_XML(new GenericType<List<Content>>() {
             }));
@@ -273,6 +282,12 @@ public class ContentWindowController {
         stage.show();
     }
 
+    /**
+     * This method clears the searching part of the window (The value and the
+     * Combobox) and returns the tables to their original state
+     *
+     * @param event
+     */
     @FXML
     private void handleClearButtonAction(ActionEvent event
     ) {
@@ -295,22 +310,52 @@ public class ContentWindowController {
         }
     }
 
+    /**
+     * This method creates a Content, either being an Image or a Text
+     *
+     * @param event
+     */
     @FXML
     private void handleAddContentButtonAction(ActionEvent event
     ) {
+        /**
+         * First we check if the Data Picker has any data, if not the user gets
+         * a notification
+         */
         LocalDate datePicker = uploadDate.getValue();
         if (datePicker != null) {
+            /**
+             * Here we do the check for which radio button is selected in order
+             * to enable some fields or others
+             */
             if (rbCustomImage.isSelected()) {
+                /**
+                 * First we check that the image is loaded
+                 */
                 if (imageBytes != null) {
+                    /**
+                     * We charge the CustomImage object with the data provided
+                     * by the user
+                     */
                     CustomImage customImage = new CustomImage();
                     customImage.setName(txtName.getText());
                     customImage.setLocation(txtLocation.getText());
                     Date date = Date.from(datePicker.atStartOfDay(ZoneId.systemDefault()).toInstant());
                     customImage.setUploadDate(date);
                     customImage.setBytes(imageBytes);
+                    /**
+                     * After getting the REST we call the method to create a new
+                     * Image Content
+                     */
                     CustomImageInterface customImageInterface = CustomImageFactory.getModel();
                     try {
                         customImageInterface.createCustomImage_XML(customImage);
+                        /**
+                         * After the method is done the user gets a notification
+                         * of the successfully added content and all the data is
+                         * cleared, also tables are refreshed, showing the new
+                         * created content
+                         */
                         new Alert(Alert.AlertType.INFORMATION, "Content Added", ButtonType.OK).showAndWait();
                         txtLocation.setText("");
                         txtName.setText("");
@@ -343,7 +388,7 @@ public class ContentWindowController {
                 customText.setText(taDescription.getText());
                 CustomTextInterface customTextInterface = CustomTextFactory.getModel();
                 try {
-                    //Starting the talking with the server
+                    //Starting the talking with the server and clear of the fields if the method is successfull
                     customTextInterface.create_XML(customText);
                     new Alert(Alert.AlertType.INFORMATION, "Content Added", ButtonType.OK).showAndWait();
                     txtLocation.setText("");
@@ -369,10 +414,23 @@ public class ContentWindowController {
         }
     }
 
+    /**
+     * This method is attached to Modify Content button and does what it means
+     *
+     * @param event
+     */
     @FXML
     private void handleModifyContentButtonAction(ActionEvent event
     ) {
+        /**
+         * First we check which of the table is selected in order to call a
+         * method or other
+         */
         if (customImageTableIsSelected) {
+            /**
+             * In this case the image one is, so we charge all the data to the
+             * Object
+             */
             int selectedRow = tableCustomImage.getSelectionModel().getSelectedIndex();
             CustomImageInterface customImageInterface = CustomImageFactory.getModel();
             CustomImage customImage = new CustomImage();
@@ -382,19 +440,31 @@ public class ContentWindowController {
             Date date = Date.from(uploadDate.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
             customImage.setUploadDate(date);
             customImage.setBytes(imageBytes);
+            /**
+             * Once all is set up we call the REST method and if successfull,
+             * the user gets notified
+             */
             try {
                 customImageInterface.edit_XML(customImage);
                 contentList = FXCollections.observableArrayList(client.findAllContents_XML(new GenericType<List<Content>>() {
                 }));
+                new Alert(Alert.AlertType.INFORMATION, "Content Modified", ButtonType.OK).showAndWait();
             } catch (ClientErrorException ex) {
                 Logger.getLogger(ContentWindowController.class.getName()).log(Level.SEVERE, null, ex);
+
             }
+            /**
+             * After the call we refresh the table to show the modified data
+             */
             customImageList = findAllCustomImages(contentList);
             ObservableList<CustomImage> listCustomImage = FXCollections.observableArrayList(customImageList);
             tableCustomImage.setItems(listCustomImage);
             tableCustomImage.refresh();
-            new Alert(Alert.AlertType.INFORMATION, "Content Modified", ButtonType.OK).showAndWait();
+
         } else if (customTextTableIsSelected) {
+            /**
+             * In this case the Text Table is selected, and same process here
+             */
             int selectedRow = tableCustomText.getSelectionModel().getSelectedIndex();
             CustomTextInterface customTextInterface = CustomTextFactory.getModel();
             CustomText customText = new CustomText();
@@ -404,10 +474,16 @@ public class ContentWindowController {
             Date date = Date.from(uploadDate.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
             customText.setUploadDate(date);
             customText.setText(taDescription.getText());
+            /**
+             * After the object is filled with data, is sent to the REST and if
+             * done correctly, a notification is shown to the user and also the
+             * tables are refreshed
+             */
             try {
                 customTextInterface.edit_XML(customText);
                 contentList = FXCollections.observableArrayList(client.findAllContents_XML(new GenericType<List<Content>>() {
                 }));
+                new Alert(Alert.AlertType.INFORMATION, "Content Modified", ButtonType.OK).showAndWait();
             } catch (ClientErrorException ex) {
                 Logger.getLogger(ContentWindowController.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -415,13 +491,21 @@ public class ContentWindowController {
             ObservableList<CustomText> listCustomText = FXCollections.observableArrayList(customTextList);
             tableCustomText.setItems(listCustomText);
             tableCustomText.refresh();
-            new Alert(Alert.AlertType.INFORMATION, "Content Modified", ButtonType.OK).showAndWait();
+
         }
     }
 
+    /**
+     * This method Deletes a Content from the tables
+     *
+     * @param event
+     */
     @FXML
     private void handleDeleteContentButtonAction(ActionEvent event
     ) {
+        /**
+         * First we ask the user for a confirmation
+         */
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setHeaderText("Delete Content");
         alert.setTitle("Confirmation");
@@ -430,6 +514,10 @@ public class ContentWindowController {
         //If you click on OK
         if (action.get() == ButtonType.OK) {
             if (customImageTableIsSelected) {
+                /**
+                 * If the Image table is selected we get the content id and then
+                 * we call the method
+                 */
                 int selectedRow = tableCustomImage.getSelectionModel().getSelectedIndex();
                 ContentInterface contentInterface = ContentFactory.getModel();
                 try {
@@ -439,6 +527,10 @@ public class ContentWindowController {
                 } catch (ClientErrorException ex) {
                     Logger.getLogger(ContentWindowController.class.getName()).log(Level.SEVERE, null, ex);
                 }
+                /**
+                 * Once the method is finnished the table refreshes and the
+                 * fields are cleared
+                 */
                 customImageList = findAllCustomImages(contentList);
                 ObservableList<CustomImage> listCustomImage = FXCollections.observableArrayList(customImageList);
                 tableCustomImage.setItems(listCustomImage);
@@ -451,6 +543,9 @@ public class ContentWindowController {
                 btnModifyContent.setDisable(true);
                 btnDeleteContent.setDisable(true);
             } else if (customTextTableIsSelected) {
+                /**
+                 * Same method as before but getting the id from the other table
+                 */
                 int selectedRow = tableCustomText.getSelectionModel().getSelectedIndex();
                 ContentInterface contentInterface = ContentFactory.getModel();
                 try {
@@ -460,6 +555,9 @@ public class ContentWindowController {
                 } catch (ClientErrorException ex) {
                     Logger.getLogger(ContentWindowController.class.getName()).log(Level.SEVERE, null, ex);
                 }
+                /**
+                 * Refreshing the table and clearing fields
+                 */
                 customTextList = findAllCustomTexts(contentList);
                 ObservableList<CustomText> listCustomText = FXCollections.observableArrayList(customTextList);
                 tableCustomText.setItems(listCustomText);
@@ -475,11 +573,23 @@ public class ContentWindowController {
         }
     }
 
+    /**
+     * This method Finds Content by the selected parameter
+     *
+     * @param event
+     */
     @FXML
     private void handleFindButtonAction(ActionEvent event
     ) {
+        /**
+         * First we check which option is selected from the Combobox
+         */
         if (cboxParameter.getSelectionModel().getSelectedItem().equals("Location")) {
             try {
+                /**
+                 * If location is selected the method is called and if
+                 * succesfull the data is shown
+                 */
                 contentList = FXCollections.observableArrayList(client.findContentByLocation_XML(new GenericType<List<Content>>() {
                 }, txtValue.getText()));
                 customImageList = findCustomImageByLocation(contentList, txtValue.getText());
@@ -494,11 +604,17 @@ public class ContentWindowController {
                 Logger.getLogger(ContentWindowController.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-
         if (cboxParameter.getSelectionModel().getSelectedItem().equals("Name")) {
             try {
+                /**
+                 * As the search is wanted by name we call the given method
+                 */
                 contentList = FXCollections.observableArrayList(client.findContentByName_XML(new GenericType<List<Content>>() {
                 }, txtValue.getText()));
+                /**
+                 * Here the table is loaded with the data if the method is done
+                 * correctly
+                 */
                 customImageList = findCustomImageByName(contentList, txtValue.getText());
                 customTextList = findCustomTextByName(contentList, txtValue.getText());
                 ObservableList<CustomImage> listCustomImage = FXCollections.observableArrayList(customImageList);
@@ -514,8 +630,14 @@ public class ContentWindowController {
 
         if (cboxParameter.getSelectionModel().getSelectedItem().equals("Upload Date")) {
             try {
+                /**
+                 * Here is by date, so we call the given method, same as before
+                 */
                 contentList = FXCollections.observableArrayList(client.findContentByDate_XML(new GenericType<List<Content>>() {
                 }, txtValue.getText()));
+                /**
+                 * we fill the tables with the information
+                 */
                 customImageList = findCustomImageByUploadDate(contentList, txtValue.getText());
                 customTextList = findCustomTextByUploadDate(contentList, txtValue.getText());
                 ObservableList<CustomImage> listCustomImage = FXCollections.observableArrayList(customImageList);
@@ -530,35 +652,68 @@ public class ContentWindowController {
         }
     }
 
+    /**
+     * This method leads you to the main page of the app (Album)
+     *
+     * @param event
+     */
     @FXML
     private void handleLogoButtonAction(ActionEvent event
     ) {
     }
 
+    /**
+     * This method leads you to the Album page
+     *
+     * @param event
+     */
     @FXML
     private void handleAlbumButtonAction(ActionEvent event
     ) {
     }
 
+    /**
+     * This method leads you to About Us page
+     *
+     * @param event
+     */
     @FXML
     private void handleAboutUsButtonAction(ActionEvent event
     ) {
     }
 
+    /**
+     * This method leads you to My Profile window
+     *
+     * @param event
+     */
     @FXML
     private void handleMyProfileButtonAction(ActionEvent event
     ) {
     }
 
+    /**
+     * This method leads you to Membership window
+     *
+     * @param event
+     */
     @FXML
     private void handleMembershipButtonAction(ActionEvent event
     ) {
     }
 
+    /**
+     * This method deals with the file chooser button
+     *
+     * @param event
+     */
     @FXML
     private void handleFileChooserButtonAction(ActionEvent event
     ) {
-
+        /**
+         * Here we state that we only accept jpg images, as they are the most
+         * common for albums
+         */
         FileChooser.ExtensionFilter imageFilter
                 = new FileChooser.ExtensionFilter("Image Files", "*.jpg");
         FileChooser fileChooser = new FileChooser();
@@ -566,8 +721,13 @@ public class ContentWindowController {
         fileChooser.setTitle("Open Resource File");
         File image = fileChooser.showOpenDialog(stage);
         Image testing = new Image(image.toURI().toString());
+        // Here the image selected is shown to the user
         imagePreview.setImage(testing);
         String path = image.getAbsolutePath();
+        /**
+         * Here the image is converted into a Byte[] and stored in a variable
+         * (imageBytes)
+         */
         try {
             BufferedImage buffImage = ImageIO.read(new File(path));
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -581,9 +741,18 @@ public class ContentWindowController {
 
     }
 
+    /**
+     * This method creates the Report of the Custom Image Table
+     *
+     * @param event
+     */
     @FXML
     private void handlePrintCustomImageButtonAction(ActionEvent event
     ) {
+        /**
+         * We select the jrxml and the report is loaded with the table
+         * information
+         */
         try {
             JasperReport report = JasperCompileManager.compileReport("src/report/CustomImage.jrxml");
             JRBeanCollectionDataSource dataItems = new JRBeanCollectionDataSource((Collection<Content>) this.tableCustomImage.getItems());
@@ -596,13 +765,28 @@ public class ContentWindowController {
         }
     }
 
+    /**
+     * This method creates a report with the Custom Text Table
+     *
+     * @param event
+     */
     @FXML
     private void handlePrintCustomTextButtonAction(ActionEvent event
     ) {
     }
 
+    /**
+     * This method clears all the data from the creation/modification part of
+     * the window, returning it to his original state
+     *
+     * @param event
+     */
     @FXML
     private void btnClearSelectionButtonAction(ActionEvent event) {
+        /**
+         * We deselect the radio buttons, clear all the text, and disable the
+         * crud buttons
+         */
         customTextTableIsSelected = false;
         customTextTableIsSelected = false;
         rbCustomImage.setDisable(false);
@@ -618,6 +802,11 @@ public class ContentWindowController {
         btnModifyContent.setDisable(true);
         btnDeleteContent.setDisable(true);
         taDescription.setText("");
+        btnAddContent.setDisable(true);
+        btnFileChooser.setDisable(true);
+        uploadDate.setDisable(true);
+        txtLocation.setDisable(true);
+        txtName.setDisable(true);
     }
 
     /**
@@ -629,6 +818,12 @@ public class ContentWindowController {
         this.stage = stage;
     }
 
+    /**
+     * This method makes the buttons to be disabled and also fill the combo with
+     * values and set actions to the radio buttons
+     *
+     * @param event
+     */
     private void handlerWindowShowing(WindowEvent event) {
         LOGGER.info("Iniciando ContentWindowController::handlerWindowShowing");
         btnDeleteContent.setDisable(true);
@@ -710,6 +905,14 @@ public class ContentWindowController {
 
     }
 
+    /**
+     * This method listens for changes in the search part to enable or disable
+     * the find button
+     *
+     * @param observable
+     * @param oldValue
+     * @param newValue
+     */
     private void searchTextPropertyChange(ObservableValue observable,
             String oldValue,
             String newValue) {
@@ -726,12 +929,24 @@ public class ContentWindowController {
         }
     }
 
+    /**
+     * This method converts a byte[] to Byte[]
+     *
+     * @param bytesPrim
+     * @return a Byte[] converted
+     */
     public Byte[] byteToByte(byte[] bytesPrim) {
         Byte[] bytes = new Byte[bytesPrim.length];
         Arrays.setAll(bytes, n -> bytesPrim[n]);
         return bytes;
     }
 
+    /**
+     * This method finds all the CustomImages
+     *
+     * @param contentList a list of all Contents
+     * @return a list of all the Custom Images
+     */
     public ArrayList<CustomImage> findAllCustomImages(ObservableList<Content> contentList) {
         ArrayList<CustomImage> customImageList = new ArrayList<>();
         CustomImage customImage = new CustomImage();
@@ -749,6 +964,12 @@ public class ContentWindowController {
         return customImageList;
     }
 
+    /**
+     * This method Finds all the Custom Texts
+     *
+     * @param contentList a list of all Contents
+     * @return a list of all the Custom Texts
+     */
     public ArrayList<CustomText> findAllCustomTexts(ObservableList<Content> contentList) {
         ArrayList<CustomText> customTextList = new ArrayList<>();
         CustomText customText = new CustomText();
@@ -766,6 +987,13 @@ public class ContentWindowController {
         return customTextList;
     }
 
+    /**
+     * This method finds Custom Images by location
+     *
+     * @param contentList the list with all the contents
+     * @param txtValue the wanted location to be searcheds
+     * @return a list of Custom Images with the given parameter
+     */
     private ArrayList<CustomImage> findCustomImageByLocation(ObservableList<Content> contentList, String txtValue) {
         ArrayList<CustomImage> customImageList = new ArrayList<>();
         CustomImage customImage = new CustomImage();
@@ -783,6 +1011,13 @@ public class ContentWindowController {
         return customImageList;
     }
 
+    /**
+     * This method finds Custom Texts by location
+     *
+     * @param contentList the list with all the contents
+     * @param txtValue the wanted location to be searcheds
+     * @return a list of Custom Texts with the given parameter
+     */
     private ArrayList<CustomText> findCustomTextByLocation(ObservableList<Content> contentList, String txtValue) {
         ArrayList<CustomText> customTextList = new ArrayList<>();
         CustomText customImage = new CustomText();
@@ -800,6 +1035,13 @@ public class ContentWindowController {
         return customTextList;
     }
 
+    /**
+     * Finds all the Custom Texts by Name
+     *
+     * @param contentList a list with all the contents
+     * @param txtValue the text with the name to be searched
+     * @return a list with the Custom Texts with the given name
+     */
     private ArrayList<CustomText> findCustomTextByName(ObservableList<Content> contentList, String txtValue) {
         ArrayList<CustomText> customTextList = new ArrayList<>();
         CustomText customText = new CustomText();
@@ -817,6 +1059,13 @@ public class ContentWindowController {
         return customTextList;
     }
 
+    /**
+     * Finds all the Custom Images by Name
+     *
+     * @param contentList a list with all the contents
+     * @param txtValue the text with the name to be searched
+     * @return a list with the Custom Images with the given name
+     */
     private ArrayList<CustomImage> findCustomImageByName(ObservableList<Content> contentList, String txtValue) {
         ArrayList<CustomImage> customImageList = new ArrayList<>();
         CustomImage customImage = new CustomImage();
@@ -834,6 +1083,13 @@ public class ContentWindowController {
         return customImageList;
     }
 
+    /**
+     * Finds all the Custom Images by upload date
+     *
+     * @param contentList the list with all the contents
+     * @param txtValue a text with the given date to be searched
+     * @return a list with all the Custom Images with that upload date
+     */
     private ArrayList<CustomImage> findCustomImageByUploadDate(ObservableList<Content> contentList, String txtValue) {
         ArrayList<CustomImage> customImageList = new ArrayList<>();
         CustomImage customImage = new CustomImage();
@@ -851,6 +1107,13 @@ public class ContentWindowController {
         return customImageList;
     }
 
+    /**
+     * Finds all the Custom Texts by upload date
+     *
+     * @param contentList the list with all the contents
+     * @param txtValue a text with the given date to be searched
+     * @return a list with all the Custom Texts with that upload date
+     */
     private ArrayList<CustomText> findCustomTextByUploadDate(ObservableList<Content> contentList, String txtValue) {
         ArrayList<CustomText> customTextList = new ArrayList<>();
         CustomText customText = new CustomText();

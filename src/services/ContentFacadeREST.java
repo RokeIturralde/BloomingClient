@@ -22,13 +22,13 @@ import javax.ws.rs.core.GenericType;
  *        client.close();
  * </pre>
  *
- * @author 2dam
+ * @author Roke
  */
 public class ContentFacadeREST implements ContentInterface {
 
     private WebTarget webTarget;
     private Client client;
-    private static final String BASE_URI = "http://localhost:8080/bloomingweb/webresources";
+    private static final String BASE_URI = "http://localhost:8080/bloomingwebb/webresources";
 
     public ContentFacadeREST() {
         client = javax.ws.rs.client.ClientBuilder.newClient();

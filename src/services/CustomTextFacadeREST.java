@@ -21,13 +21,13 @@ import javax.ws.rs.client.WebTarget;
  *        client.close();
  * </pre>
  *
- * @author 2dam
+ * @author Roke
  */
 public class CustomTextFacadeREST implements CustomTextInterface {
 
     private WebTarget webTarget;
     private Client client;
-    private static final String BASE_URI = "http://localhost:8080/bloomingweb/webresources";
+    private static final String BASE_URI = "http://localhost:8080/bloomingwebb/webresources";
 
     public CustomTextFacadeREST() {
         client = javax.ws.rs.client.ClientBuilder.newClient();
