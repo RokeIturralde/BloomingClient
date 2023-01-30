@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import exceptions.ClientErrorException;
-import factories.MemberInterface;
+import businessLogic.user.MemberInterface;
 import logic.objects.Member;
 import logic.objects.Privilege;
 

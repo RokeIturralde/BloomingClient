@@ -5,12 +5,11 @@
  */
 package ui.membershipPlan.admin;
 
-import factories.MemberInterface;
 import businessLogic.membership.MembershipPlanFactory;
 import businessLogic.membership.MembershipPlanInterface;
-
-import java.util.Arrays;
-
+import businessLogic.user.FactoryMember;
+import businessLogic.user.MemberInterface;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -134,20 +133,35 @@ public class AdminMembershipPlanController {
         cShareable.setCellValueFactory(new PropertyValueFactory<>("shareable"));
         cUsers.setCellValueFactory(new PropertyValueFactory<>("cont"));
         cPrice.setCellValueFactory(new PropertyValueFactory<>("price"));
+        membershipClient = MembershipPlanFactory.getModel();
+        memberClient = FactoryMember.get();
+        refreshPlus();
+        stage.show();
+    }
 
-                
-        try{
-            membershipClient = MembershipPlanFactory.getModel();
-            //membershipPlanData = FXCollections.observableArrayList(membershipClient.findAll_XML(new GenericType<List<MembershipPlan>>() {}));
-            memberClient = FactoryMember.get();
-            for(int i = 0; i < membershipPlanData.size();i++){
-                membershipPlanData.get(i).setMembers(Arrays.asList());
+    public void setStage(Stage stage) {
+        this.stage = stage;
+    }
 
+    
+    private void handlePlansTableSelectionChanged(ObservableValue observable,
+            Object oldValue,
+            Object newValue) {
+        if (newValue != null) {
+            MembershipPlan plan = (MembershipPlan) newValue;
+            txtName.setText(plan.getName());
+            txtaDescription.setText(plan.getDescription());
+            txtPrice.setText(plan.getPrice() + "");
+            txtAlbumLimit.setText(plan.getAlbumLimit() + "");
+            txtDuration.setText(plan.getDuration() + "");
+            cbShareable.setSelected(plan.getShareable());
+            btnShowUsers.setDisable(false);
+            if(plan.getMembers().isEmpty()){
+                btnDelete.setDisable(false);
             }
             else{
                 btnDelete.setDisable(true);
             }
-            
         } else {
             txtName.setText("");
             txtaDescription.setText("");
@@ -165,8 +179,7 @@ public class AdminMembershipPlanController {
             membershipPlanData = FXCollections.observableArrayList(membershipClient.findAll_XML(new GenericType<List<MembershipPlan>>() {
             }));
             for (int i = 0; i < membershipPlanData.size(); i++) {
-                membershipPlanData.get(i).setMembers(memberClient.findMembersByPlan_XML(new GenericType<List<Member>>() {
-                }, membershipPlanData.get(i).getId() + ""));
+                membershipPlanData.get(i).setMembers(memberClient.findMembersByPlan(membershipPlanData.get(i).getId() + ""));
             }
             tbPlans.setItems(membershipPlanData);
             tbPlans.refresh();
@@ -279,8 +292,7 @@ public class AdminMembershipPlanController {
             try {                
                 membershipPlanData = FXCollections.observableArrayList(membershipClient.findPlanByName_XML(new GenericType<List<MembershipPlan>>(){}, txtSearch.getText()));
                 for (int i = 0; i < membershipPlanData.size(); i++) {
-                    membershipPlanData.get(i).setMembers(memberClient.findMembersByPlan_XML(new GenericType<List<Member>>() {
-                    }, membershipPlanData.get(i).getId() + ""));
+                    membershipPlanData.get(i).setMembers(memberClient.findMembersByPlan(membershipPlanData.get(i).getId() + ""));
                 }
                 tbPlans.setItems(membershipPlanData);
                 tbPlans.refresh();
@@ -294,8 +306,7 @@ public class AdminMembershipPlanController {
             try {                
                 membershipPlanData = FXCollections.observableArrayList(membershipClient.findPlanByDuration_XML(new GenericType<List<MembershipPlan>>(){}, txtSearch.getText()));
                 for (int i = 0; i < membershipPlanData.size(); i++) {
-                    membershipPlanData.get(i).setMembers(memberClient.findMembersByPlan_XML(new GenericType<List<Member>>() {
-                    }, membershipPlanData.get(i).getId() + ""));
+                    membershipPlanData.get(i).setMembers(memberClient.findMembersByPlan(membershipPlanData.get(i).getId() + ""));
                 }
                 tbPlans.setItems(membershipPlanData);
                 tbPlans.refresh();
@@ -309,8 +320,7 @@ public class AdminMembershipPlanController {
            try {                
                 membershipPlanData = FXCollections.observableArrayList(membershipClient.findPlanByPrice_XML(new GenericType<List<MembershipPlan>>(){}, txtSearch.getText()));
                 for (int i = 0; i < membershipPlanData.size(); i++) {
-                    membershipPlanData.get(i).setMembers(memberClient.findMembersByPlan_XML(new GenericType<List<Member>>() {
-                    }, membershipPlanData.get(i).getId() + ""));
+                    membershipPlanData.get(i).setMembers(memberClient.findMembersByPlan(membershipPlanData.get(i).getId() + ""));
                 }
                 tbPlans.setItems(membershipPlanData);
                 tbPlans.refresh();

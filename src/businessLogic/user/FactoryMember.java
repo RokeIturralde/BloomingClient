@@ -1,6 +1,6 @@
-package factories;
+package businessLogic.user;
 
-import businessLogic.user.MemberManager;
+import businessLogic.user.managers.MemberManager;
 
 /**
  * @author dani

@@ -1,6 +1,6 @@
-package businessLogic.user;
+package businessLogic.user.managers;
 
-import factories.UserInterface;
+import businessLogic.user.UserInterface;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;

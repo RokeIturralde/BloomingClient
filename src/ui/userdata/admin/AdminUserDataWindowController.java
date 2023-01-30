@@ -15,7 +15,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
-import factories.FactoryMember;
+import businessLogic.user.FactoryMember;
 import logic.objects.Member;
 import logic.objects.User;
 import logic.objects.Privilege;
@@ -149,14 +149,16 @@ public class AdminUserDataWindowController {
         btnModifyUser.setDisable(!everyUserParamAreFull());
         btnDeleteUser.setDefaultButton(!everyUserParamAreFull());   
 
+        /*
 
-
-        if (!everyUserParamIsEmpty())
+        if (!everyUserParamIsEmpty()) {
             if (AUDW.isLoginFormat(txtLogin.getText()))
             if (AUDW.isEmailFormat(txtEmail.getText()))
-            if (AUDW.isNameFormat(txtFullName.getText()))
+            if (AUDW.isNameFormat(txtFullName.getText())
 
         }
+        */
+    }
 
     /**
      * check that every parameter is full

@@ -1,4 +1,4 @@
-package factories;
+package businessLogic.user;
 
 import exceptions.ClientErrorException;
 import logic.objects.Member;

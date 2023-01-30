@@ -1,7 +1,7 @@
-package factories;
+package businessLogic.user;
 
 import antiserver.AntiServerTestDataUser;
-import businessLogic.user.UserManager;
+import businessLogic.user.managers.UserManager;
 
 /**
  * @author dani

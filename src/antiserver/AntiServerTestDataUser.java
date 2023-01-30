@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import exceptions.ClientErrorException;
-import factories.UserInterface;
+import businessLogic.user.UserInterface;
 import logic.objects.Status;
 import logic.objects.User;
 

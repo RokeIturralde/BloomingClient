@@ -6,7 +6,6 @@
 package ui.signIn;
 
 import ui.signUp.SignUpController;
-import businessLogic.FactoryUser;
 import businessLogic.album.AlbumInterface;
 import exceptions.*;
 import java.io.IOException;
