@@ -38,6 +38,7 @@ import logic.objects.Album;
 import logic.objects.User;
 
 /**
+ * Album window controller.
  *
  * @author Nerea
  */
@@ -151,6 +152,7 @@ public class AlbumsViewController {
      * Initializing the window method
      *
      * @param root root object with the DOM charged
+     * @param loggedUser
      */
     public void initStage(Parent root, User loggedUser) {
         LOGGER.info("Initializing Albums window");
@@ -166,18 +168,26 @@ public class AlbumsViewController {
         //Set the Event handlers
         stage.setOnShowing(this::handlerWindowShowing);
         //Set the textfields with a listener
-        txtValue.textProperty().addListener(this::textChanged);
+        txtValue.textProperty().addListener(this::searchTextPropertyChange);
         txtAlbumName.textProperty().addListener(this::textChanged);
         txtAlbumCreator.textProperty().addListener(this::textChanged);
         txtAddUser.textProperty().addListener(this::textChanged);
         taAlbumDesc.textProperty().addListener(this::textChanged);
+        tbMyAlbums.getSelectionModel().selectedItemProperty()
+                .addListener(this::handleUsersTableSelectionChanged);
 
         //Charge tables data
         try {
             client = FactoryAlbum.getModel();
-            clientsData = FXCollections.observableArrayList(client.findMyAllAlbums_XML(ArrayList.class, loggedUser.getLogin()));
+            clientsData = FXCollections.observableArrayList(client.findMyAllAlbums_XML(new GenericType<List<Album>>() {
+            }, loggedUser.getLogin()));
             tbMyAlbums.setItems(clientsData);
             tbMyAlbums.refresh();
+
+            clientsData = FXCollections.observableArrayList(client.findMyAllSharedAlbums_XML(new GenericType<List<Album>>() {
+            }, loggedUser.getLogin()));
+            tbSharedAlbums.setItems(clientsData);
+            tbSharedAlbums.refresh();
 
         } catch (Exception e) {
             LOGGER.info(e.getMessage());
@@ -187,7 +197,7 @@ public class AlbumsViewController {
     }
 
     /**
-     * Method that handles the startup of the Albums view
+     * Method that handles the startup of the Albums view.
      *
      * @param event event of showing the window
      */
@@ -214,7 +224,12 @@ public class AlbumsViewController {
         //Filds disabled at first
         txtAddUser.setDisable(true);
         taUsers.setDisable(true);
-        txtValue.setDisable(true);
+
+        //Charge into the combobox the select actions and selecting the first.
+        cbSearchType.getItems().set(1, "Name");
+        cbSearchType.getItems().set(2, "Date");
+        cbSearchType.getItems().set(3, "Creator");
+        cbSearchType.getSelectionModel().selectFirst();
 
         //Set factories for cell values in users table columns (My albums table)
         columnNameMyAlbums.setCellValueFactory(
@@ -250,20 +265,33 @@ public class AlbumsViewController {
         String text = txtValue.getText();
         if (busqueda.equalsIgnoreCase("Name")) {
             if (checkShared.isSelected()) {
-                clientsData = FXCollections.observableArrayList(client.findMySharedAlbumsByName_XML(ArrayList.class, loggedUser.getLogin(), text));
+                clientsData = FXCollections.observableArrayList(client.findMySharedAlbumsByName_XML(new GenericType<List<Album>>() {
+                }, loggedUser.getLogin(), text));
+                tbMyAlbums.setItems(clientsData);
+                tbMyAlbums.refresh();
             } else {
-                clientsData = FXCollections.observableArrayList(client.findMyAlbumsByName_XML(ArrayList.class, loggedUser.getLogin(), text));
+                clientsData = FXCollections.observableArrayList(client.findMyAlbumsByName_XML(new GenericType<List<Album>>() {
+                }, loggedUser.getLogin(), text));
+                tbSharedAlbums.setItems(clientsData);
+                tbSharedAlbums.refresh();
             }
         } else if ((busqueda.equalsIgnoreCase("Date"))) {
             if (checkShared.isSelected()) {
-                clientsData = FXCollections.observableArrayList(client.findMySharedAlbumsByDate_XML(ArrayList.class, loggedUser.getLogin(), text));
+                clientsData = FXCollections.observableArrayList(client.findMySharedAlbumsByDate_XML(new GenericType<List<Album>>() {
+                }, loggedUser.getLogin(), text));
+                tbMyAlbums.setItems(clientsData);
+                tbMyAlbums.refresh();
             } else {
-                clientsData = FXCollections.observableArrayList(client.findMyAlbumsByDate_XML(ArrayList.class, loggedUser.getLogin(), text));
+                clientsData = FXCollections.observableArrayList(client.findMyAlbumsByDate_XML(new GenericType<List<Album>>() {
+                }, loggedUser.getLogin(), text));
+                tbSharedAlbums.setItems(clientsData);
+                tbSharedAlbums.refresh();
             }
         } else if ((busqueda.equalsIgnoreCase("Creator"))) {
-            clientsData = FXCollections.observableArrayList(client.findMySharedAlbumsByCreator_XML(ArrayList.class, loggedUser.getLogin(), text));
-        } else {
-            //Exception
+            clientsData = FXCollections.observableArrayList(client.findMySharedAlbumsByCreator_XML(new GenericType<List<Album>>() {
+            }, loggedUser.getLogin(), text));
+            tbSharedAlbums.setItems(clientsData);
+            tbSharedAlbums.refresh();
         }
     }
 
@@ -276,11 +304,14 @@ public class AlbumsViewController {
     private void handleAddButtonAction(ActionEvent event) {
         LOGGER.info("Metodo de control del boton de Add");
         ArrayList<User> users = new ArrayList();
-        String login = txtAddUser.getText();
-        //buscar usuario por login
-        User user = null;
-        users.add(user);
-        taUsers.setText(arrayToString(users));
+        try {
+            String login = txtAddUser.getText();
+            //buscar usuario por login
+            User user = null;
+            users.add(user);
+            taUsers.setText(arrayToString(users));
+        } catch (Exception e) {
+        }
     }
 
     /**
@@ -308,7 +339,25 @@ public class AlbumsViewController {
     @FXML
     private void handleCreateAlbumButtonAction(ActionEvent event) {
         LOGGER.info("Metodo de control del boton de Create a new Album");
-
+        Album album = new Album();
+        album.setName(txtAlbumName.getText());
+        //album.setCreationDate(dpCreationDate.getValue());
+        album.setCreator(loggedUser);
+        taAlbumDesc.getText();
+        taUsers.setText(arrayToString((ArrayList<User>) album.getUsers()));
+        
+        client = FactoryAlbum.getModel();
+        client.createAlbum_XML(album);
+        
+        //Vaciar campos
+         txtAlbumName.setText("");
+        dpCreationDate.setValue(null);
+        txtAlbumCreator.setText("");
+        taAlbumDesc.setText("");
+        checkShare.setSelected(false);
+        txtAddUser.setText("");
+        taUsers.setText("");
+        
     }
 
     /**
@@ -353,6 +402,36 @@ public class AlbumsViewController {
     }
 
     /**
+     * Method that handles the btnClearShearch button.
+     *
+     * @param event The action event object
+     */
+    @FXML
+    private void handleClearShearchButtonAction(ActionEvent event) {
+        LOGGER.info("Metodo de control del boton de Clear search");
+        cbSearchType.getSelectionModel().selectFirst();
+        checkShared.setSelected(false);
+        txtValue.setText("");
+    }
+
+    /**
+     * Method that handles the btnClearInfo button.
+     *
+     * @param event The action event object
+     */
+    @FXML
+    private void handleClearInfoButtonAction(ActionEvent event) {
+        LOGGER.info("Metodo de control del boton de Clear info");
+        txtAlbumName.setText("");
+        dpCreationDate.setValue(null);
+        txtAlbumCreator.setText("");
+        taAlbumDesc.setText("");
+        checkShare.setSelected(false);
+        txtAddUser.setText("");
+        taUsers.setText("");
+    }
+
+    /**
      * Text changed event handler. Validate that the combobox has something
      * selected to enable value fild and that value fild has text to enable the
      * find button.
@@ -374,6 +453,13 @@ public class AlbumsViewController {
         } //Else, enable  button
         else {
             btnFind.setDisable(false);
+        }
+
+        if (txtValue.getText().trim().length() > 25) {
+            txtValue.setText(txtValue.getText().substring(0, 25));
+            new Alert(Alert.AlertType.ERROR, "The maximum lenght for the login is 25 characters.", ButtonType.OK).showAndWait();
+            btnCreateAlbum.setDisable(true);
+            btnModifyAlbum.setDisable(true);
         }
     }
 
@@ -416,35 +502,60 @@ public class AlbumsViewController {
             new Alert(Alert.AlertType.ERROR, "The maximum lenght for the login is 25 characters.", ButtonType.OK).showAndWait();
             btnAdd.setDisable(true);
         }
-    }
 
-    /**
-     * Enable button Create Album when all the filds to create an album are not
-     * empty.
-     *
-     */
-    private void enableCreateAlbumButton() {
-        //Validates that the fields are not empty
-        if (txtAlbumName.getText().trim().isEmpty() || txtAlbumCreator.getText().trim().isEmpty() || taAlbumDesc.getText().trim().isEmpty() && btnModifyAlbum.getText().equalsIgnoreCase("Accept")) {
-            btnCreateAlbum.setDisable(true);
-        } else {
-            //All the data is filled correctly and the button is enabled
-            btnCreateAlbum.setDisable(false);
-        }
-    }
-
-    /**
-     * Enable button Modify Album when all the filds to create an album are not
-     * empty.
-     *
-     */
-    private void enableModifyAlbumButton() {
-        //Validates that the fields are not empty
-        if (txtAlbumName.getText().trim().isEmpty() || txtAlbumCreator.getText().trim().isEmpty() || taAlbumDesc.getText().trim().isEmpty()) {
-            btnModifyAlbum.setDisable(true);
-        } else {
-            //All the data is filled correctly and the button is enabled
+        //If text fields are empty disable buttton
+        if (txtAlbumName.getText().trim().isEmpty()
+                || txtAlbumCreator.getText().trim().isEmpty()) {
+            btnAdd.setDisable(true);
+        } //Else, enable button
+        else {
+            btnAdd.setDisable(false);
             btnModifyAlbum.setDisable(false);
+            btnDeleteAlbum.setDisable(false);
+        }
+
+    }
+
+    /**
+     * MyAlbums and sharedAlbums tables selection changed event handler. It
+     * enables or disables buttons depending on selection state of the table.
+     *
+     * @param observable the property being observed: SelectedItem Property
+     * @param oldValue old UserBean value for the property.
+     * @param newValue new UserBean value for the property.
+     */
+    private void handleUsersTableSelectionChanged(ObservableValue observable,
+            Object oldValue,
+            Object newValue) {
+        //If there is a row selected, move row data to corresponding fields in the
+        //window and enable create, modify and delete buttons
+        if (newValue != null) {
+            Album album = (Album) newValue;
+            txtAlbumName.setText(album.getName());
+            //dpCreationDate.setValue(album.getCreationDate());
+            txtAlbumCreator.setText(album.getCreator().getLogin());
+            taAlbumDesc.setText(album.getDescription());
+            if (album.getUsers().isEmpty()) {
+                checkShare.isSelected();
+                taUsers.setText(arrayToString((ArrayList<User>) album.getUsers()));
+            } else {
+                btnCreateAlbum.setDisable(false);
+            }
+            btnModifyAlbum.setDisable(false);
+            btnDeleteAlbum.setDisable(false);
+        } else {
+            //If there is not a row selected, clean window fields 
+            //and disable create, modify and delete buttons
+            txtAlbumName.setText("");
+            dpCreationDate.setValue(null);
+            txtAlbumCreator.setText("");
+            taAlbumDesc.setText("");
+            checkShare.setSelected(false);
+            txtAddUser.setText("");
+            taUsers.setText("");
+            btnCreateAlbum.setDisable(true);
+            btnModifyAlbum.setDisable(true);
+            btnDeleteAlbum.setDisable(true);
         }
     }
 
