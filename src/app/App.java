@@ -10,7 +10,7 @@ import javafx.stage.Stage;
 import view.album.AlbumsViewController;
 
 
-import user.UserWindowController;
+import ui.userdata.admin.AdminUserDataWindowController;
 
 public class App extends Application {
 
@@ -22,11 +22,9 @@ public class App extends Application {
     public void start(Stage stage) {
         try {
 
-
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/user/UserWindow.fxml"));
             Parent root = (Parent) loader.load();
             //Obtain the Sign In window controller
-            UserWindowController controller = (UserWindowController) loader.getController();
+            AdminUserDataWindowController controller = (AdminUserDataWindowController) loader.getController();
 
             controller.setStage(stage);
             controller.initStage(root);

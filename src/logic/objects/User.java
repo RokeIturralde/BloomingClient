@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package logic.objects;
 
 import java.io.Serializable;
@@ -14,7 +9,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  *
  * @author dani
  */
-@XmlRootElement
+@XmlRootElement(name="user")
 public class User implements Serializable {
 
     private String email;
@@ -23,8 +18,27 @@ public class User implements Serializable {
     private String password;
     private Privilege privilege;
     private Status status;
+
+    public User(
+    String login, String email, String fullName, String password, 
+    Privilege privilege, Status status, Date lastPasswordChange) {
+        this.email = email;
+        this.fullName = fullName;
+        this.login = login;
+        this.password = password;
+        this.privilege = privilege;
+        this.status = status;
+        this.lastPasswordChange = lastPasswordChange;
+        this.createdAlbums = null;
+        this.sharedAlbums = null;
+    }
+    
     private Date lastPasswordChange;
     private List<Album> createdAlbums;
+
+    public User() {}
+
+    
 
     public List<Album> getCreatedAlbums() {
         return createdAlbums;
@@ -121,7 +135,7 @@ public class User implements Serializable {
 
     @Override
     public String toString() {
-        return "entities.User[ login=" + login + " ]";
+        return "entities.User[ id=" + login + " email=" + email + " fullName=" + fullName + " ]";
     }
 
 }

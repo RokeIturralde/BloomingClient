@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package businessLogic.membership;
 
 import javax.ws.rs.ClientErrorException;
@@ -14,6 +9,7 @@ import javax.ws.rs.core.GenericType;
  */
 public interface MembershipPlanInterface {
     
+
     public <T> T findPlanByName_XML(GenericType<T> responseType, String name) throws ClientErrorException;
     
     public <T> T findPlanByDuration_XML(GenericType<T> responseType, String duration) throws ClientErrorException;

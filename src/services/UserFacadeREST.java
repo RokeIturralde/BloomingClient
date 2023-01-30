@@ -1,9 +1,10 @@
 package services;
 
-import businessLogic.UserInterface;
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.GenericType;
+
 
 /**
  * Jersey REST client generated for REST resource:UserFacadeREST
@@ -18,7 +19,7 @@ import javax.ws.rs.client.WebTarget;
  *
  * @author dani
  */
-public class UserFacadeREST implements UserInterface {
+public class UserFacadeREST {
 
     private WebTarget webTarget;
     private Client client;
@@ -30,7 +31,7 @@ public class UserFacadeREST implements UserInterface {
     }
 
     
-    public <T> T findUserByName_XML(Class<T> responseType, String name) throws ClientErrorException {
+    public <T> T findUserByName_XML(GenericType<T> responseType, String name) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("findByName/{0}", new Object[]{name}));
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
@@ -50,7 +51,7 @@ public class UserFacadeREST implements UserInterface {
         webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).put(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_JSON));
     }
 
-    public <T> T findUserByStatus_XML(Class<T> responseType, String status) throws ClientErrorException {
+    public <T> T findUserByStatus_XML(GenericType<T> responseType, String status) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("findByStatus/{0}", new Object[]{status}));
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);

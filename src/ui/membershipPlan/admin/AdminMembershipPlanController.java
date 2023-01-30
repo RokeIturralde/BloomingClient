@@ -5,11 +5,12 @@
  */
 package ui.membershipPlan.admin;
 
-import businessLogic.FactoryMember;
-import businessLogic.MemberInterface;
+import factories.MemberInterface;
 import businessLogic.membership.MembershipPlanFactory;
 import businessLogic.membership.MembershipPlanInterface;
-import java.util.ArrayList;
+
+import java.util.Arrays;
+
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -133,35 +134,20 @@ public class AdminMembershipPlanController {
         cShareable.setCellValueFactory(new PropertyValueFactory<>("shareable"));
         cUsers.setCellValueFactory(new PropertyValueFactory<>("cont"));
         cPrice.setCellValueFactory(new PropertyValueFactory<>("price"));
-        membershipClient = MembershipPlanFactory.getModel();
-        memberClient = FactoryMember.get();
-        refreshPlus();
-        stage.show();
-    }
 
-    public void setStage(Stage stage) {
-        this.stage = stage;
-    }
+                
+        try{
+            membershipClient = MembershipPlanFactory.getModel();
+            //membershipPlanData = FXCollections.observableArrayList(membershipClient.findAll_XML(new GenericType<List<MembershipPlan>>() {}));
+            memberClient = FactoryMember.get();
+            for(int i = 0; i < membershipPlanData.size();i++){
+                membershipPlanData.get(i).setMembers(Arrays.asList());
 
-    
-    private void handlePlansTableSelectionChanged(ObservableValue observable,
-            Object oldValue,
-            Object newValue) {
-        if (newValue != null) {
-            MembershipPlan plan = (MembershipPlan) newValue;
-            txtName.setText(plan.getName());
-            txtaDescription.setText(plan.getDescription());
-            txtPrice.setText(plan.getPrice() + "");
-            txtAlbumLimit.setText(plan.getAlbumLimit() + "");
-            txtDuration.setText(plan.getDuration() + "");
-            cbShareable.setSelected(plan.getShareable());
-            btnShowUsers.setDisable(false);
-            if(plan.getMembers().isEmpty()){
-                btnDelete.setDisable(false);
             }
             else{
                 btnDelete.setDisable(true);
             }
+            
         } else {
             txtName.setText("");
             txtaDescription.setText("");

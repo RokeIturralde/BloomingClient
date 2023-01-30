@@ -1,12 +1,12 @@
-package businessLogic;
+package factories;
 
-import services.MemberFacadeREST;
+import businessLogic.user.MemberManager;
 
 /**
  * @author dani
  */
 public class FactoryMember {
     public static MemberInterface get() {
-        return new MemberFacadeREST();
+        return new MemberManager();
     }
 }
