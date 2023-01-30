@@ -37,7 +37,7 @@ public class AUDW {
      * @param fullName
      * @return
      */
-    public static boolean isNameFormat(String fullName) {
+    public static boolean isFullNameFormat(String fullName) {
         return fullName.contains(" ");
     }
 
