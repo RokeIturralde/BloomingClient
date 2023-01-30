@@ -14,9 +14,9 @@ import javax.ws.rs.core.GenericType;
  */
 public interface MembershipPlanInterface {
     
-    public <T> T findPlanByName_XML(Class<T> responseType, String name) throws ClientErrorException;
+    public <T> T findPlanByName_XML(GenericType<T> responseType, String name) throws ClientErrorException;
     
-    public <T> T findPlanByDuration_XML(Class<T> responseType, String duration) throws ClientErrorException;
+    public <T> T findPlanByDuration_XML(GenericType<T> responseType, String duration) throws ClientErrorException;
     
     public void edit_XML(Object requestEntity) throws ClientErrorException;
     
@@ -24,7 +24,7 @@ public interface MembershipPlanInterface {
     
     public void create_XML(Object requestEntity) throws ClientErrorException;
     
-    public <T> T findPlanByPrice_XML(Class<T> responseType, String price) throws ClientErrorException;
+    public <T> T findPlanByPrice_XML(GenericType<T> responseType, String price) throws ClientErrorException;
     
     public <T> T findAll_XML(GenericType<T> responseType) throws ClientErrorException;
     
