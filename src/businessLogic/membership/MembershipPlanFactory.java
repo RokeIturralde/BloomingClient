@@ -5,6 +5,8 @@
  */
 package businessLogic.membership;
 
+import services.MembershipPlanFacadeREST;
+
 
 /**
  *
@@ -16,7 +18,7 @@ public class MembershipPlanFactory {
     
     public static MembershipPlanInterface getModel(){
         if (model == null){
-            //model = new MembershipPlanFacadeREST();
+            model = new MembershipPlanFacadeREST();
         }
         return model;
     }

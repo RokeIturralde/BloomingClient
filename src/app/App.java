@@ -7,6 +7,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.stage.Stage;
+import ui.membershipPlan.admin.AdminMembershipPlanController;
 import ui.signIn.SignInController;
 import ui.userdata.admin.AdminUserDataWindowController;
 
@@ -19,10 +20,11 @@ public class App extends Application {
     @Override
     public void start(Stage stage) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/userdata/admin/AdminUserDataWindow.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/membershipPlan/admin/AdminMembershipPlan.fxml"));
             Parent root = (Parent) loader.load();
             //Obtain the Sign In window controller
-            AdminUserDataWindowController controller = (AdminUserDataWindowController) loader.getController();
+            AdminMembershipPlanController controller = (AdminMembershipPlanController) loader.getController();
+
             controller.setStage(stage);
             controller.initStage(root);
         } catch (IOException ex) {
