@@ -346,13 +346,29 @@ public class AdminUserDataWindowController {
         txtEmail.setPromptText(txtEmailPromptText);
         txtFullName.setPromptText(txtFullNamePromptText);
 
+        // checkboxes
+        ChangeListener <Boolean> cl = new ChangeListener<Boolean>() {
 
-        /*
-        checkboxPrivilegeAdmin;
-        checkBoxPrivilegeMember;
-        checkBoxPrivilegeClient;
-        checkBoxStatusDisabled;
-        checkBoxStatusEnabled; */
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                if(newValue){
+    
+                    // your checkbox has been ticked. 
+                    // write login-username to config file
+    
+                } else {
+    
+                    // your checkbox has been unticked. do stuff...
+                    // clear the config file
+                }
+            }
+        };
+        
+        checkBoxPrivilegeAdmin.selectedProperty().addListener(cl);
+        checkBoxPrivilegeMember.selectedProperty().addListener(cl);
+        checkBoxPrivilegeUser.selectedProperty().addListener(cl);
+        checkBoxStatusDisabled.selectedProperty().addListener(cl);
+        checkBoxStatusEnabled.selectedProperty().addListener(cl);
 
         
 
