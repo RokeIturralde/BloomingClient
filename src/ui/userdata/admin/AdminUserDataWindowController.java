@@ -4,6 +4,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
 
+import org.eclipse.persistence.jpa.jpql.parser.ElseExpressionBNF;
+
+import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -16,6 +19,7 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import objects.User;
 import businessLogic.user.FactoryMember;
+import businessLogic.user.UserInterface;
 
 /**
  * @author dani
@@ -105,12 +109,14 @@ public class AdminUserDataWindowController {
 
         // search value has changed
 
-        boolean nicely = false;
         String message = "";
 
-        if (!txtSearchValue.getText().isEmpty()) {
-            
-            switch (
+        if (txtSearchValue.getText().isEmpty()) {
+            txtSearchValue.setPromptText(txtSearchValuePromptText);
+            btnSearch.setDisable(true);
+        
+        } else {
+            /*switch (
             comboBoxSearchParameter
             .getSelectionModel()
             .getSelectedItem().toString()) {
@@ -127,79 +133,76 @@ public class AdminUserDataWindowController {
 
                 default:
                 break;
-            }
-
-            btnSearch.setDisable(!nicely);
-        
-        } else {
-            txtSearchValue.setPromptText(txtSearchValuePromptText);
-            btnSearch.setDisable(true);
+            }*/
         }
 
 
 
 
 
-        // TODO: fix this, message and look if the loogin exists or not.
-        btnAddUser.setDisable(!everyUserParamIsCorrect());
-        btnModifyUser.setDisable(!everyUserParamIsCorrect());
-        btnDeleteUser.setDefaultButton(!everyUserParamIsCorrect());   
+        boolean correctParams = 
+        everyUserParamIsCorrect();
 
-
-        boolean activate = true;
-
-        if (!everyUserParamIsEmpty()) {
-
-            if (txtLogin.getText().isEmpty())
-                txtLogin.setPromptText(txtLoginPromptText);
-            else 
-                activate = activate || AUDW.isLoginFormat(txtLogin.getText());
-        
-            if (txtEmail.getText().isEmpty())
-                txtEmail.setPromptText(txtEmailPromptText);    
-            else
-                activate = activate || AUDW.isFullNameFormat(txtFullName.getText());
-
-            if (txtFullName.getText().isEmpty())
-                txtFullName.setPromptText(txtFullNamePromptText);
-            else
-                activate = activate || AUDW.isEmailFormat(txtEmail.getText()); 
-        } else if (everyUserParamIsCorrect()) {
-
-
-        }
-
-
-
-
-
+            btnAddUser.setDisable(!correctParams);
+            btnModifyUser.setDisable(!correctParams);
+            btnDeleteUser.setDefaultButton(!correctParams);
     }
 
     /**
-     * check that every parameter is completed
+     * TODO: checking should be correct
+     * puts every prompt text
      * @return true if every user param is full,
      * and with the correct format.
-     * TODO: checking should be correct
      */
+
     private boolean everyUserParamIsCorrect() {
+        boolean 
+            nicely = true;
+
+        // text checkings
+
+        if (txtLogin.getText().isEmpty())
+            txtLogin.setPromptText(txtLoginPromptText);
+        else 
+            nicely = nicely && AUDW.isLoginFormat(txtLogin.getText());
+    
+        if (txtEmail.getText().isEmpty())
+            txtEmail.setPromptText(txtEmailPromptText);    
+        else
+            nicely = nicely && AUDW.isFullNameFormat(txtFullName.getText());
+
+        if (txtFullName.getText().isEmpty())
+            txtFullName.setPromptText(txtFullNamePromptText);
+        else
+            nicely = nicely && AUDW.isEmailFormat(txtEmail.getText()); 
+
+
+        // date checkings
         
-        return 
-            AUDW.isLoginFormat(txtLogin.getText()) && 
-            AUDW.isEmailFormat(txtEmail.getText()) &&
-            AUDW.isFullNameFormat(txtFullName.getText()) &&
-            
-              (checkBoxPrivilegeAdmin.isArmed() 
+        if (!datePickerStart.isArmed())
+            datePickerStart.setPromptText(datePickerStartText);
+        else
+            nicely = nicely && AUDW.dateFormatIsFine(datePickerStart.getValue());
+        
+        if (!datePickerEnd.isArmed())
+            datePickerEnd.setPromptText(datePickerEndText);
+        else
+            nicely = nicely && AUDW.dateFormatIsFine(datePickerEnd.getValue());
+
+
+        // checkbox checkings
+
+        nicely = nicely &&
+            (checkBoxPrivilegeAdmin.isArmed() 
             || checkBoxPrivilegeMember.isArmed() 
             || checkBoxPrivilegeUser.isArmed()) && 
-
             
-              (checkBoxStatusEnabled.isArmed() 
+            (checkBoxStatusEnabled.isArmed() 
             || checkBoxStatusDisabled.isArmed()) &&
             
-            comboBoxMembershipPlans.isArmed() &&
-            
-            (datePickerStart.isArmed() &&
-            datePickerEnd.isArmed());
+            comboBoxMembershipPlans.isArmed();
+
+        return nicely;
     }
 
     /**
@@ -282,6 +285,7 @@ public class AdminUserDataWindowController {
     private void handlePrintButtonAction() {
     }
 
+
     private String formatNormal(String s) {
         return 
             Character.toUpperCase(
@@ -342,6 +346,16 @@ public class AdminUserDataWindowController {
         txtEmail.setPromptText(txtEmailPromptText);
         txtFullName.setPromptText(txtFullNamePromptText);
 
+
+        /*
+        checkboxPrivilegeAdmin;
+        checkBoxPrivilegeMember;
+        checkBoxPrivilegeClient;
+        checkBoxStatusDisabled;
+        checkBoxStatusEnabled; */
+
+        
+
         // combobox
         comboBoxSearchParameter.setOnAction((event) -> {
             comboBoxMemberStatusSearch.getItems().clear();
@@ -384,38 +398,41 @@ public class AdminUserDataWindowController {
             FXCollections
             .observableArrayList(searchParametersList));
 
+        //UserInterface.SearchParameter.values()
+
         // TODO: listener of parameter change
 
         comboBoxMemberStatusSearch.setVisible(false);
 
-        // table users
+        // table users 
+        {
+            tableUsers.getSelectionModel().selectedItemProperty()
+                .addListener(this::handleUsersTableSelectionChanged);
+
+            List <String> tableColumns = 
+                Arrays.asList("login", "email", "fullName", "status", "privilege", "plan", "lastPasswordChange");
         
-        tableUsers.getSelectionModel().selectedItemProperty()
-            .addListener(this::handleUsersTableSelectionChanged);
+            
+            tbColLogin.setCellValueFactory(
+                new PropertyValueFactory<>("login"));
+            tbColEmail.setCellValueFactory(
+                new PropertyValueFactory<>("email"));
 
-        List <String> tableColumns = 
-            Arrays.asList("login", "email", "fullName", "status", "privilege", "plan", "lastPasswordChange");
-    
-        
-        tbColLogin.setCellValueFactory(
-            new PropertyValueFactory<>("login"));
-        tbColEmail.setCellValueFactory(
-            new PropertyValueFactory<>("email"));
+            tbColFullName.setCellValueFactory(
+                new PropertyValueFactory<>("fullName"));
 
-        tbColFullName.setCellValueFactory(
-            new PropertyValueFactory<>("fullName"));
+            tbColStatus.setCellValueFactory(
+                new PropertyValueFactory<>("status"));
 
-        tbColStatus.setCellValueFactory(
-            new PropertyValueFactory<>("status"));
+            tbColPrivilege.setCellValueFactory(
+                new PropertyValueFactory<>("privilege"));
 
-        tbColPrivilege.setCellValueFactory(
-            new PropertyValueFactory<>("privilege"));
+            tbColMembershipPlan.setCellValueFactory(
+                new PropertyValueFactory<>("plan"));
 
-        tbColMembershipPlan.setCellValueFactory(
-            new PropertyValueFactory<>("plan"));
-
-        tbColLastPasswordChange.setCellValueFactory(
-            new PropertyValueFactory<>("lastPasswordChange"));  
+            tbColLastPasswordChange.setCellValueFactory(
+                new PropertyValueFactory<>("lastPasswordChange"));  
+        }
 
         stage.show();
     }

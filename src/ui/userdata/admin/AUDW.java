@@ -1,5 +1,6 @@
 package ui.userdata.admin;
 
+import java.time.LocalDate;
 import java.util.regex.Pattern;
 
 public class AUDW {
@@ -39,6 +40,10 @@ public class AUDW {
      */
     public static boolean isFullNameFormat(String fullName) {
         return fullName.contains(" ");
+    }
+
+    public static boolean dateFormatIsFine(LocalDate date) {
+        return false;
     }
 
 
