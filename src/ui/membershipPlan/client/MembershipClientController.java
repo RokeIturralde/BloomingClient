@@ -5,8 +5,8 @@
  */
 package ui.membershipPlan.client;
 
-import businessLogic.MemberInterface;
 import businessLogic.membership.MembershipPlanInterface;
+import businessLogic.user.MemberInterface;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.logging.Logger;
