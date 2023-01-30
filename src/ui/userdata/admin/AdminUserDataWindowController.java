@@ -151,8 +151,12 @@ public class AdminUserDataWindowController {
 
 
 
-        
-    }
+        if (!everyUserParamIsEmpty())
+            if (AUDW.isLoginFormat(txtLogin.getText()))
+            if (AUDW.isEmailFormat(txtEmail.getText()))
+            if (AUDW.isNameFormat(txtFullName.getText()))
+
+        }
 
     /**
      * check that every parameter is full
