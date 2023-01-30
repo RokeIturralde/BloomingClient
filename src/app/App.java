@@ -7,6 +7,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.stage.Stage;
+import ui.content.ContentWindowController;
 import ui.signIn.SignInController;
 
 public class App extends Application {
@@ -18,10 +19,10 @@ public class App extends Application {
     @Override
     public void start(Stage stage) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/signIn/SignInCrud.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/content/ContentWindow.fxml"));
             Parent root = (Parent) loader.load();
             //Obtain the Sign In window controller
-            SignInController controller = (SignInController) loader.getController();
+            ContentWindowController controller = (ContentWindowController) loader.getController();
 
             controller.setStage(stage);
             controller.initStage(root);

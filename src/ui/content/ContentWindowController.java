@@ -18,6 +18,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -31,6 +32,7 @@ import java.util.Optional;
 import java.util.logging.Level;
 import javafx.stage.Stage;
 import java.util.logging.Logger;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -44,6 +46,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
@@ -54,6 +57,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
 import javafx.stage.WindowEvent;
+import javafx.util.Callback;
 import javax.imageio.ImageIO;
 import javax.ws.rs.core.GenericType;
 import net.sf.jasperreports.engine.JRException;
@@ -247,16 +251,59 @@ public class ContentWindowController {
                 new PropertyValueFactory<>("name"));
         customImageLocation.setCellValueFactory(
                 new PropertyValueFactory<>("location"));
-        customImageUploadDate.setCellValueFactory(
-                new PropertyValueFactory<>("uploadDate"));
-        /* customImageImage.setCellValueFactory(
-                new PropertyValueFactory<>(tableImage));*/
+        customImageImage.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Content, String>, ObservableValue<String>>() {
+            @Override
+            public ObservableValue<String> call(TableColumn.CellDataFeatures<Content, String> uploadDate) {
+                SimpleStringProperty property = new SimpleStringProperty();
+                property.setValue("View Image");
+                return property;
+            }
+        });
         customTextName.setCellValueFactory(
                 new PropertyValueFactory<>("name"));
         customTextLocation.setCellValueFactory(
                 new PropertyValueFactory<>("location"));
+        customImageUploadDate.setCellValueFactory(
+                new PropertyValueFactory<>("uploadDate"));
+        customImageUploadDate.setCellFactory(column -> {
+            TableCell<Content, Date> cell = new TableCell<Content, Date>() {
+                private SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+
+                @Override
+                protected void updateItem(Date item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty) {
+                        setText(null);
+                    } else {
+                        this.setText(format.format(item));
+
+                    }
+                }
+            };
+
+            return cell;
+        });
+
         customTextUploadDate.setCellValueFactory(
                 new PropertyValueFactory<>("uploadDate"));
+        customTextUploadDate.setCellFactory(column -> {
+            TableCell<Content, Date> cell = new TableCell<Content, Date>() {
+                private SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+
+                @Override
+                protected void updateItem(Date item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty) {
+                        setText(null);
+                    } else {
+                        this.setText(format.format(item));
+
+                    }
+                }
+            };
+
+            return cell;
+        });
         customTextDescription.setCellValueFactory(
                 new PropertyValueFactory<>("text"));
         /**
