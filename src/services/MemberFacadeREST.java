@@ -1,6 +1,5 @@
 package services;
 
-import businessLogic.MemberInterface;
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.WebTarget;
@@ -19,7 +18,7 @@ import javax.ws.rs.core.GenericType;
  *
  * @author 2dam
  */
-public class MemberFacadeREST implements MemberInterface {
+public class MemberFacadeREST{
 
     private WebTarget webTarget;
     private Client client;
@@ -38,7 +37,7 @@ public class MemberFacadeREST implements MemberInterface {
         webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).put(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_JSON));
     }
 
-    public <T> T getEveryMember_XML(Class<T> responseType) throws ClientErrorException {
+    public <T> T getEveryMember_XML(GenericType<T> responseType) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path("getEveryMember");
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
@@ -50,7 +49,7 @@ public class MemberFacadeREST implements MemberInterface {
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(responseType);
     }
 
-    public <T> T getEveryUser_XML(Class<T> responseType) throws ClientErrorException {
+    public <T> T getEveryUser_XML(GenericType<T> responseType) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path("getEveryUser");
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);

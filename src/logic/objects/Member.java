@@ -1,11 +1,5 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package logic.objects;
 
-import java.io.Serializable;
 import java.util.Date;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -15,13 +9,36 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 
 @XmlRootElement(name="member")
-
-public class Member extends User implements Serializable {
+public class Member extends User {
 
     private static final long serialVersionUID = 1L;
     private Date memberEndingDate;
     private Date memberStartingDate;
     private MembershipPlan plan;
+
+    public Member(
+    String login, String email, String fullName, String password, 
+    Privilege privilege, Status status, Date lastPasswordChange, 
+    Date memberEndingDate, Date memberStartingDate, MembershipPlan plan) {
+        super(login, email, fullName, password, privilege, status, lastPasswordChange);
+        this.memberEndingDate = memberEndingDate;
+        this.memberStartingDate = memberStartingDate;
+        this.plan = plan;
+    }
+
+
+
+    public Member(Date memberEndingDate, Date memberStartingDate, MembershipPlan plan) {
+        this.memberEndingDate = memberEndingDate;
+        this.memberStartingDate = memberStartingDate;
+        this.plan = plan;
+    }
+
+
+
+    public Member() {}
+
+    
 
     public Date getMemberEndingDate() {
         return memberEndingDate;

@@ -21,15 +21,16 @@ public class MembershipPlan implements Serializable {
     private Integer id;
     private Integer albumLimit;
     private String description;
-    private String duration;
+    private Integer duration;
     private List<Member> members;
     private String name;
     private Float price;
     private Boolean shareable;
     private Integer cont;
 
-    public MembershipPlan() {
-    }
+    public MembershipPlan() {}
+
+    public MembershipPlan(int id) {this.id = id;}
 
     public Integer getId() {
         return id;
@@ -55,11 +56,11 @@ public class MembershipPlan implements Serializable {
         this.description = description;
     }
 
-    public String getDuration() {
+    public Integer getDuration() {
         return duration;
     }
 
-    public void setDuration(String duration) {
+    public void setDuration(Integer duration) {
         this.duration = duration;
     }
 
