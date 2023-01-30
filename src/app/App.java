@@ -9,6 +9,7 @@ import javafx.scene.Parent;
 import javafx.stage.Stage;
 import ui.membershipPlan.admin.AdminMembershipPlanController;
 import ui.signIn.SignInController;
+import ui.userdata.admin.AdminUserDataWindowController;
 
 public class App extends Application {
 
@@ -23,6 +24,7 @@ public class App extends Application {
             Parent root = (Parent) loader.load();
             //Obtain the Sign In window controller
             AdminMembershipPlanController controller = (AdminMembershipPlanController) loader.getController();
+
             controller.setStage(stage);
             controller.initStage(root);
         } catch (IOException ex) {
