@@ -26,15 +26,25 @@
             </Text>
             <ImageView fx:id="imgLogo" fitHeight="105.0" fitWidth="130.0" layoutX="6.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../../resources/bloomingPNG.png" />
+                  <Image url="@../../../resources/bloomingPNG.png" />
                </image>
             </ImageView>
-            <Button fx:id="btnMembership" layoutX="4.0" layoutY="225.0" mnemonicParsing="false" opacity="0.0" prefHeight="35.0" prefWidth="127.0" onAction="#handleMembershipButtonAction">
+            <Button fx:id="btnMembership" layoutX="4.0" layoutY="225.0" mnemonicParsing="false" onAction="#handleMembershipButtonAction" opacity="0.0" prefHeight="35.0" prefWidth="127.0">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
-            <Button fx:id="btnLogo" layoutX="4.0" layoutY="14.0" mnemonicParsing="false" opacity="0.0" prefHeight="111.0" prefWidth="127.0" onAction="#handleLogoButtonAction">
+            <Button fx:id="btnLogo" layoutX="4.0" layoutY="14.0" mnemonicParsing="false" onAction="#handleLogoButtonAction" opacity="0.0" prefHeight="111.0" prefWidth="127.0">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+            <Text fontSmoothingType="LCD" layoutX="-12.0" layoutY="184.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Users" textAlignment="CENTER" wrappingWidth="158.13672637939453">
+               <font>
+                  <Font name="Microsoft YaHei" size="18.0" />
+               </font>
+            </Text>
+            <Button id="btnUsers" fx:id="btnUsers" layoutX="4.0" layoutY="160.0" mnemonicParsing="false" onAction="#handleUsersButtonAction" opacity="0.0" prefHeight="35.0" prefWidth="127.0">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
@@ -53,9 +63,9 @@
             <TableColumn fx:id="cPrice" minWidth="0.0" prefWidth="113.60003662109375" text="Price" />
          </columns>
       </TableView>
-      <Label fx:id="lblName" layoutX="251.0" layoutY="52.0" prefHeight="17.0" prefWidth="39.0" text="Name:" />
+      <Label fx:id="lblName" layoutX="251.0" layoutY="52.0" prefHeight="17.0" prefWidth="69.0" text="Name:" />
       <TextField fx:id="txtName" layoutX="251.0" layoutY="75.0" prefHeight="25.0" prefWidth="193.0" />
-      <Label fx:id="lblDescription" layoutX="250.0" layoutY="117.0" prefHeight="17.0" prefWidth="69.0" text="Description:" />
+      <Label fx:id="lblDescription" layoutX="250.0" layoutY="117.0" prefHeight="17.0" prefWidth="89.0" text="Description:" />
       <Label fx:id="lblAlbumLimit" layoutX="478.0" layoutY="52.0" prefHeight="17.0" prefWidth="81.0" text="Album limit:" />
       <Label fx:id="lblDuration" layoutX="477.0" layoutY="118.0" text="Duration" />
       <Label fx:id="lblShareable" layoutX="676.0" layoutY="52.0" text="Shareable" />
@@ -64,19 +74,20 @@
       <TextField fx:id="txtDuration" layoutX="477.0" layoutY="135.0" />
       <CheckBox fx:id="cbShareable" layoutX="678.0" layoutY="79.0" mnemonicParsing="false" prefHeight="17.0" prefWidth="7.0" />
       <TextField fx:id="txtPrice" layoutX="673.0" layoutY="135.0" />
-      <Button fx:id="btnDelete" layoutX="916.0" layoutY="57.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="89.0" text="Delete" onAction="#handleDeleteButtonAction" />
-      <Button fx:id="btnModify" layoutX="916.0" layoutY="135.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="89.0" text="Modify" onAction="#handleModifyDeleteButtonAction" />
-      <Button fx:id="btnCreate" layoutX="1050.0" layoutY="60.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="89.0" text="Create" onAction="#handleCreateButtonAction" />
-      <Button fx:id="btnPrint" layoutX="1078.0" layoutY="458.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="81.0" text="Print" onAction="#handlePrintButtonAction" />
+      <Button fx:id="btnDelete" layoutX="916.0" layoutY="57.0" mnemonicParsing="false" onAction="#handleDeleteButtonAction" prefHeight="25.0" prefWidth="89.0" text="Delete" />
+      <Button fx:id="btnModify" layoutX="916.0" layoutY="135.0" mnemonicParsing="false" onAction="#handleModifyDeleteButtonAction" prefHeight="25.0" prefWidth="89.0" text="Modify" />
+      <Button fx:id="btnCreate" layoutX="1050.0" layoutY="60.0" mnemonicParsing="false" onAction="#handleCreateButtonAction" prefHeight="25.0" prefWidth="89.0" text="Create" />
+      <Button fx:id="btnPrint" layoutX="1078.0" layoutY="458.0" mnemonicParsing="false" onAction="#handlePrintButtonAction" prefHeight="25.0" prefWidth="81.0" text="Print" />
       <TextArea fx:id="txtaDescription" layoutX="251.0" layoutY="140.0" prefHeight="68.0" prefWidth="193.0" />
       <TextField fx:id="txtSearch" layoutX="362.0" layoutY="247.0" />
-      <Button fx:id="btnSearch" layoutX="600.0" layoutY="247.0" mnemonicParsing="false" text="Search" onAction="#handleSearchButtonAction" />
+      <Button fx:id="btnSearch" layoutX="600.0" layoutY="247.0" mnemonicParsing="false" onAction="#handleSearchButtonAction" text="Search" />
       <ComboBox fx:id="cboxParameter" layoutX="195.0" layoutY="247.0" prefWidth="150.0" />
-      <Button fx:id="btnClear" layoutX="718.0" layoutY="247.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="59.0" text="Clear" onAction="#handleClearButtonAction" />
+      <Button fx:id="btnClear" layoutX="718.0" layoutY="247.0" mnemonicParsing="false" onAction="#handleClearButtonAction" prefHeight="25.0" prefWidth="59.0" text="Clear" />
       <Label layoutX="1119.0" layoutY="21.0" prefHeight="24.0" prefWidth="39.0" text="Help" textFill="#3c75df" underline="true">
          <font>
             <Font size="15.0" />
          </font>
       </Label>
+      <Button fx:id="btnShowUsers" layoutX="864.0" layoutY="247.0" mnemonicParsing="false" onAction="#handleShowUsersButtonAction" text="Show users" />
    </children>
 </Pane>

@@ -22,7 +22,7 @@
                <children>
                   <ImageView fitHeight="105.0" fitWidth="130.0" layoutX="6.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../../resources/bloomingPNG.png" />
+                        <Image url="@../../../resources/bloomingPNG.png" />
                      </image>
                   </ImageView>
                   <Text fontSmoothingType="LCD" layoutX="28.0" layoutY="174.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx background color:: D66136;" text="Albums" wrappingWidth="81.33673095703125">
@@ -51,7 +51,7 @@
                      </cursor></Button>
                   <ImageView fitHeight="49.0" fitWidth="55.0" layoutX="43.0" layoutY="589.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../../resources/user.png" />
+                        <Image url="@../../../resources/user.png" />
                      </image>
                   </ImageView>
                   <Text id="btnProfile" fontSmoothingType="LCD" layoutX="-10.0" layoutY="668.0" strokeType="OUTSIDE" strokeWidth="0.0" text="My profile" textAlignment="CENTER" wrappingWidth="158.13672637939453">
@@ -81,7 +81,7 @@
                      </cursor></Button>
                </children>
             </Pane>
-            <TableView id="tbPlans" layoutX="174.0" layoutY="213.0" prefHeight="450.0" prefWidth="976.0">
+            <TableView id="tbPlans" fx:id="tbPlans" layoutX="174.0" layoutY="213.0" prefHeight="450.0" prefWidth="976.0">
               <columns>
                 <TableColumn id="cName" prefWidth="172.0" text="Name" />
                 <TableColumn id="cDescription" prefWidth="236.79995727539062" text="Description" />
@@ -91,10 +91,10 @@
                   <TableColumn id="cPrice" prefWidth="133.60009765625" text="Price" />
               </columns>
             </TableView>
-            <TextField id="txtSearch" layoutX="341.0" layoutY="176.0" />
-            <Button id="bSearch" layoutX="505.0" layoutY="176.0" mnemonicParsing="false" text="Search" />
-            <ComboBox layoutX="174.0" layoutY="176.0" prefWidth="150.0" />
-            <Button id="bSearch" layoutX="573.0" layoutY="176.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="59.0" text="Clear" />
+            <TextField id="txtSearch" fx:id="txtSearch" layoutX="341.0" layoutY="176.0" />
+            <Button id="btnSearch" fx:id="btnSearch" layoutX="505.0" layoutY="176.0" mnemonicParsing="false" text="Search" />
+            <ComboBox id="cbParameter" fx:id="cbParameter" layoutX="174.0" layoutY="176.0" prefWidth="150.0" />
+            <Button id="btnSearch" fx:id="btnClear" layoutX="573.0" layoutY="176.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="59.0" text="Clear" />
             <Label layoutX="1095.0" layoutY="43.0" prefHeight="24.0" prefWidth="39.0" text="Help" textFill="#3c75df" underline="true">
                <font>
                   <Font size="15.0" />

@@ -56,8 +56,7 @@ public class User implements Serializable {
     public void setSharedAlbums(List<Album> sharedAlbums) {
         this.sharedAlbums = sharedAlbums;
     }
-
-
+    
     public String getEmail() {
         return email;
     }

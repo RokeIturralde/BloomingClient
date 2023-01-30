@@ -35,7 +35,7 @@ public class MembershipPlanFacadeREST implements MembershipPlanInterface{
         webTarget = client.target(BASE_URI).path("entities.membershipplan");
     }
 
-    public <T> T findPlanByName_XML(Class<T> responseType, String name) throws ClientErrorException {
+    public <T> T findPlanByName_XML(GenericType<T> responseType, String name) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("findByName/{0}", new Object[]{name}));
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
@@ -47,7 +47,7 @@ public class MembershipPlanFacadeREST implements MembershipPlanInterface{
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(responseType);
     }
 
-    public <T> T findPlanByDuration_XML(Class<T> responseType, String duration) throws ClientErrorException {
+    public <T> T findPlanByDuration_XML(GenericType<T> responseType, String duration) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("duration/{0}", new Object[]{duration}));
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
@@ -87,7 +87,7 @@ public class MembershipPlanFacadeREST implements MembershipPlanInterface{
         webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).post(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_JSON));
     }
 
-    public <T> T findPlanByPrice_XML(Class<T> responseType, String price) throws ClientErrorException {
+    public <T> T findPlanByPrice_XML(GenericType<T> responseType, String price) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("price/{0}", new Object[]{price}));
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
