@@ -1,4 +1,4 @@
-package logic.objects;
+package objects;
 
 import java.util.Date;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -7,8 +7,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  *
  * @author dani
  */
-
-@XmlRootElement(name="member")
+@XmlRootElement(name = "member")
 public class Member extends User {
 
     private static final long serialVersionUID = 1L;
@@ -17,16 +16,14 @@ public class Member extends User {
     private MembershipPlan plan;
 
     public Member(
-    String login, String email, String fullName, String password, 
-    Privilege privilege, Status status, Date lastPasswordChange, 
-    Date memberEndingDate, Date memberStartingDate, MembershipPlan plan) {
+            String login, String email, String fullName, String password,
+            Privilege privilege, Status status, Date lastPasswordChange,
+            Date memberEndingDate, Date memberStartingDate, MembershipPlan plan) {
         super(login, email, fullName, password, privilege, status, lastPasswordChange);
         this.memberEndingDate = memberEndingDate;
         this.memberStartingDate = memberStartingDate;
         this.plan = plan;
     }
-
-
 
     public Member(Date memberEndingDate, Date memberStartingDate, MembershipPlan plan) {
         this.memberEndingDate = memberEndingDate;
@@ -34,11 +31,8 @@ public class Member extends User {
         this.plan = plan;
     }
 
-
-
-    public Member() {}
-
-    
+    public Member() {
+    }
 
     public Date getMemberEndingDate() {
         return memberEndingDate;

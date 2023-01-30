@@ -25,7 +25,7 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javax.crypto.Cipher;
-import logic.objects.User;
+import objects.User;
 import ui.album.AlbumsViewController;
 
 /**
@@ -99,22 +99,20 @@ public class SignInController {
     @FXML
     private void handleSignInButtonAction(ActionEvent event) {
         try {
-           /* LOGGER.info("Intentando abrir la ventana Album");
-
+            /* LOGGER.info("Intentando abrir la ventana Album");
             if (Character.isDigit(txtLogin.getText().charAt(0)) || txtLogin.getText().contains(" ")) {
                 throw new LoginFormatException();
             }
-
             //Validates password format
             if (cpPassword.getText().contains(" ")) {
                 throw new LoginPasswordFormatException();
             }
-*/
+             */
             //The data is charged into an User
             User usSignIn = new User();
             usSignIn.setLogin(txtLogin.getText());
             //usSignIn.setPassword(cifrarClavePrivada(cpPassword.getText()));
-           
+
             //The factory is used to obtain the implementation, and the method signIn is called, sending the User from above. 
             //client = (UserInterface) FactoryUser.get();
             /*if (response.getResponseType() != ResponseType.OK) {
@@ -199,11 +197,11 @@ public class SignInController {
     public void setStage(Stage stage) {
         this.stage = stage;
     }
-    
+
     /**
      * A method to encript the password with the server's public key.
-     * 
-     * @param passwd An String with the password to encript 
+     *
+     * @param passwd An String with the password to encript
      * @return An string with the encripted password pased to hexadecimal.
      */
     private String cifrarClavePrivada(String passwd) {
