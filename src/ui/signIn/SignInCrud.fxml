@@ -23,7 +23,7 @@
          </image>
       </ImageView>
       <PasswordField fx:id="cpPassword" layoutX="445.0" layoutY="212.0" prefHeight="30.0" prefWidth="185.0" promptText="Password" />
-      <Button fx:id="btnSignIn" layoutX="560.0" layoutY="292.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="83.0" text="Sign In" />
+      <Button fx:id="btnSignIn" onAction="#handleSignInButtonAction" layoutX="560.0" layoutY="292.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="83.0" text="Sign In" />
       <Label layoutX="445.0" layoutY="251.0" prefHeight="17.0" prefWidth="83.0" text="No account?" />
       <Button fx:id="btnRegister" onAction="#handleRegisterButtonAction" layoutX="523.0" layoutY="247.0" mnemonicParsing="false" opacity="0.0" prefHeight="25.0" prefWidth="47.0" />
       <Label layoutX="523.0" layoutY="247.0" prefHeight="25.0" prefWidth="55.0" text="Register" textFill="#121af8" />

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ui.signIn;
+package ui.signUp;
 
 import javafx.scene.Parent;
 import javafx.stage.Stage;
@@ -12,14 +12,14 @@ import javafx.stage.Stage;
  *
  * @author Usuario
  */
-class SignUpController {
+public class SignUpController {
 
-    void setStage(Stage stage) {
+    public void setStage(Stage stage) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    void initSignUp(Parent root) {
+    public void initSignUp(Parent root) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
 }

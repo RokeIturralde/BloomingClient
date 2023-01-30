@@ -5,6 +5,7 @@
  */
 package ui.signIn;
 
+import ui.signUp.SignUpController;
 import businessLogic.FactoryUser;
 import businessLogic.album.AlbumInterface;
 import exceptions.*;
@@ -97,9 +98,9 @@ public class SignInController {
      * @param event The action event object
      */
     @FXML
-    private void handleAcceptButtonAction(ActionEvent event) {
+    private void handleSignInButtonAction(ActionEvent event) {
         try {
-            LOGGER.info("Intentando abrir la ventana Logged");
+           /* LOGGER.info("Intentando abrir la ventana Album");
 
             if (Character.isDigit(txtLogin.getText().charAt(0)) || txtLogin.getText().contains(" ")) {
                 throw new LoginFormatException();
@@ -109,11 +110,12 @@ public class SignInController {
             if (cpPassword.getText().contains(" ")) {
                 throw new LoginPasswordFormatException();
             }
-
+*/
             //The data is charged into an User
             User usSignIn = new User();
             usSignIn.setLogin(txtLogin.getText());
-            usSignIn.setPassword(cifrarClavePrivada(cpPassword.getText()));
+            //usSignIn.setPassword(cifrarClavePrivada(cpPassword.getText()));
+           
             //The factory is used to obtain the implementation, and the method signIn is called, sending the User from above. 
             //client = (UserInterface) FactoryUser.get();
             /*if (response.getResponseType() != ResponseType.OK) {
@@ -125,15 +127,16 @@ public class SignInController {
             } else {*/
             //Closing SignIn window
             this.stage.close();
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("UIAlbum.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("../album/UIAlbum.fxml"));
             Parent root = (Parent) loader.load();
+            Stage stageAlbum = new Stage();
             //Obtain the Sign In window controller
             AlbumsViewController controller = (AlbumsViewController) loader.getController();
-            controller.setStage(stage);
+            controller.setStage(stageAlbum);
             controller.initStage(root, usSignIn);
             //}
 
-        } catch (Exception ex) {
+        } catch (IOException ex) {
             new Alert(Alert.AlertType.ERROR, ex.getMessage(), ButtonType.OK).showAndWait();
         }
     }

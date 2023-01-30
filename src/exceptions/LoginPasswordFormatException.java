@@ -26,6 +26,6 @@ public class LoginPasswordFormatException extends Exception {
      * @param msg the detail message.
      */
     public LoginPasswordFormatException(String msg) {
-        super(msg);
+        super("Password can't contain blank spaces");
     }
 }

@@ -26,6 +26,6 @@ public class LoginFormatException extends Exception {
      * @param msg the detail message.
      */
     public LoginFormatException(String msg) {
-        super(msg);
+        super("Error with the format of the login,\\n can't start with a number or contain a blank space");
     }
 }
