@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
 
-import org.eclipse.persistence.jpa.jpql.parser.ElseExpressionBNF;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -269,6 +268,7 @@ public class AdminUserDataWindowController {
             txtFullName.setText(u.getFullName()); 
         }
     }
+
     @FXML
     private void handleClearButtonAction() {
     }
