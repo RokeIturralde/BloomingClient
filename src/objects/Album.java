@@ -8,11 +8,13 @@ package objects;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
  * @author Roke
  */
+@XmlRootElement(name = "album")
 public class Album implements Serializable {
 
     private Integer id;
