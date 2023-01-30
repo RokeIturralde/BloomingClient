@@ -6,6 +6,8 @@ public class AUDW {
 
     public final static int MAX_LENGTH = 250;
 
+    // check if its empty
+
     /**
      * TODO: it has to tell you wether it contains weird characters
      * @param login
@@ -35,7 +37,7 @@ public class AUDW {
      * @param fullName
      * @return
      */
-    public static boolean isFullNameFormat(String fullName) {
+    public static boolean isNameFormat(String fullName) {
         return fullName.contains(" ");
     }
 

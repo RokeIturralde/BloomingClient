@@ -1,12 +1,13 @@
 package factories;
 
-import logic.AntiServerTestDataUser;
+import antiserver.AntiServerTestDataUser;
+import businessLogic.user.UserManager;
 
 /**
  * @author dani
  */
 public class FactoryUser {
     public static UserInterface get() {
-        return new AntiServerTestDataUser();
+        return new UserManager();
     }
 }

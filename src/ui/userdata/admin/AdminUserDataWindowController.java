@@ -126,7 +126,7 @@ public class AdminUserDataWindowController {
                 case "Email": nicely = AUDW.isEmailFormat(txtSearchValue.getText());
                 break;
 
-                case "Full Name": nicely = AUDW.isFullNameFormat(txtSearchValue.getText());
+                case "Full Name": nicely = AUDW.isNameFormat(txtSearchValue.getText());
                 break;
 
                 default:
@@ -142,10 +142,16 @@ public class AdminUserDataWindowController {
 
 
 
+
+
         // TODO: fix this, message and look if the loogin exists or not.
         btnAddUser.setDisable(!everyUserParamAreFull());
         btnModifyUser.setDisable(!everyUserParamAreFull());
         btnDeleteUser.setDefaultButton(!everyUserParamAreFull());   
+
+
+
+        
     }
 
     /**
@@ -157,12 +163,13 @@ public class AdminUserDataWindowController {
         return 
             AUDW.isLoginFormat(txtLogin.getText()) && 
             AUDW.isEmailFormat(txtEmail.getText()) &&
-            AUDW.isFullNameFormat(txtFullName.getText()) &&
+            AUDW.isNameFormat(txtFullName.getText()) &&
             
               (checkBoxPrivilegeAdmin.isArmed() 
             || checkBoxPrivilegeMember.isArmed() 
             || checkBoxPrivilegeUser.isArmed()) && 
 
+            
               (checkBoxStatusEnabled.isArmed() 
             || checkBoxStatusDisabled.isArmed()) &&
             

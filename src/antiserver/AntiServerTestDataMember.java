@@ -1,4 +1,4 @@
-package logic;
+package antiserver;
 
 import java.util.List;
 import java.util.stream.Collectors;

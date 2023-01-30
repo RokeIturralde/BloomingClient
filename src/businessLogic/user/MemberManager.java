@@ -1,4 +1,4 @@
-package logic;
+package businessLogic.user;
 
 import factories.MemberInterface;
 import java.util.List;
