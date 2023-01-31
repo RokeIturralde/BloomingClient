@@ -162,7 +162,7 @@
                 <TableColumn fx:id="customTextDescription" prefWidth="147.199951171875" text="Description" />
             </columns>
         </TableView>
-        <Button fx:id="btnPrintCustomText" layoutX="830.0" layoutY="652.0" mnemonicParsing="false" prefHeight="16.0" prefWidth="81.0" text="Print">
+        <Button fx:id="btnPrintCustomText" layoutX="830.0" layoutY="652.0" mnemonicParsing="false" prefHeight="16.0" prefWidth="81.0" text="Print" onAction="#handlePrintCustomTextButtonAction">
             <cursor>
                 <Cursor fx:constant="HAND" />
             </cursor>
@@ -193,10 +193,10 @@
                 <Cursor fx:constant="HAND" />
             </cursor>
         </Button>
-      <Button fx:id="btnClearSelection" layoutX="1038.0" layoutY="327.0" mnemonicParsing="false" onAction="#btnClearSelectionButtonAction" text="Clear Selection">
-         <cursor>
-            <Cursor fx:constant="HAND" />
-         </cursor>
-      </Button>
+        <Button fx:id="btnClearSelection" layoutX="1038.0" layoutY="327.0" mnemonicParsing="false" onAction="#btnClearSelectionButtonAction" text="Clear Selection">
+            <cursor>
+                <Cursor fx:constant="HAND" />
+            </cursor>
+        </Button>
     </children>
 </Pane>

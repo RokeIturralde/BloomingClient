@@ -674,29 +674,6 @@ public class ContentWindowController {
                 Logger.getLogger(ContentWindowController.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-
-        if (cboxParameter.getSelectionModel().getSelectedItem().equals("Upload Date")) {
-            try {
-                /**
-                 * Here is by date, so we call the given method, same as before
-                 */
-                contentList = FXCollections.observableArrayList(client.findContentByDate_XML(new GenericType<List<Content>>() {
-                }, txtValue.getText()));
-                /**
-                 * we fill the tables with the information
-                 */
-                customImageList = findCustomImageByUploadDate(contentList, txtValue.getText());
-                customTextList = findCustomTextByUploadDate(contentList, txtValue.getText());
-                ObservableList<CustomImage> listCustomImage = FXCollections.observableArrayList(customImageList);
-                ObservableList<CustomText> listCustomText = FXCollections.observableArrayList(customTextList);
-                tableCustomImage.setItems(listCustomImage);
-                tableCustomImage.refresh();
-                tableCustomText.setItems(listCustomText);
-                tableCustomText.refresh();
-            } catch (ClientErrorException ex) {
-                Logger.getLogger(ContentWindowController.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
     }
 
     /**
@@ -820,6 +797,20 @@ public class ContentWindowController {
     @FXML
     private void handlePrintCustomTextButtonAction(ActionEvent event
     ) {
+        /**
+         * We select the jrxml and the report is loaded with the table
+         * information
+         */
+        try {
+            JasperReport report = JasperCompileManager.compileReport("src/report/CustomText.jrxml");
+            JRBeanCollectionDataSource dataItems = new JRBeanCollectionDataSource((Collection<Content>) this.tableCustomText.getItems());
+            Map<String, Object> parameters = new HashMap<>();
+            JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameters, dataItems);
+            JasperViewer jasperViewer = new JasperViewer(jasperPrint);
+            jasperViewer.setVisible(true);
+        } catch (JRException ex) {
+            Logger.getLogger(ContentWindowController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -884,7 +875,6 @@ public class ContentWindowController {
         btnFind.setDisable(true);
         cboxParameter.getItems().addAll(
                 "Location",
-                "Upload Date",
                 "Name");
         // Handle action events for the radio buttons. 
         rbCustomImage.setOnAction(e -> {
