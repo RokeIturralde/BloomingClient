@@ -62,9 +62,12 @@ public class AdminUserDataWindowController {
         datePickerEndText = "Membership ending";
 
     @FXML
-    private CheckBox checkBoxStatusEnabled, 
-    checkBoxStatusDisabled, checkBoxPrivilegeAdmin,
-    checkBoxPrivilegeUser, checkBoxPrivilegeMember;
+    private CheckBox checkBoxStatusEnabled;
+
+    @FXML
+    private RadioButton 
+        checkBoxPrivilegeAdmin,
+        checkBoxPrivilegeUser, checkBoxPrivilegeMember;
 
     @FXML
     private TableView <User> tableUsers;
@@ -196,8 +199,7 @@ public class AdminUserDataWindowController {
             || checkBoxPrivilegeMember.isArmed() 
             || checkBoxPrivilegeUser.isArmed()) && 
             
-            (checkBoxStatusEnabled.isArmed() 
-            || checkBoxStatusDisabled.isArmed()) &&
+            checkBoxStatusEnabled.isArmed() &&
             
             comboBoxMembershipPlans.isArmed();
 
@@ -218,8 +220,7 @@ public class AdminUserDataWindowController {
             || checkBoxPrivilegeMember.isArmed() 
             || checkBoxPrivilegeUser.isArmed()) && 
 
-            !(checkBoxStatusEnabled.isArmed() 
-            || checkBoxStatusDisabled.isArmed()) &&
+            !checkBoxStatusEnabled.isArmed() &&
 
             !comboBoxMembershipPlans.isArmed() &&
             
@@ -367,7 +368,6 @@ public class AdminUserDataWindowController {
         checkBoxPrivilegeAdmin.selectedProperty().addListener(cl);
         checkBoxPrivilegeMember.selectedProperty().addListener(cl);
         checkBoxPrivilegeUser.selectedProperty().addListener(cl);
-        checkBoxStatusDisabled.selectedProperty().addListener(cl);
         checkBoxStatusEnabled.selectedProperty().addListener(cl);
 
         

@@ -105,9 +105,9 @@
             <TextField fx:id="txtLogin" layoutX="37.0" layoutY="73.0" promptText="Login" />
             <TextField fx:id="txtEmail" layoutX="37.0" layoutY="119.0" promptText="Email" />
             <TextField fx:id="txtFullName" layoutX="38.0" layoutY="165.0" promptText="Full name" />
-            <RadioButton layoutX="37.0" layoutY="335.0" mnemonicParsing="false" text="Admin" />
-            <RadioButton layoutX="115.0" layoutY="335.0" mnemonicParsing="false" text="Client" />
-            <RadioButton layoutX="190.0" layoutY="335.0" mnemonicParsing="false" text="Member" />
+            <RadioButton fx:id="checkBoxPrivilegeAdmin" layoutX="37.0" layoutY="335.0" mnemonicParsing="false" text="Admin" />
+            <RadioButton fx:id="checkBoxPrivilegeUser" layoutX="115.0" layoutY="335.0" mnemonicParsing="false" text="Client" />
+            <RadioButton fx:id="checkBoxPrivilegeMember" layoutX="190.0" layoutY="335.0" mnemonicParsing="false" text="Member" />
          </children></Pane>
       <Button fx:id="btnPrint" layoutX="479.0" layoutY="609.0" mnemonicParsing="false" onAction="#handlePrintButtonAction" text="Print" />
       <Button fx:id="btnAddUser" layoutX="1022.0" layoutY="634.0" mnemonicParsing="false" onAction="#handleAddUserButtonAction" text="Add user" />
