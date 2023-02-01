@@ -1,6 +1,7 @@
 /build/
 /dist/
 
+/src/antiserver
 
 nbproject/**
 build.xml
