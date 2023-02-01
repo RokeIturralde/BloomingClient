@@ -3,7 +3,8 @@ package ui.userdata.admin;
 import java.time.LocalDate;
 import java.util.regex.Pattern;
 
-public class AUDW {
+// User Param Formater class
+public class USF {
 
     public final static int MAX_LENGTH = 250;
 
@@ -21,12 +22,12 @@ public class AUDW {
     public static boolean isLoginFormat(String login) {
         String patternLogin = 
             "([a-z]*)([a-z0-9]*)";
-            Pattern.matches(login, patternLogin);
-        return login.contains(" ");            
+        Pattern.matches(login, patternLogin);
+        return !login.contains(" ") 
+            && !(login.length() == 1 && login.charAt(0) == ' ');       
     }
 
     /**
-     * TODO: recomendable make this method static from another class
      * @param email
      * @return
      */
@@ -42,10 +43,17 @@ public class AUDW {
      * @param fullName
      * @return
      */
+
     public static boolean isFullNameFormat(String fullName) {
         return fullName.contains(" ");
     }
 
+    /**
+     * TODO: check if the date is (or not) possible
+     * @param date
+     * @return
+     */
+    
     public static boolean dateFormatIsFine(LocalDate date) {
         return false;
     }

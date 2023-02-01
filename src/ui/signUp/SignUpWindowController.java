@@ -21,7 +21,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import objects.User;
-import ui.userdata.admin.AUDW;
+import ui.userdata.admin.USF;
 import businessLogic.user.FactoryMember;
 import businessLogic.user.FactoryUser;
 
@@ -120,17 +120,17 @@ public class SignUpWindowController {
         if (txtLogin.getText().isEmpty())
             txtLogin.setPromptText(txtLoginPromptText);
         else 
-            nicely = nicely && AUDW.isLoginFormat(txtLogin.getText());
+            nicely = nicely && USF.isLoginFormat(txtLogin.getText());
     
         if (txtEmail.getText().isEmpty())
             txtEmail.setPromptText(txtEmailPromptText);    
         else
-            nicely = nicely && AUDW.isFullNameFormat(txtFullName.getText());
+            nicely = nicely && USF.isFullNameFormat(txtFullName.getText());
 
         if (txtFullName.getText().isEmpty())
             txtFullName.setPromptText(txtFullNamePromptText);
         else
-            nicely = nicely && AUDW.isEmailFormat(txtEmail.getText()); 
+            nicely = nicely && USF.isEmailFormat(txtEmail.getText()); 
 
         if (password.getText().isEmpty())
             password.setPromptText(passwordPromptText);

@@ -85,7 +85,7 @@
                </font>
             </Text>
 
-            <CheckBox fx:id="checkBoxStatusEnabled" layoutX="47.0" layoutY="248.0" mnemonicParsing="false" text="Disabled" />
+            <CheckBox fx:id="checkBoxStatus" layoutX="47.0" layoutY="248.0" mnemonicParsing="false" text="Disabled" />
 
             <Text fontSmoothingType="LCD" layoutX="37.0" layoutY="306.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Privilege" wrappingWidth="158.13672637939453">
                <font>
@@ -105,9 +105,9 @@
             <TextField fx:id="txtLogin" layoutX="37.0" layoutY="73.0" promptText="Login" />
             <TextField fx:id="txtEmail" layoutX="37.0" layoutY="119.0" promptText="Email" />
             <TextField fx:id="txtFullName" layoutX="38.0" layoutY="165.0" promptText="Full name" />
-            <RadioButton fx:id="checkBoxPrivilegeAdmin" layoutX="37.0" layoutY="335.0" mnemonicParsing="false" text="Administrator" />
-            <RadioButton fx:id="checkBoxPrivilegeUser" layoutX="141.0" layoutY="335.0" mnemonicParsing="false" text="Client" />
-            <RadioButton fx:id="checkBoxPrivilegeMember" layoutX="201.0" layoutY="335.0" mnemonicParsing="false" text="Member" />
+            <RadioButton fx:id="radioButtonAdmin" layoutX="37.0" layoutY="335.0" mnemonicParsing="false" text="Administrator" />
+            <RadioButton fx:id="radioButtonClient" layoutX="141.0" layoutY="335.0" mnemonicParsing="false" text="Client" />
+            <RadioButton fx:id="radioButtonMember" layoutX="201.0" layoutY="335.0" mnemonicParsing="false" text="Member" />
          </children></Pane>
       <Button fx:id="btnPrint" layoutX="479.0" layoutY="609.0" mnemonicParsing="false" onAction="#handlePrintButtonAction" text="Print" />
       <Button fx:id="btnAddUser" layoutX="1022.0" layoutY="634.0" mnemonicParsing="false" onAction="#handleAddUserButtonAction" text="Add user" />
