@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
 
+import com.fasterxml.jackson.databind.ser.std.EnumSerializer;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -277,20 +278,20 @@ public class AdminUserDataWindowController {
         // TODO: PLEASE PLEASE TELL ME THERE'S A BETTER WAY OF CATCHING EXCEPTIONS.
             try {
                 switch (selection) {
-                    case "Login": searchResults = 
+                    case "Login" : searchResults = 
                         Arrays.asList(
                             FactoryUser.get()
                             .findUserByLogin(param)
                         );
                     break;
                 
-                    case "Email": searchResults =
+                    case "Email" : searchResults =
                         Arrays.asList(
                             FactoryUser.get().findUserByEmail(param)
                         );
                     break;
 
-                    case "Name": searchResults = 
+                    case "Name" : searchResults = 
                         FactoryUser.get()
                             .findUserByName(param);   
                     break;
@@ -301,6 +302,23 @@ public class AdminUserDataWindowController {
                 // TODO: handle exception :((((((
             }
 
+        else if (enumeratedSearches.contains(selection))
+            try {
+                switch (selection) {
+                    case "Status" : searchResults = 
+                        FactoryUser.get().findUserByStatus(param);
+                    break;
+
+                    /* case "Privilege" : searchResults = 
+                        FactoryUser.get
+                    break; */
+                }
+            } catch (Exception e) {
+                // TODO: handle exception
+            }
+
+        else
+            System.out.println("Bro please select somethin'");
         tableUsers.setItems(FXCollections.observableArrayList(searchResults));
 
 
@@ -461,9 +479,12 @@ public class AdminUserDataWindowController {
                 
             });
            
-        comboBoxSearchParameter.setItems(
+        /* comboBoxSearchParameter.setItems(
             FXCollections
-            .observableArrayList(textSearches));
+            .observableArrayList(textSearches)); */
+            comboBoxSearchParameter.setItems(
+                FXCollections
+                .observableArrayList(enumeratedSearches));
         // TODO: add both items.
 
 
