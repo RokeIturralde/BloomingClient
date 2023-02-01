@@ -1,6 +1,9 @@
 package ui.userdata.admin;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -17,6 +20,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import objects.Member;
+import objects.Privilege;
 import objects.Status;
 import objects.User;
 import businessLogic.user.FactoryMember;
@@ -53,6 +57,7 @@ public class AdminUserDataWindowController {
         comboBoxMemberStatusSearch, comboBoxMembershipPlans;
     private final String 
         comboBoxSearchParameterText = "Parameter",
+        comboBoxStatusText = "Status",
         comboBoxMembershipPlansText = "Membership plans";
 
     @FXML
@@ -130,7 +135,7 @@ public class AdminUserDataWindowController {
 
         // search value has changed
 
-        String message = "";
+        
 
         if (txtSearchValue.getText().isEmpty()) {
             txtSearchValue.setPromptText(txtSearchValuePromptText);
@@ -159,16 +164,14 @@ public class AdminUserDataWindowController {
             
         }
 
-
         // any user param (CRUD options) has changed
-
 
         boolean correctParams = 
         everyUserParamIsCorrect();
 
-            btnAddUser.setDisable(!correctParams);
-            btnModifyUser.setDisable(!correctParams);
-            btnDeleteUser.setDefaultButton(!correctParams);
+        btnAddUser.setDisable(!correctParams);
+        btnModifyUser.setDisable(!correctParams);
+        btnDeleteUser.setDefaultButton(!correctParams);
     }
 
     /**
@@ -248,10 +251,8 @@ public class AdminUserDataWindowController {
             !(datePickerStart.isArmed() &&
             datePickerEnd.isArmed());
     }
-
     
 
-    
     private void handlerWindowShowing(WindowEvent event) {
         LOGGER.info("Initializing UserWindowController::handlerWindowShowing");
         
@@ -338,9 +339,47 @@ public class AdminUserDataWindowController {
     private void handleUsersTableSelectionChanged(
     ObservableValue observable,
     Object oldValue, Object newValue) {
+        clearEverything();
 
         User u = User.class.cast(newValue);
-        
+        loadUserData(u);
+
+    }
+
+    private void clearEverything() {
+        txtSearchValue.setPromptText(txtSearchValuePromptText);
+        txtLogin.setPromptText(txtLoginPromptText);
+        txtEmail.setPromptText(txtEmailPromptText);
+        txtFullName.setPromptText(txtFullNamePromptText);
+
+        btnSearch.setDisable(true);
+        btnAddUser.setDisable(true); 
+        btnModifyUser.setDisable(true);  
+        btnDeleteUser.setDisable(true);
+
+        checkBoxStatus.setSelected(false);
+
+        radioButtonAdmin.setSelected(false);
+        radioButtonClient.setSelected(false);
+        radioButtonMember.setSelected(false);
+
+        datePickerStart.setPromptText(datePickerStartText);
+        datePickerEnd.setPromptText(datePickerEndText);
+
+        /*
+         * btnSearch
+         * btnClear
+         * 
+         * checkBoxStatus
+         * radioButtonAdmin
+         * radioButtonClient
+         * radioButtonMember
+         * 
+         * comboBoxSearchParameter
+         * comboBoxMembershipPlans
+         * comboBoxMemberStatusSearch
+         * 
+         */
 
     }
 
@@ -359,24 +398,42 @@ public class AdminUserDataWindowController {
         txtEmail.setText(u.getEmail());
         txtFullName.setText(u.getFullName()); 
 
-        if (u.getStatus().equals(Status.ENABLE)) {
-            checkBoxStatus.arm();
+        boolean enabled = u.getStatus().equals(Status.ENABLE);
+        if (enabled)
             checkBoxStatus.setText(checkBoxStatusEnableText);
-        }
-        else {
-            checkBoxStatus.disarm();
+        else 
             checkBoxStatus.setText(checkBoxStatusDisableText);
-        }
+        
+        checkBoxStatus.setSelected(enabled);
 
-
+        if (u.getPrivilege().equals(Privilege.ADMIN))
+            radioButtonAdmin.setSelected(true);
+        if (u.getPrivilege().equals(Privilege.CLIENT))
+            radioButtonClient.setSelected(true);
+        if (u.getPrivilege().equals(Privilege.MEMBER)) {
+            radioButtonMember.setSelected(true);
             
+            datePickerStart.setValue(
+                toLocalDate(
+                    Member.class.cast(u)
+                    .getMemberStartingDate()));
+            datePickerStart.setValue(
+                toLocalDate(
+                    Member.class.cast(u)
+                    .getMemberEndingDate()));
+        }
+    }
 
-    
-    
+
+    public LocalDate toLocalDate(Date date) {
+        return date.toInstant()
+            .atZone(ZoneId.systemDefault())
+                .toLocalDate();
     }
 
     @FXML
     private void handleClearButtonAction() {
+        clearEverything();
     }
     @FXML
     private void handleAddUserButtonAction() {
@@ -413,37 +470,25 @@ public class AdminUserDataWindowController {
         // text listeners
         txtSearchValue.textProperty().addListener(
             this::handleTextChanged);
-        txtSearchValue.setPromptText(txtSearchValuePromptText);
 
         txtLogin.textProperty().addListener(
             this::handleTextChanged);
-        txtLogin.setPromptText(txtLoginPromptText);
 
         txtEmail.textProperty().addListener(
             this::handleTextChanged);
-        txtEmail.setPromptText(txtEmailPromptText);
 
         txtFullName.textProperty().addListener(
             this::handleTextChanged);
-        txtFullName.setPromptText(txtFullNamePromptText);
 
 
         // buttons
-        btnSearch.setDisable(true);
-            btnSearch.setText(btnSearchText);
+        btnSearch.setText(btnSearchText);
+        btnClear.setText(btnClearText);
+        btnAddUser.setText(btnAddUserText);
+        btnModifyUser.setText(btnModifyUserText);
+        btnDeleteUser.setText(btnDeleteUserText);
 
-        btnClear.setDisable(true);
-            btnClear.setText(btnClearText);
-
-        btnAddUser.setDisable(true);
-            btnAddUser.setText(btnAddUserText);
-
-        btnModifyUser.setDisable(true);
-            btnModifyUser.setText(btnModifyUserText);
-
-        btnDeleteUser.setDisable(true);
-            btnDeleteUser.setText(btnDeleteUserText);
-
+        btnClear.setDisable(false);
 
 
         // radio button
@@ -456,7 +501,7 @@ public class AdminUserDataWindowController {
             
         // TODO: listener
 
-        
+
 
         // checkbox
         checkBoxStatus.selectedProperty()
@@ -474,28 +519,30 @@ public class AdminUserDataWindowController {
             });
         
 
-        // combobox
-        /* comboBoxSearchParameter.setItems(
-            FXCollections
-            .observableArrayList(textSearches)); */
-            comboBoxSearchParameter
-                .getItems().addAll(textSearches);
-            comboBoxSearchParameter
-                .getItems().addAll(enumeratedSearches);
-        // TODO: add both items.
-
+        // combo box
+        comboBoxSearchParameter
+            .getItems().addAll(textSearches);
+        comboBoxSearchParameter
+            .getItems().addAll(enumeratedSearches);
 
 
         comboBoxSearchParameter.setOnAction((event) -> {
             //comboBoxMemberStatusSearch.getItems().clear();
+
+            String v = comboBoxSearchParameter.getSelectionModel().getSelectedItem();
+
+            //if (v.equals(comboBoxMembershipPlansText)) 
+                
+            
+
             
 
             // TODO: pulir 
 
-                switch (comboBoxSearchParameter.getSelectionModel().getSelectedItem()) {
+                switch (v) {
                 case "Privilege":
 
-                    comboBoxMemberStatusSearch.setPromptText("Privilege");
+                    
                         comboBoxMemberStatusSearch.setItems(
                             FXCollections
                             .observableArrayList(privileges));
@@ -504,7 +551,7 @@ public class AdminUserDataWindowController {
                 break;
 
                 case "Status":
-                    comboBoxMemberStatusSearch.setPromptText("Status");
+                    
                         comboBoxMemberStatusSearch.setItems(
                             FXCollections
                             .observableArrayList(status));
