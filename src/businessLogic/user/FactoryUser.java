@@ -1,8 +1,6 @@
 package businessLogic.user;
 
-import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 
-import antiserver.AntiServerTestDataUser;
 import businessLogic.user.managers.UserManager;
 
 /**

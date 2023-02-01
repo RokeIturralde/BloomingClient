@@ -8,7 +8,10 @@ import java.util.logging.Logger;
 import javax.ws.rs.core.GenericType;
 
 import exceptions.ClientErrorException;
-import objects.User;
+import exceptions.LoginDoesNotExistException;
+import exceptions.NotThePasswordException;
+import logic.objects.User;
+
 import services.UserFacadeREST;
 
 public class UserManager implements UserInterface {
@@ -25,6 +28,21 @@ public class UserManager implements UserInterface {
      */
     public UserManager() {
         webClient = new UserFacadeREST();
+    }
+
+    // TODO: if there's time do it inside
+    @Override
+    public User signIn(String login, String password) /*throws LoginDoesNotExistException, NotThePasswordException*/ {
+        User u = null;
+        try {
+            LOGGER.info("User manager: Sign in user with login " + login);
+            u = webClient.signIn_XML(User.class, login, password);
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE,
+                    "UserManager: Exception all members by name, {0}",
+                    e.getMessage());
+        }
+        return u;
     }
 
     @Override

@@ -18,7 +18,8 @@ public class App extends Application {
     @Override
     public void start(Stage stage) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/userdata/admin/AdminUserDataWindow.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/signIn/SignInController"));
+
             Parent root = (Parent) loader.load();
             //Obtain the Sign In window controller
             AdminUserDataWindowController controller = (AdminUserDataWindowController) loader.getController();

@@ -74,16 +74,16 @@ public class AlbumFarcadeREST implements AlbumInterface{
     /**
      *
      * @param <T>
-     * @param genericType
+     * @param objectClass
      * @param id
      * @return
      * @throws ClientErrorException
      */
     @Override
-    public <T> T findAlbumByID_XML(GenericType<T> genericType, String id) throws ClientErrorException {
+    public <T> T findAlbumByID_XML(Class<T> objectClass, String id) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("{0}", new Object[]{id}));
-        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(genericType);
+        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(objectClass);
     }
 
     public <T> T findAlbumByID_JSON(GenericType<T> genericType, String id) throws ClientErrorException {
