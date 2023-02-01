@@ -78,7 +78,7 @@ public class AdminUserDataWindowController {
 
     private Stage stage;
 
-    private final String WINDOW_NAME = "AdminUserData"; 
+    private final String WINDOW_NAME = "AdminUserData";
 
     // LOGGER that will be used to note every event of the window.
     private static final Logger LOGGER =
@@ -487,7 +487,7 @@ public class AdminUserDataWindowController {
             .observableArrayList(textSearches)); */
             comboBoxSearchParameter.setItems(
                 FXCollections
-                .observableArrayList(enumeratedSearches));
+                .observableArrayList(textSearches));
         // TODO: add both items.
 
 

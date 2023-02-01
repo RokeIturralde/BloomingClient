@@ -37,7 +37,7 @@
                   <Font name="Microsoft YaHei" size="13.0" />
                </font>
             </Text>
-            <Button fx:id="btnRegister" layoutX="463.0" layoutY="610.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="108.0" text="Register" />
+            <Button fx:id="btnRegister" layoutX="463.0" layoutY="610.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="108.0" text="Register" onAction="#handlerRegisterButtonAction"/>
             <Text fontSmoothingType="LCD" layoutX="512.0" layoutY="440.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Password" wrappingWidth="158.13672637939453">
                <font>
                   <Font name="Microsoft YaHei" size="13.0" />
@@ -48,8 +48,8 @@
                   <Font name="Microsoft YaHei" size="13.0" />
                </font>
             </Text>
-            <Button fx:id="btnClear" layoutX="621.0" layoutY="611.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="108.0" text="Clear" />
-            <Button fx:id="btnExit" layoutX="542.0" layoutY="649.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="108.0" text="Exit" />
+            <Button fx:id="btnClear" layoutX="621.0" layoutY="611.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="108.0" text="Clear" onAction="#handlerClearButtonAction"/>
+            <Button fx:id="btnExit" layoutX="542.0" layoutY="649.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="108.0" text="Exit" onAction="#handlerExitButtonAction"/>
             <ImageView fitHeight="125.0" fitWidth="149.0" layoutX="512.0" layoutY="48.0">
                <image>
                   <Image url="@../../resources/bloomingPNG.png" />
