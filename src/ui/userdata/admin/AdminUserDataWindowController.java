@@ -87,9 +87,10 @@ public class AdminUserDataWindowController {
 
 
     // options of the search combobox
-    private final List <String> searchParametersList = 
-        Arrays.asList("Login", "Email", 
-        "Full Name", "Privilege", "Status");
+    private final List <String> textSearches = 
+        Arrays.asList("Login", "Email", "Full Name");
+    private final List <String>  enumeratedSearches = 
+        Arrays.asList("Privilege", "Status");
 
 
 
@@ -99,7 +100,12 @@ public class AdminUserDataWindowController {
 
 
      /**
-      * handle change of any text from the window.
+      * handle change of any text from the window. 
+      * in case of being the search parameter,
+      * check the format and stuff.
+      *
+      * in case of being text from the CRUD, check
+      * every posibility.
       * @param observable
       * @param oldValue
       * @param newValue
@@ -118,28 +124,30 @@ public class AdminUserDataWindowController {
             btnSearch.setDisable(true);
         
         } else {
-            /*switch (
-            comboBoxSearchParameter
-            .getSelectionModel()
-            .getSelectedItem().toString()) {
+            String searchValue = 
+                comboBoxSearchParameter
+                    .getSelectionModel()
+                    .getSelectedItem().toString();
 
-                case "Login": nicely = AUDW.isLoginFormat(txtSearchValue.getText());
+            boolean nicely = textSearches.contains(searchValue);
+            if (nicely)
+                nicely = 
+                (searchValue.equals("Login") 
+                && AUDW.isLoginFormat(txtSearchValue.getText())) ||
                     
-                break;
+                (searchValue.equals("Email") 
+                && AUDW.isEmailFormat(txtSearchValue.getText())) ||
 
-                case "Email": nicely = AUDW.isEmailFormat(txtSearchValue.getText());
-                break;
+                searchValue.equals("Full Name") 
+                && AUDW.isFullNameFormat(txtSearchValue.getText());
+           
+            btnSearch.setDisable(!nicely);
 
-                case "Full Name": nicely = AUDW.isFullNameFormat(txtSearchValue.getText());
-                break;
-
-                default:
-                break;
-            }*/
+            
         }
 
 
-
+        // any user param (CRUD options) has changed
 
 
         boolean correctParams = 
@@ -412,7 +420,7 @@ public class AdminUserDataWindowController {
            
         comboBoxSearchParameter.setItems(
             FXCollections
-            .observableArrayList(searchParametersList));
+            .observableArrayList(textSearches));
 
         //UserInterface.SearchParameter.values()
 
