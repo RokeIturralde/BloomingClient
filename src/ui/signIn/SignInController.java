@@ -27,10 +27,11 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import objects.Privilege;
+import objects.User;
+
 import javax.crypto.Cipher;
 
-import logic.objects.Privilege;
-import logic.objects.User;
 
 import ui.album.AlbumsViewController;
 import ui.userdata.admin.AdminUserDataWindowController;

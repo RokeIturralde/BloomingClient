@@ -10,8 +10,7 @@ import javax.ws.rs.core.GenericType;
 import exceptions.ClientErrorException;
 import exceptions.LoginDoesNotExistException;
 import exceptions.NotThePasswordException;
-import logic.objects.User;
-
+import objects.User;
 import services.UserFacadeREST;
 
 public class UserManager implements UserInterface {
@@ -159,5 +158,6 @@ public class UserManager implements UserInterface {
         }
         return u;
     }
+
 
 }

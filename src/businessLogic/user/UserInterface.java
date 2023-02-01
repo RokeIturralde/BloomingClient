@@ -5,7 +5,7 @@ import java.util.List;
 import exceptions.ClientErrorException;
 import exceptions.LoginDoesNotExistException;
 import exceptions.NotThePasswordException;
-import logic.objects.User;
+import objects.User;
 
 
 
