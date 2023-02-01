@@ -192,6 +192,7 @@ public class ContentWindowController {
                  * If the table of Image is selected the fields are introduced
                  * in the designated textfields and an image preview appears
                  */
+                btnFileChooser.setDisable(false);
                 rbCustomText.setDisable(true);
                 rbCustomImage.setDisable(false);
                 tableCustomText.getSelectionModel().clearSelection();
@@ -216,7 +217,6 @@ public class ContentWindowController {
                 }
                 InputStream inputStream = new ByteArrayInputStream(byteArray);
                 imagePreview.setImage(new Image(inputStream));
-                btnFileChooser.setDisable(false);
 
             }
         });
@@ -268,6 +268,7 @@ public class ContentWindowController {
                 new PropertyValueFactory<>("location"));
         customImageUploadDate.setCellValueFactory(
                 new PropertyValueFactory<>("uploadDate"));
+
         customImageUploadDate.setCellValueFactory(
                 new Callback<TableColumn.CellDataFeatures<objects.Content, String>, ObservableValue<String>>() {
             @Override
@@ -275,30 +276,12 @@ public class ContentWindowController {
                 SimpleStringProperty property = new SimpleStringProperty();
                 if (param.equals(null)) {
                     property.setValue(null);
-                } else
+                } else {
                     property.setValue(formatDate(param.getValue().getUploadDate()).toString());
+                }
                 return property;
             }
         });
-        /*customImageUploadDate.setCellFactory(column -> {
-            TableCell<Content, Date> cell = new TableCell<Content, Date>() {
-                private SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-
-                @Override
-                protected void updateItem(Date item, boolean empty) {
-                    super.updateItem(item, empty);
-                    if (empty) {
-                        setText(null);
-                    } else {
-                        this.setText(format.format(item));
-
-                    }
-                }
-            };
-
-            return cell;
-        }
-        );*/
 
         customTextUploadDate.setCellValueFactory(
                 new PropertyValueFactory<>("uploadDate"));
@@ -323,6 +306,8 @@ public class ContentWindowController {
             tableCustomText.setItems(listCustomText);
         } catch (ClientErrorException e) {
             new Alert(Alert.AlertType.ERROR, e.getMessage(), ButtonType.OK).showAndWait();
+        } catch (Exception e) {
+            new Alert(Alert.AlertType.ERROR, "Failed connecting to the server, try again later please", ButtonType.OK).showAndWait();
         }
 
         stage.show();
@@ -423,6 +408,9 @@ public class ContentWindowController {
                     } catch (ClientErrorException ex) {
                         Logger.getLogger(ContentWindowController.class
                                 .getName()).log(Level.SEVERE, null, ex);
+                        new Alert(Alert.AlertType.ERROR, ex.getMessage(), ButtonType.OK).showAndWait();
+                    } catch (Exception e) {
+                        new Alert(Alert.AlertType.ERROR, "Failed connecting to the server, try again later please", ButtonType.OK).showAndWait();
                     }
                 } else {
                     new Alert(Alert.AlertType.ERROR, "The Image is not set", ButtonType.OK).showAndWait();
@@ -459,6 +447,8 @@ public class ContentWindowController {
                     Logger.getLogger(ContentWindowController.class
                             .getName()).log(Level.SEVERE, null, ex);
                     new Alert(Alert.AlertType.ERROR, ex.getMessage(), ButtonType.OK).showAndWait();
+                } catch (Exception e) {
+                    new Alert(Alert.AlertType.ERROR, "Failed connecting to the server, try again later please", ButtonType.OK).showAndWait();
                 }
             }
         } else {
@@ -543,6 +533,8 @@ public class ContentWindowController {
                 Logger
                         .getLogger(ContentWindowController.class
                                 .getName()).log(Level.SEVERE, null, ex);
+            } catch (Exception e) {
+                new Alert(Alert.AlertType.ERROR, "Failed connecting to the server, try again later please", ButtonType.OK).showAndWait();
             }
             customTextList = findAllCustomTexts(contentList);
             ObservableList<CustomText> listCustomText = FXCollections.observableArrayList(customTextList);
@@ -586,6 +578,8 @@ public class ContentWindowController {
                     Logger
                             .getLogger(ContentWindowController.class
                                     .getName()).log(Level.SEVERE, null, ex);
+                } catch (Exception e) {
+                    new Alert(Alert.AlertType.ERROR, "Failed connecting to the server, try again later please", ButtonType.OK).showAndWait();
                 }
                 /**
                  * Once the method is finnished the table refreshes and the
@@ -617,6 +611,8 @@ public class ContentWindowController {
                     Logger
                             .getLogger(ContentWindowController.class
                                     .getName()).log(Level.SEVERE, null, ex);
+                } catch (Exception e) {
+                    new Alert(Alert.AlertType.ERROR, "Failed connecting to the server, try again later please", ButtonType.OK).showAndWait();
                 }
                 /**
                  * Refreshing the table and clearing fields
@@ -656,18 +652,20 @@ public class ContentWindowController {
                 contentList = FXCollections.observableArrayList(client.findContentByLocation_XML(new GenericType<List<Content>>() {
                 }, txtValue.getText()));
                 customImageList = findCustomImageByLocation(contentList, txtValue.getText());
-                // customTextList = findCustomTextByLocation(contentList, txtValue.getText());
+                //  customTextList = findCustomTextByLocation(contentList, txtValue.getText());
                 ObservableList<CustomImage> listCustomImage = FXCollections.observableArrayList(customImageList);
-                // ObservableList<CustomText> listCustomText = FXCollections.observableArrayList(customTextList);
+                //  ObservableList<CustomText> listCustomText = FXCollections.observableArrayList(customTextList);
                 tableCustomImage.setItems(listCustomImage);
                 tableCustomImage.refresh();
                 // tableCustomText.setItems(listCustomText);
-                // tableCustomText.refresh();
+                //  tableCustomText.refresh();
             } catch (ClientErrorException ex) {
                 new Alert(Alert.AlertType.ERROR, ex.getMessage(), ButtonType.OK).showAndWait();
                 Logger
                         .getLogger(ContentWindowController.class
                                 .getName()).log(Level.SEVERE, null, ex);
+            } catch (Exception e) {
+                new Alert(Alert.AlertType.ERROR, "Failed connecting to the server, try again later please", ButtonType.OK).showAndWait();
             }
         }
         if (cboxParameter.getSelectionModel().getSelectedItem().equals("Name")) {
@@ -694,6 +692,8 @@ public class ContentWindowController {
                 Logger
                         .getLogger(ContentWindowController.class
                                 .getName()).log(Level.SEVERE, null, ex);
+            } catch (Exception e) {
+                new Alert(Alert.AlertType.ERROR, "Failed connecting to the server, try again later please", ButtonType.OK).showAndWait();
             }
         }
     }
@@ -796,8 +796,7 @@ public class ContentWindowController {
      * @param event
      */
     @FXML
-    private void handlePrintCustomImageButtonAction(ActionEvent event
-    ) {
+    private void handlePrintCustomImageButtonAction(ActionEvent event) {
         /**
          * We select the jrxml and the report is loaded with the table
          * information
@@ -1105,7 +1104,7 @@ public class ContentWindowController {
      * @param txtValue the wanted location to be searcheds
      * @return a list of Custom Texts with the given parameter
      */
-    /*  private ArrayList<CustomText> findCustomTextByLocation(ObservableList<Content> contentList, String txtValue) {
+    private ArrayList<CustomText> findCustomTextByLocation(ObservableList<Content> contentList, String txtValue) {
         ArrayList<CustomText> customTextList = new ArrayList<>();
         CustomText customImage = new CustomText();
         CustomTextInterface customTextInterface = CustomTextFactory.getModel();
@@ -1124,7 +1123,8 @@ public class ContentWindowController {
             }
         }
         return customTextList;
-    }*/
+    }
+
     /**
      * Finds all the Custom Texts by Name
      *
@@ -1132,7 +1132,7 @@ public class ContentWindowController {
      * @param txtValue the text with the name to be searched
      * @return a list with the Custom Texts with the given name
      */
-    /*  private ArrayList<CustomText> findCustomTextByName(ObservableList<Content> contentList, String txtValue) {
+    private ArrayList<CustomText> findCustomTextByName(ObservableList<Content> contentList, String txtValue) {
         ArrayList<CustomText> customTextList = new ArrayList<>();
         CustomText customText = new CustomText();
         CustomTextInterface customTextInterface = CustomTextFactory.getModel();
@@ -1151,7 +1151,8 @@ public class ContentWindowController {
             }
         }
         return customTextList;
-    }*/
+    }
+
     /**
      * Finds all the Custom Images by Name
      *
@@ -1179,12 +1180,13 @@ public class ContentWindowController {
         }
         return customImageList;
     }
+
     public LocalDate convertToLocalDateViaInstant(Date dateToConvert) {
         return dateToConvert.toInstant()
                 .atZone(ZoneId.systemDefault())
                 .toLocalDate();
     }
-    
+
     public LocalDate formatDate(Date dateToFormat) {
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
         convertToLocalDateViaInstant(dateToFormat);
