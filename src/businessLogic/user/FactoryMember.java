@@ -8,7 +8,7 @@ import businessLogic.user.managers.MemberManager;
  */
 public class FactoryMember {
 
-    private static int SYSTEM = 0;
+    private static int SYSTEM = -1;
 
     public static MemberInterface get() {
         if (SYSTEM == 0)

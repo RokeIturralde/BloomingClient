@@ -9,7 +9,7 @@ import businessLogic.user.managers.UserManager;
  */
 public class FactoryUser {
 
-    private static int SYSTEM = 0;
+    private static int SYSTEM = -1;
 
     public static UserInterface get() {
         if (SYSTEM == 0)
