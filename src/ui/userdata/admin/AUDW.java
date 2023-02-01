@@ -11,14 +11,18 @@ public class AUDW {
 
     /**
      * TODO: it has to tell you wether it contains weird characters
+     * login properties are: 
+     *  1 not begining with a number
+     *  2 
      * @param login
      * @return
      */
 
     public static boolean isLoginFormat(String login) {
-        if (login.contains(" "))
-            return false;
-        return true;
+        String patternLogin = 
+            "([a-z]*)([a-z0-9]*)";
+            Pattern.matches(login, patternLogin);
+        return login.contains(" ");            
     }
 
     /**

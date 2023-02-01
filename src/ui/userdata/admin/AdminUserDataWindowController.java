@@ -94,6 +94,12 @@ public class AdminUserDataWindowController {
     private final List <String>  enumeratedSearches = 
         Arrays.asList("Privilege", "Status");
 
+    private final List <String> privileges = 
+        Arrays.asList("Client", "Member", "Admin");
+
+    private final List <String> status = 
+        Arrays.asList("Enable", "Disable");
+    
 
 
     /**
@@ -416,7 +422,7 @@ public class AdminUserDataWindowController {
         txtEmail.setPromptText(txtEmailPromptText);
         txtFullName.setPromptText(txtFullNamePromptText);
 
-        // checkboxes
+        // checkboxes TOD: matame
         ChangeListener <Boolean> cl = new ChangeListener<Boolean>() {
 
             @Override
@@ -445,37 +451,37 @@ public class AdminUserDataWindowController {
         comboBoxSearchParameter.setOnAction((event) -> {
             comboBoxMemberStatusSearch.getItems().clear();
 
-
+            // TODO: pulir 
 
             switch (comboBoxSearchParameter.getSelectionModel().getSelectedItem()) {
                 case "Privilege":
 
                     comboBoxMemberStatusSearch.setPromptText("Privilege");
-                        comboBoxMemberStatusSearch.getItems().add("Client");
-                        comboBoxMemberStatusSearch.getItems().add("Member");
-                        comboBoxMemberStatusSearch.getItems().add("Admin");
-                    txtSearchValue.setVisible(false);
-                    comboBoxMemberStatusSearch.setVisible(true);
+                        comboBoxMemberStatusSearch.setItems(
+                            FXCollections
+                            .observableArrayList(privileges));
                 break;
 
                 case "Status":
                     comboBoxMemberStatusSearch.setPromptText("Status");
-                        comboBoxMemberStatusSearch.getItems().add("Enable");
-                        comboBoxMemberStatusSearch.getItems().add("Disable");
-                    txtSearchValue.setVisible(false);
-                    comboBoxMemberStatusSearch.setVisible(true);
+                        comboBoxMemberStatusSearch.setItems(
+                            FXCollections
+                            .observableArrayList(status));
                 break;
 
                 default:
                     comboBoxMemberStatusSearch.setVisible(false);
                     txtSearchValue.setVisible(true);
-                    txtSearchValue.setPromptText("Value");
+                    txtSearchValue.setPromptText(txtSearchValuePromptText);
                     handleTextChanged(null, null, null);
                 break;
             }
-        
 
-            btnSearch.setDisable(true);
+            txtSearchValue.setVisible(false);
+            comboBoxMemberStatusSearch.setVisible(true);
+       
+
+            btnSearch.setDisable(false);
                 
             });
            
