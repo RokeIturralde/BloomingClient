@@ -4,12 +4,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
 
-import com.fasterxml.jackson.databind.ser.std.EnumSerializer;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -20,7 +18,6 @@ import javafx.stage.WindowEvent;
 import objects.User;
 import businessLogic.user.FactoryMember;
 import businessLogic.user.FactoryUser;
-import businessLogic.user.UserInterface;
 
 /**
  * @author dani
