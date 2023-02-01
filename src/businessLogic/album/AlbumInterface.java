@@ -20,7 +20,7 @@ public interface AlbumInterface {
 
     public void removeAlbum(String id) throws ClientErrorException;
 
-    public <T> T findAlbumByID_XML(GenericType<T> genericType, String id) throws ClientErrorException;
+    public <T> T findAlbumByID_XML(Class<T> objectClass, String id) throws ClientErrorException;
 
     public <T> T findMyAllAlbums_XML(GenericType<T> genericType, String userLogin) throws ClientErrorException;
 

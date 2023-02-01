@@ -20,7 +20,7 @@ public class App extends Application {
     @Override
     public void start(Stage stage) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/membershipPlan/admin/AdminMembershipPlan.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/signIn/SignInController"));
             Parent root = (Parent) loader.load();
             //Obtain the Sign In window controller
             AdminMembershipPlanController controller = (AdminMembershipPlanController) loader.getController();

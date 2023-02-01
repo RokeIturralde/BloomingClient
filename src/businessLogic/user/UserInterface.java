@@ -3,6 +3,8 @@ package businessLogic.user;
 import java.util.List;
 
 import exceptions.ClientErrorException;
+import exceptions.LoginDoesNotExistException;
+import exceptions.NotThePasswordException;
 import logic.objects.User;
 
 /**
@@ -17,6 +19,8 @@ public interface UserInterface {
         STATUS,
         PRIVILEGE
     }
+    
+    public User signIn(String login, String password) throws LoginDoesNotExistException, NotThePasswordException;
 
     public List <User> find(SearchParameter sp, String value) throws ClientErrorException;   
 
