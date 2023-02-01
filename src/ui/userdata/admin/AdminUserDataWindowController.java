@@ -18,6 +18,7 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import objects.User;
 import businessLogic.user.FactoryMember;
+import businessLogic.user.FactoryUser;
 import businessLogic.user.UserInterface;
 
 /**
@@ -256,9 +257,51 @@ public class AdminUserDataWindowController {
 
     @FXML
     private void handleSearchButtonAction() {
-        ObservableList <User> l;
+        List <User> searchResults = null; // every result will be stored in here
+        String 
+            selection = 
+                comboBoxSearchParameter
+                .getSelectionModel()
+                    .getSelectedItem(),
+                param = txtSearchValue.getText();
 
-        // do i have to check?
+        if (param.isEmpty())
+            System.out.println("Please, first input a value to look for"); // TODO: pulir esto
+
+        else if (selection.equalsIgnoreCase("parameter"))
+            System.out.println("Please, select the search parmeter :)))");
+
+
+
+        if (textSearches.contains(selection)) // case of being a text search
+        // TODO: PLEASE PLEASE TELL ME THERE'S A BETTER WAY OF CATCHING EXCEPTIONS.
+            try {
+                switch (selection) {
+                    case "Login": searchResults = 
+                        Arrays.asList(
+                            FactoryUser.get()
+                            .findUserByLogin(param)
+                        );
+                    break;
+                
+                    case "Email": searchResults =
+                        Arrays.asList(
+                            FactoryUser.get().findUserByEmail(param)
+                        );
+                    break;
+
+                    case "Name": searchResults = 
+                        FactoryUser.get()
+                            .findUserByName(param);   
+                    break;
+                    default:
+                        break;
+                }
+            } catch (Exception e) {
+                // TODO: handle exception :((((((
+            }
+
+        tableUsers.setItems(FXCollections.observableArrayList(searchResults));
 
 
         
@@ -421,8 +464,10 @@ public class AdminUserDataWindowController {
         comboBoxSearchParameter.setItems(
             FXCollections
             .observableArrayList(textSearches));
+        // TODO: add both items.
 
-        //UserInterface.SearchParameter.values()
+
+
 
         // TODO: listener of parameter change
 
