@@ -21,12 +21,14 @@ import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.logging.Level;
@@ -194,6 +196,7 @@ public class ContentWindowController {
                 rbCustomImage.setDisable(false);
                 tableCustomText.getSelectionModel().clearSelection();
                 rbCustomImage.setSelected(true);
+                txtValue.setDisable(false);
                 int selectedRow = tableCustomImage.getSelectionModel().getSelectedIndex();
                 txtName.setText(customImageList.get(selectedRow).getName());
                 txtName.setDisable(false);
@@ -265,7 +268,19 @@ public class ContentWindowController {
                 new PropertyValueFactory<>("location"));
         customImageUploadDate.setCellValueFactory(
                 new PropertyValueFactory<>("uploadDate"));
-        customImageUploadDate.setCellFactory(column -> {
+        customImageUploadDate.setCellValueFactory(
+                new Callback<TableColumn.CellDataFeatures<objects.Content, String>, ObservableValue<String>>() {
+            @Override
+            public ObservableValue<String> call(TableColumn.CellDataFeatures<objects.Content, String> param) {
+                SimpleStringProperty property = new SimpleStringProperty();
+                if (param.equals(null)) {
+                    property.setValue(null);
+                } else
+                    property.setValue(formatDate(param.getValue().getUploadDate()).toString());
+                return property;
+            }
+        });
+        /*customImageUploadDate.setCellFactory(column -> {
             TableCell<Content, Date> cell = new TableCell<Content, Date>() {
                 private SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
 
@@ -282,28 +297,11 @@ public class ContentWindowController {
             };
 
             return cell;
-        });
+        }
+        );*/
 
         customTextUploadDate.setCellValueFactory(
                 new PropertyValueFactory<>("uploadDate"));
-        customTextUploadDate.setCellFactory(column -> {
-            TableCell<Content, Date> cell = new TableCell<Content, Date>() {
-                private SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-
-                @Override
-                protected void updateItem(Date item, boolean empty) {
-                    super.updateItem(item, empty);
-                    if (empty) {
-                        setText(null);
-                    } else {
-                        this.setText(format.format(item));
-
-                    }
-                }
-            };
-
-            return cell;
-        });
         customTextDescription.setCellValueFactory(
                 new PropertyValueFactory<>("text"));
         /**
@@ -324,8 +322,9 @@ public class ContentWindowController {
             tableCustomImage.setItems(listCustomImage);
             tableCustomText.setItems(listCustomText);
         } catch (ClientErrorException e) {
-            LOGGER.info(e.getMessage());
+            new Alert(Alert.AlertType.ERROR, e.getMessage(), ButtonType.OK).showAndWait();
         }
+
         stage.show();
     }
 
@@ -340,6 +339,7 @@ public class ContentWindowController {
     ) {
         //Empty all the fields 
         txtValue.setText("");
+        txtValue.setDisable(true);
         cboxParameter.getSelectionModel().selectFirst();
         //Return the tables to the standard mode (all info)
         try {
@@ -353,7 +353,7 @@ public class ContentWindowController {
             tableCustomImage.setItems(listCustomImage);
             tableCustomText.setItems(listCustomText);
         } catch (ClientErrorException e) {
-            LOGGER.info(e.getMessage());
+            new Alert(Alert.AlertType.ERROR, e.getMessage(), ButtonType.OK).showAndWait();
         }
     }
 
@@ -419,8 +419,10 @@ public class ContentWindowController {
                         ObservableList<CustomImage> listCustomImage = FXCollections.observableArrayList(customImageList);
                         tableCustomImage.setItems(listCustomImage);
                         tableCustomImage.refresh();
+
                     } catch (ClientErrorException ex) {
-                        Logger.getLogger(ContentWindowController.class.getName()).log(Level.SEVERE, null, ex);
+                        Logger.getLogger(ContentWindowController.class
+                                .getName()).log(Level.SEVERE, null, ex);
                     }
                 } else {
                     new Alert(Alert.AlertType.ERROR, "The Image is not set", ButtonType.OK).showAndWait();
@@ -452,8 +454,11 @@ public class ContentWindowController {
                     ObservableList<CustomText> listCustomText = FXCollections.observableArrayList(customTextList);
                     tableCustomText.setItems(listCustomText);
                     tableCustomText.refresh();
+
                 } catch (ClientErrorException ex) {
-                    Logger.getLogger(ContentWindowController.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(ContentWindowController.class
+                            .getName()).log(Level.SEVERE, null, ex);
+                    new Alert(Alert.AlertType.ERROR, ex.getMessage(), ButtonType.OK).showAndWait();
                 }
             }
         } else {
@@ -497,8 +502,10 @@ public class ContentWindowController {
                 }));
                 new Alert(Alert.AlertType.INFORMATION, "Content Modified", ButtonType.OK).showAndWait();
             } catch (ClientErrorException ex) {
-                Logger.getLogger(ContentWindowController.class.getName()).log(Level.SEVERE, null, ex);
-
+                new Alert(Alert.AlertType.ERROR, ex.getMessage(), ButtonType.OK).showAndWait();
+                Logger
+                        .getLogger(ContentWindowController.class
+                                .getName()).log(Level.SEVERE, null, ex);
             }
             /**
              * After the call we refresh the table to show the modified data
@@ -532,7 +539,10 @@ public class ContentWindowController {
                 }));
                 new Alert(Alert.AlertType.INFORMATION, "Content Modified", ButtonType.OK).showAndWait();
             } catch (ClientErrorException ex) {
-                Logger.getLogger(ContentWindowController.class.getName()).log(Level.SEVERE, null, ex);
+                new Alert(Alert.AlertType.ERROR, ex.getMessage(), ButtonType.OK).showAndWait();
+                Logger
+                        .getLogger(ContentWindowController.class
+                                .getName()).log(Level.SEVERE, null, ex);
             }
             customTextList = findAllCustomTexts(contentList);
             ObservableList<CustomText> listCustomText = FXCollections.observableArrayList(customTextList);
@@ -572,7 +582,10 @@ public class ContentWindowController {
                     contentList = FXCollections.observableArrayList(contentInterface.findAllContents_XML(new GenericType<List<Content>>() {
                     }));
                 } catch (ClientErrorException ex) {
-                    Logger.getLogger(ContentWindowController.class.getName()).log(Level.SEVERE, null, ex);
+                    new Alert(Alert.AlertType.ERROR, ex.getMessage(), ButtonType.OK).showAndWait();
+                    Logger
+                            .getLogger(ContentWindowController.class
+                                    .getName()).log(Level.SEVERE, null, ex);
                 }
                 /**
                  * Once the method is finnished the table refreshes and the
@@ -600,7 +613,10 @@ public class ContentWindowController {
                     contentList = FXCollections.observableArrayList(contentInterface.findAllContents_XML(new GenericType<List<Content>>() {
                     }));
                 } catch (ClientErrorException ex) {
-                    Logger.getLogger(ContentWindowController.class.getName()).log(Level.SEVERE, null, ex);
+                    new Alert(Alert.AlertType.ERROR, ex.getMessage(), ButtonType.OK).showAndWait();
+                    Logger
+                            .getLogger(ContentWindowController.class
+                                    .getName()).log(Level.SEVERE, null, ex);
                 }
                 /**
                  * Refreshing the table and clearing fields
@@ -640,15 +656,18 @@ public class ContentWindowController {
                 contentList = FXCollections.observableArrayList(client.findContentByLocation_XML(new GenericType<List<Content>>() {
                 }, txtValue.getText()));
                 customImageList = findCustomImageByLocation(contentList, txtValue.getText());
-                customTextList = findCustomTextByLocation(contentList, txtValue.getText());
+                // customTextList = findCustomTextByLocation(contentList, txtValue.getText());
                 ObservableList<CustomImage> listCustomImage = FXCollections.observableArrayList(customImageList);
-                ObservableList<CustomText> listCustomText = FXCollections.observableArrayList(customTextList);
+                // ObservableList<CustomText> listCustomText = FXCollections.observableArrayList(customTextList);
                 tableCustomImage.setItems(listCustomImage);
                 tableCustomImage.refresh();
-                tableCustomText.setItems(listCustomText);
-                tableCustomText.refresh();
+                // tableCustomText.setItems(listCustomText);
+                // tableCustomText.refresh();
             } catch (ClientErrorException ex) {
-                Logger.getLogger(ContentWindowController.class.getName()).log(Level.SEVERE, null, ex);
+                new Alert(Alert.AlertType.ERROR, ex.getMessage(), ButtonType.OK).showAndWait();
+                Logger
+                        .getLogger(ContentWindowController.class
+                                .getName()).log(Level.SEVERE, null, ex);
             }
         }
         if (cboxParameter.getSelectionModel().getSelectedItem().equals("Name")) {
@@ -663,15 +682,18 @@ public class ContentWindowController {
                  * correctly
                  */
                 customImageList = findCustomImageByName(contentList, txtValue.getText());
-                customTextList = findCustomTextByName(contentList, txtValue.getText());
+                //customTextList = findCustomTextByName(contentList, txtValue.getText());
                 ObservableList<CustomImage> listCustomImage = FXCollections.observableArrayList(customImageList);
-                ObservableList<CustomText> listCustomText = FXCollections.observableArrayList(customTextList);
+                // ObservableList<CustomText> listCustomText = FXCollections.observableArrayList(customTextList);
                 tableCustomImage.setItems(listCustomImage);
                 tableCustomImage.refresh();
-                tableCustomText.setItems(listCustomText);
-                tableCustomText.refresh();
+                //tableCustomText.setItems(listCustomText);
+                //tableCustomText.refresh();
             } catch (ClientErrorException ex) {
-                Logger.getLogger(ContentWindowController.class.getName()).log(Level.SEVERE, null, ex);
+                new Alert(Alert.AlertType.ERROR, ex.getMessage(), ButtonType.OK).showAndWait();
+                Logger
+                        .getLogger(ContentWindowController.class
+                                .getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
@@ -759,8 +781,11 @@ public class ContentWindowController {
             baos.flush();
             byte[] imageInbytes = baos.toByteArray();
             imageBytes = byteToByte(imageInbytes);
+
         } catch (IOException ex) {
-            Logger.getLogger(ContentWindowController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ContentWindowController.class
+                    .getName()).log(Level.SEVERE, null, ex);
+            new Alert(Alert.AlertType.ERROR, ex.getMessage(), ButtonType.OK).showAndWait();
         }
 
     }
@@ -784,8 +809,11 @@ public class ContentWindowController {
             JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameters, dataItems);
             JasperViewer jasperViewer = new JasperViewer(jasperPrint);
             jasperViewer.setVisible(true);
+
         } catch (JRException ex) {
-            Logger.getLogger(ContentWindowController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ContentWindowController.class
+                    .getName()).log(Level.SEVERE, null, ex);
+            new Alert(Alert.AlertType.ERROR, ex.getMessage(), ButtonType.OK).showAndWait();
         }
     }
 
@@ -797,11 +825,12 @@ public class ContentWindowController {
     @FXML
     private void handlePrintCustomTextButtonAction(ActionEvent event
     ) {
+        new Alert(Alert.AlertType.INFORMATION, "This part is not implemented yet, be sure to check out our new updates!", ButtonType.OK).showAndWait();
         /**
          * We select the jrxml and the report is loaded with the table
          * information
          */
-        try {
+        /*  try {
             JasperReport report = JasperCompileManager.compileReport("src/report/CustomText.jrxml");
             JRBeanCollectionDataSource dataItems = new JRBeanCollectionDataSource((Collection<Content>) this.tableCustomText.getItems());
             Map<String, Object> parameters = new HashMap<>();
@@ -810,7 +839,7 @@ public class ContentWindowController {
             jasperViewer.setVisible(true);
         } catch (JRException ex) {
             Logger.getLogger(ContentWindowController.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        }*/
     }
 
     /**
@@ -830,7 +859,7 @@ public class ContentWindowController {
         rbCustomImage.setDisable(false);
         rbCustomText.setSelected(false);
         rbCustomText.setDisable(false);
-        rbCustomImage.setSelected(false);
+        rbCustomImage.setSelected(true);
         imagePreview.setImage(null);
         //Clear all 
         taDescription.setText("");
@@ -869,13 +898,25 @@ public class ContentWindowController {
         btnModifyContent.setDisable(true);
         btnFileChooser.setDisable(true);
         txtName.setDisable(true);
+        txtValue.setDisable(true);
         taDescription.setDisable(true);
         txtLocation.setDisable(true);
         uploadDate.setDisable(true);
         btnFind.setDisable(true);
         cboxParameter.getItems().addAll(
+                "",
                 "Location",
-                "Name");
+                "Name"
+        );
+        cboxParameter.valueProperty().addListener((ObservableList, oldValue, newValue) -> {
+            if (newValue.equals("Location")) {
+                txtValue.setDisable(false);
+            } else if (newValue.equals("Name")) {
+                txtValue.setDisable(false);
+            } else {
+                txtValue.setDisable(true);
+            }
+        });
         // Handle action events for the radio buttons. 
         rbCustomImage.setOnAction(e -> {
             btnFileChooser.setDisable(false);
@@ -953,10 +994,6 @@ public class ContentWindowController {
     private void searchTextPropertyChange(ObservableValue observable,
             String oldValue,
             String newValue) {
-        if (cboxParameter.getSelectionModel().getSelectedItem() == null && txtValue.getText().trim().isEmpty()) {
-            btnFind.setDisable(true);
-        }
-
         //If text field is empty disable  buttton
         if (txtValue.getText().trim().isEmpty()) {
             btnFind.setDisable(true);
@@ -964,6 +1001,7 @@ public class ContentWindowController {
         else {
             btnFind.setDisable(false);
         }
+
     }
 
     /**
@@ -990,9 +1028,13 @@ public class ContentWindowController {
         CustomImageInterface customImageInterface = CustomImageFactory.getModel();
         for (int i = 0; i < contentList.size(); i++) {
             try {
-                customImage = customImageInterface.findCustomTextById_XML(CustomImage.class, contentList.get(i).getContentId() + "");
+                customImage = customImageInterface.findCustomTextById_XML(CustomImage.class,
+                        contentList.get(i).getContentId() + "");
+
             } catch (ClientErrorException ex) {
-                Logger.getLogger(ContentWindowController.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(ContentWindowController.class
+                        .getName()).log(Level.SEVERE, null, ex);
+                new Alert(Alert.AlertType.ERROR, ex.getMessage(), ButtonType.OK).showAndWait();
             }
             if (customImage != null) {
                 customImageList.add(customImage);
@@ -1013,9 +1055,13 @@ public class ContentWindowController {
         CustomTextInterface customTextInterface = CustomTextFactory.getModel();
         for (int i = 0; i < contentList.size(); i++) {
             try {
-                customText = customTextInterface.findCustomTextById_XML(CustomText.class, contentList.get(i).getContentId() + "");
+                customText = customTextInterface.findCustomTextById_XML(CustomText.class,
+                        contentList.get(i).getContentId() + "");
+
             } catch (ClientErrorException ex) {
-                Logger.getLogger(ContentWindowController.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(ContentWindowController.class
+                        .getName()).log(Level.SEVERE, null, ex);
+                new Alert(Alert.AlertType.ERROR, ex.getMessage(), ButtonType.OK).showAndWait();
             }
             if (customText != null) {
                 customTextList.add(customText);
@@ -1038,9 +1084,13 @@ public class ContentWindowController {
         for (int i = 0; i < contentList.size(); i++) {
             if (contentList.get(i).getLocation().equalsIgnoreCase(txtValue)) {
                 try {
-                    customImage = customImageInterface.findCustomTextById_XML(CustomImage.class, contentList.get(i).getContentId() + "");
+                    customImage = customImageInterface.findCustomTextById_XML(CustomImage.class,
+                            contentList.get(i).getContentId() + "");
+
                 } catch (ClientErrorException ex) {
-                    Logger.getLogger(ContentWindowController.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(ContentWindowController.class
+                            .getName()).log(Level.SEVERE, null, ex);
+                    new Alert(Alert.AlertType.ERROR, ex.getMessage(), ButtonType.OK).showAndWait();
                 }
                 customImageList.add(customImage);
             }
@@ -1055,23 +1105,26 @@ public class ContentWindowController {
      * @param txtValue the wanted location to be searcheds
      * @return a list of Custom Texts with the given parameter
      */
-    private ArrayList<CustomText> findCustomTextByLocation(ObservableList<Content> contentList, String txtValue) {
+    /*  private ArrayList<CustomText> findCustomTextByLocation(ObservableList<Content> contentList, String txtValue) {
         ArrayList<CustomText> customTextList = new ArrayList<>();
         CustomText customImage = new CustomText();
         CustomTextInterface customTextInterface = CustomTextFactory.getModel();
         for (int i = 0; i < contentList.size(); i++) {
             if (contentList.get(i).getLocation().equalsIgnoreCase(txtValue)) {
                 try {
-                    customImage = customTextInterface.findCustomTextById_XML(CustomText.class, contentList.get(i).getContentId() + "");
+                    customImage = customTextInterface.findCustomTextById_XML(CustomText.class,
+                            contentList.get(i).getContentId() + "");
+
                 } catch (ClientErrorException ex) {
-                    Logger.getLogger(ContentWindowController.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(ContentWindowController.class
+                            .getName()).log(Level.SEVERE, null, ex);
+                    new Alert(Alert.AlertType.ERROR, ex.getMessage(), ButtonType.OK).showAndWait();
                 }
                 customTextList.add(customImage);
             }
         }
         return customTextList;
-    }
-
+    }*/
     /**
      * Finds all the Custom Texts by Name
      *
@@ -1079,23 +1132,26 @@ public class ContentWindowController {
      * @param txtValue the text with the name to be searched
      * @return a list with the Custom Texts with the given name
      */
-    private ArrayList<CustomText> findCustomTextByName(ObservableList<Content> contentList, String txtValue) {
+    /*  private ArrayList<CustomText> findCustomTextByName(ObservableList<Content> contentList, String txtValue) {
         ArrayList<CustomText> customTextList = new ArrayList<>();
         CustomText customText = new CustomText();
         CustomTextInterface customTextInterface = CustomTextFactory.getModel();
         for (int i = 0; i < contentList.size(); i++) {
             if (contentList.get(i).getName().equalsIgnoreCase(txtValue)) {
                 try {
-                    customText = customTextInterface.findCustomTextById_XML(CustomText.class, contentList.get(i).getContentId() + "");
+                    customText = customTextInterface.findCustomTextById_XML(CustomText.class,
+                            contentList.get(i).getContentId() + "");
+
                 } catch (ClientErrorException ex) {
-                    Logger.getLogger(ContentWindowController.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(ContentWindowController.class
+                            .getName()).log(Level.SEVERE, null, ex);
+                    new Alert(Alert.AlertType.ERROR, ex.getMessage(), ButtonType.OK).showAndWait();
                 }
                 customTextList.add(customText);
             }
         }
         return customTextList;
-    }
-
+    }*/
     /**
      * Finds all the Custom Images by Name
      *
@@ -1110,62 +1166,32 @@ public class ContentWindowController {
         for (int i = 0; i < contentList.size(); i++) {
             if (contentList.get(i).getName().equalsIgnoreCase(txtValue)) {
                 try {
-                    customImage = customImageInterface.findCustomTextById_XML(CustomImage.class, contentList.get(i).getContentId() + "");
+                    customImage = customImageInterface.findCustomTextById_XML(CustomImage.class,
+                            contentList.get(i).getContentId() + "");
+
                 } catch (ClientErrorException ex) {
-                    Logger.getLogger(ContentWindowController.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(ContentWindowController.class
+                            .getName()).log(Level.SEVERE, null, ex);
+                    new Alert(Alert.AlertType.ERROR, ex.getMessage(), ButtonType.OK).showAndWait();
                 }
                 customImageList.add(customImage);
             }
         }
         return customImageList;
     }
-
-    /**
-     * Finds all the Custom Images by upload date
-     *
-     * @param contentList the list with all the contents
-     * @param txtValue a text with the given date to be searched
-     * @return a list with all the Custom Images with that upload date
-     */
-    private ArrayList<CustomImage> findCustomImageByUploadDate(ObservableList<Content> contentList, String txtValue) {
-        ArrayList<CustomImage> customImageList = new ArrayList<>();
-        CustomImage customImage = new CustomImage();
-        CustomImageInterface customImageInterface = CustomImageFactory.getModel();
-        for (int i = 0; i < contentList.size(); i++) {
-            if (contentList.get(i).getUploadDate().equals(txtValue)) {
-                try {
-                    customImage = customImageInterface.findCustomTextById_XML(CustomImage.class, contentList.get(i).getContentId() + "");
-                } catch (ClientErrorException ex) {
-                    Logger.getLogger(ContentWindowController.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                customImageList.add(customImage);
-            }
-        }
-        return customImageList;
+    public LocalDate convertToLocalDateViaInstant(Date dateToConvert) {
+        return dateToConvert.toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDate();
     }
-
-    /**
-     * Finds all the Custom Texts by upload date
-     *
-     * @param contentList the list with all the contents
-     * @param txtValue a text with the given date to be searched
-     * @return a list with all the Custom Texts with that upload date
-     */
-    private ArrayList<CustomText> findCustomTextByUploadDate(ObservableList<Content> contentList, String txtValue) {
-        ArrayList<CustomText> customTextList = new ArrayList<>();
-        CustomText customText = new CustomText();
-        CustomTextInterface customTextInterface = CustomTextFactory.getModel();
-        for (int i = 0; i < contentList.size(); i++) {
-            if (contentList.get(i).getUploadDate().equals(txtValue)) {
-                try {
-                    customText = customTextInterface.findCustomTextById_XML(CustomText.class, contentList.get(i).getContentId() + "");
-                } catch (ClientErrorException ex) {
-                    Logger.getLogger(ContentWindowController.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                customTextList.add(customText);
-            }
-        }
-        return customTextList;
+    
+    public LocalDate formatDate(Date dateToFormat) {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
+        convertToLocalDateViaInstant(dateToFormat);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        //return sdf.format(dateToFormat);
+        LocalDate localDate = LocalDate.parse(sdf.format(dateToFormat), formatter);
+        LOGGER.info(localDate.toString());
+        return localDate;
     }
-
 }
