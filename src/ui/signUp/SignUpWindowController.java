@@ -29,7 +29,7 @@ import businessLogic.user.FactoryUser;
  *
  * @author dani
  */
-public class SignUpController {
+public class SignUpWindowController {
 
     @FXML
     private TextField 
@@ -89,9 +89,20 @@ public class SignUpController {
      private void handleTextChanged(
     ObservableValue observableValue,
     String oldvalue, String newValue) {
+        boolean lesgoo = everyUserParamIsCorrect();
+        
+        btnRegister.setDisable(!lesgoo);
+
+
+
 
 
     }
+
+    /**
+     * manage message (user already in use.)
+     * @return
+     */
 
     /**
      * TODO: checking should be correct
@@ -121,15 +132,15 @@ public class SignUpController {
         else
             nicely = nicely && AUDW.isEmailFormat(txtEmail.getText()); 
 
-        /* if (password.getText().isEmpty())
+        if (password.getText().isEmpty())
             password.setPromptText(passwordPromptText);
         else
-            if (passwordConfirmation.getText().isEmpty()) {
+            if (passwordConfirmation.getText().isEmpty()) 
                 passwordConfirmation.setPromptText(passwordConfirmationPromptText);
-                nicely 
-            }
+
+
+        nicely = nicely && (password.equals(passwordConfirmationPromptText));
                 
-            else */
                 
 
         
@@ -144,8 +155,29 @@ public class SignUpController {
         LOGGER.info("Initializing UserWindowController::handlerWindowShowing");
     }
 
-    
+    /**
+     * void that initiates the whole window.
+     * @param root parent 
+     */
 
+     
+     public void initStage(Parent root) {
+        LOGGER.info("Initializing 'SignUp' window");
+        // Stablish scene
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
+
+        // Set properties
+        stage.setTitle(WINDOW_NAME);
+        stage.setResizable(false);
+        stage.setOnShowing(this::handlerWindowShowing);
+
+        stage.show();
+     }
+
+
+
+    
     /**
      * checks if the spaces have values
      * @return
@@ -175,4 +207,6 @@ public class SignUpController {
     private void handlerExitButtonAction() {
 
     }
+
+    
 }

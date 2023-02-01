@@ -7,9 +7,13 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.stage.Stage;
+import ui.signUp.SignUpWindowController;
 import ui.userdata.admin.AdminUserDataWindowController;
 
 public class App extends Application {
+
+    private final String path = 
+        "/ui/userdata/admin/AdminUserDataWindow.fxml";
 
     public static void main(String[] args) {
         launch(args);
@@ -18,16 +22,19 @@ public class App extends Application {
     @Override
     public void start(Stage stage) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/userdata/admin/AdminUserDataWindow.fxml"));
+            FXMLLoader loader = 
+                new FXMLLoader(getClass().getResource(path));
 
-            Parent root = (Parent) loader.load();
+            Parent root = Parent.class.cast(loader.load());
             //Obtain the Sign In window controller
-            AdminUserDataWindowController controller = (AdminUserDataWindowController) loader.getController();
+            AdminUserDataWindowController controller = 
+                AdminUserDataWindowController.class
+                    .cast(loader.getController());
+                    
             controller.setStage(stage);
             controller.initStage(root);
         } catch (IOException ex) {
             Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
 }

@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
 
-
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -65,8 +64,11 @@ public class AdminUserDataWindowController {
 
     @FXML
     private RadioButton 
-        checkBoxPrivilegeAdmin,
-        checkBoxPrivilegeUser, checkBoxPrivilegeMember;
+        radioButtonAdmin,
+        radioButtonClient, radioButtonMember;
+    private final String 
+        radioButtonAdminText = "Administrator",
+        radioButtonClientText = "Client", radioButtonMemberText = "Member";
 
     @FXML
     private TableView <User> tableUsers;
@@ -208,9 +210,9 @@ public class AdminUserDataWindowController {
         // checkbox checkings
 
         nicely = nicely &&
-            (checkBoxPrivilegeAdmin.isArmed() 
-            || checkBoxPrivilegeMember.isArmed() 
-            || checkBoxPrivilegeUser.isArmed()) && 
+            (radioButtonAdmin.isArmed() 
+            || radioButtonMember.isArmed() 
+            || radioButtonClient.isArmed()) && 
             
             checkBoxStatusEnabled.isArmed() &&
             
@@ -229,9 +231,9 @@ public class AdminUserDataWindowController {
             txtEmail.getText().isEmpty() &&
             txtFullName.getText().isEmpty() &&
 
-            !(checkBoxPrivilegeAdmin.isArmed() 
-            || checkBoxPrivilegeMember.isArmed() 
-            || checkBoxPrivilegeUser.isArmed()) && 
+            !(radioButtonAdmin.isArmed() 
+            || radioButtonMember.isArmed() 
+            || radioButtonClient.isArmed()) && 
 
             !checkBoxStatusEnabled.isArmed() &&
 
@@ -324,9 +326,7 @@ public class AdminUserDataWindowController {
             System.out.println("Bro please select somethin'");
         tableUsers.setItems(FXCollections.observableArrayList(searchResults));
 
-
-        
-        
+  
     }
 
     private void handleUsersTableSelectionChanged(
@@ -359,13 +359,6 @@ public class AdminUserDataWindowController {
     }
 
 
-    private String formatNormal(String s) {
-        return 
-            Character.toUpperCase(
-                s.charAt(0)) + 
-            s.substring(1);
-    }
-
     /**
      * void that initiates the whole window.
      * @param root parent 
@@ -383,44 +376,57 @@ public class AdminUserDataWindowController {
         stage.setResizable(false);
         stage.setOnShowing(this::handlerWindowShowing);
 
-        // listeners
-        txtSearchValue.textProperty()
-            .addListener(
+        // text listeners
+        txtSearchValue.textProperty().addListener(
             this::handleTextChanged);
         txtSearchValue.setPromptText(txtSearchValuePromptText);
-        txtLogin.textProperty()
-            .addListener(
+
+        txtLogin.textProperty().addListener(
             this::handleTextChanged);
-            txtLogin.setPromptText(txtLoginPromptText);
-        txtEmail.textProperty()
-            .addListener(
+        txtLogin.setPromptText(txtLoginPromptText);
+
+        txtEmail.textProperty().addListener(
             this::handleTextChanged);
         txtEmail.setPromptText(txtEmailPromptText);
-        txtFullName.textProperty()
-            .addListener(
+
+        txtFullName.textProperty().addListener(
             this::handleTextChanged);
         txtFullName.setPromptText(txtFullNamePromptText);
+
+
 
         // buttons
         btnSearch.setDisable(true);
             btnSearch.setText(btnSearchText);
+
         btnClear.setDisable(true);
             btnClear.setText(btnClearText);
+
         btnAddUser.setDisable(true);
             btnAddUser.setText(btnAddUserText);
+
         btnModifyUser.setDisable(true);
             btnModifyUser.setText(btnModifyUserText);
+
         btnDeleteUser.setDisable(true);
             btnDeleteUser.setText(btnDeleteUserText);
 
-        // texts
-        txtSearchValue.setPromptText(txtSearchValuePromptText);
-        txtLogin.setPromptText(txtLoginPromptText);
-        txtEmail.setPromptText(txtEmailPromptText);
-        txtFullName.setPromptText(txtFullNamePromptText);
 
-        // checkboxes TOD: matame
-        ChangeListener <Boolean> cl = new ChangeListener<Boolean>() {
+
+        // radio button
+
+        radioButtonAdmin.setText(
+            radioButtonAdminText);
+
+
+        // radioButtonAdmin.selectedProperty().addListener(cl);
+        
+
+
+
+        // checkbox
+        ChangeListener <Boolean> checkboxListener = 
+            new ChangeListener<Boolean>() {
 
             @Override
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
@@ -437,10 +443,8 @@ public class AdminUserDataWindowController {
             }
         };
         
-        checkBoxPrivilegeAdmin.selectedProperty().addListener(cl);
-        checkBoxPrivilegeMember.selectedProperty().addListener(cl);
-        checkBoxPrivilegeUser.selectedProperty().addListener(cl);
-        checkBoxStatusEnabled.selectedProperty().addListener(cl);
+        checkBoxStatusEnabled.selectedProperty()
+            .addListener(checkboxListener);
 
         
 
@@ -457,6 +461,8 @@ public class AdminUserDataWindowController {
                         comboBoxMemberStatusSearch.setItems(
                             FXCollections
                             .observableArrayList(privileges));
+                            txtSearchValue.setVisible(false);
+            comboBoxMemberStatusSearch.setVisible(true);
                 break;
 
                 case "Status":
@@ -464,6 +470,8 @@ public class AdminUserDataWindowController {
                         comboBoxMemberStatusSearch.setItems(
                             FXCollections
                             .observableArrayList(status));
+                            txtSearchValue.setVisible(false);
+                    comboBoxMemberStatusSearch.setVisible(true);
                 break;
 
                 default:
