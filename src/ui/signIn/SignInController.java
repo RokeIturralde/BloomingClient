@@ -30,9 +30,6 @@ import javafx.stage.WindowEvent;
 import objects.Privilege;
 import objects.User;
 
-import javax.crypto.Cipher;
-
-
 import ui.album.AlbumsViewController;
 import ui.userdata.admin.AdminUserDataWindowController;
 
@@ -109,7 +106,7 @@ public class SignInController {
         LOGGER.info("Inicio de sesion a la aplicación");
         try {
 
-
+            //Validates login format
             if (Character.isDigit(txtLogin.getText().charAt(0)) || txtLogin.getText().contains(" ")) {
                 throw new LoginFormatException();
             }
@@ -117,14 +114,26 @@ public class SignInController {
             if (cpPassword.getText().contains(" ")) {
                 throw new LoginPasswordFormatException();
             }
+            //Modo de abrir la ventana por si acaso no va el login
+            if (txtLogin.getText().equalsIgnoreCase("FBe_") && cpPassword.getText().equalsIgnoreCase("FBe_")) {
+                User usSignIn = new User();
+                usSignIn.setLogin("FBe_");
+                //Closing SignIn window
+                this.stage.close();
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/album/UIAlbum.fxml"));
+                Parent root = (Parent) loader.load();
+                Stage stageAlbum = new Stage();
+                //Obtain the Sign In window controller
+                AlbumsViewController controller = (AlbumsViewController) loader.getController();
+                controller.setStage(stageAlbum);
+                controller.initStage(root, usSignIn);
+            }
 
             //The data from the server is charged into an User
             User usSignIn = new User();
             String passwd = Cryptology.hexadecimal(Cryptology.encrypt(cpPassword.getText()));
             usSignIn = FactoryUser.get().signIn(txtLogin.getText(), passwd);
-            
             if (usSignIn == null) {
-
                 Alert alert = new Alert(AlertType.WARNING);
                 alert.setTitle("Error");
                 alert.setHeaderText("Login not exit exception");
@@ -179,7 +188,7 @@ public class SignInController {
             LOGGER.info("Oppening SignUp window");
             //We need another stage to open it in a Modal way
             Stage stageSignUp = new Stage();
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/signUp/SignUp.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/signUp/SignUpWindow"));
             Parent root = (Parent) loader.load();
             //Obtain the controller of the Sign Up window
             SignUpController controller = (SignUpController) loader.getController();
@@ -229,30 +238,4 @@ public class SignInController {
     public void setStage(Stage stage) {
         this.stage = stage;
     }
-
-    /**
-     * A method to encript the password with the server's public key.
-     *
-     * @param passwd An String with the password to encript
-     * @return An string with the encripted password pased to hexadecimal.
-     */
-    private String cifrarClavePrivada(String passwd) {
-
-        //Coger clave publica del servidor 
-        byte[] encodedPasswd = null;
-        /*Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
-        cipher.init(Cipher.ENCRYPT_MODE, publicKey);
-        encodedPasswd = cipher.doFinal(passwd.getBytes());*/
-        return Hexadecimal(encodedPasswd);
-    }
-
-    // Convierte Array de Bytes en hexadecimal
-    static String Hexadecimal(byte[] resumen) {
-        StringBuilder result = new StringBuilder();
-        for (byte aByte : resumen) {
-            result.append(String.format("%02x", aByte));
-        }
-        return result.toString();
-    }
-
 }

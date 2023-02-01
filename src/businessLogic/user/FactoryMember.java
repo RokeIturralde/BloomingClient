@@ -1,6 +1,5 @@
 package businessLogic.user;
 
-import antiserver.AntiServerTestDataMember;
 import businessLogic.user.managers.MemberManager;
 
 /**
@@ -11,8 +10,7 @@ public class FactoryMember {
     private static int SYSTEM = -1;
 
     public static MemberInterface get() {
-        if (SYSTEM == 0)
-            return new AntiServerTestDataMember();
+          
         return new MemberManager();
     }
 }

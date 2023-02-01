@@ -6,9 +6,15 @@ package ui.album;
 
 import businessLogic.album.FactoryAlbum;
 import businessLogic.album.AlbumInterface;
+import businessLogic.user.FactoryUser;
+import exceptions.NameExistException;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.value.ObservableValue;
@@ -33,9 +39,11 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.core.GenericType;
 import objects.Album;
 import objects.User;
+import ui.content.ContentWindowController;
 
 /**
  * Album window controller.
@@ -147,6 +155,8 @@ public class AlbumsViewController {
     private ObservableList<Album> clientsData;
     private static User loggedUser;
     private AlbumInterface client;
+    private ArrayList<Album> albumList;
+    private static ArrayList<User> userList;
 
     /**
      * Initializing the window method
@@ -174,7 +184,9 @@ public class AlbumsViewController {
         txtAddUser.textProperty().addListener(this::textChanged);
         taAlbumDesc.textProperty().addListener(this::textChanged);
         tbMyAlbums.getSelectionModel().selectedItemProperty()
-                .addListener(this::handleUsersTableSelectionChanged);
+                .addListener(this::handleAlbumsTableSelectionChanged);
+        tbSharedAlbums.getSelectionModel().selectedItemProperty()
+                .addListener(this::handleAlbumsTableSelectionChanged);
 
         //Charge tables data
         try {
@@ -308,6 +320,7 @@ public class AlbumsViewController {
             String login = txtAddUser.getText();
             //buscar usuario por login
             User user = null;
+            user = FactoryUser.get().findUserByLogin(login);
             users.add(user);
             taUsers.setText(arrayToString(users));
         } catch (Exception e) {
@@ -337,26 +350,46 @@ public class AlbumsViewController {
      * @param event The action event object
      */
     @FXML
-    private void handleCreateAlbumButtonAction(ActionEvent event) {
+    private void handleCreateAlbumButtonAction(ActionEvent event) throws NameExistException {
         LOGGER.info("Metodo de control del boton de Create a new Album");
+
         Album album = new Album();
         album.setName(txtAlbumName.getText());
-        //album.setCreationDate(dpCreationDate.getValue());
+        LocalDate datePicker = dpCreationDate.getValue();
+        Date date = Date.from(datePicker.atStartOfDay(ZoneId.systemDefault()).toInstant());
+        album.setCreationDate(date);
         album.setCreator(loggedUser);
         taAlbumDesc.getText();
         taUsers.setText(arrayToString((ArrayList<User>) album.getUsers()));
 
         client = FactoryAlbum.getModel();
-        client.createAlbum_XML(album);
+        try {
+            client.createAlbum_XML(album);
+            /**
+             * After the method is done the user gets a notification of the
+             * successfully added content and all the data is cleared, also
+             * tables are refreshed, showing the new created content
+             */
+            new Alert(Alert.AlertType.INFORMATION, "Album added successfully", ButtonType.OK).showAndWait();
+            txtAlbumName.setText("");
+            dpCreationDate.setValue(null);
+            txtAlbumCreator.setText("");
+            taAlbumDesc.setText("");
+            checkShare.setSelected(false);
+            txtAddUser.setText("");
+            taUsers.setText("");
 
-        //Vaciar campos
-        txtAlbumName.setText("");
-        dpCreationDate.setValue(null);
-        txtAlbumCreator.setText("");
-        taAlbumDesc.setText("");
-        checkShare.setSelected(false);
-        txtAddUser.setText("");
-        taUsers.setText("");
+            //Refress the table to charge the new info
+            clientsData = FXCollections.observableArrayList(client.findMyAllAlbums_XML(new GenericType<List<Album>>() {
+            }, loggedUser.getLogin()));
+            tbMyAlbums.setItems(clientsData);
+            tbMyAlbums.refresh();
+
+        } catch (NameExistException ex) {
+            Logger.getLogger(AlbumsViewController.class.getName()).log(Level.SEVERE, null, ex);
+            new Alert(Alert.AlertType.INFORMATION, ex.getMessage(), ButtonType.OK).showAndWait();
+
+        }
 
     }
 
@@ -368,6 +401,39 @@ public class AlbumsViewController {
     @FXML
     private void handleModifyAlbumButtonAction(ActionEvent event) {
         LOGGER.info("Metodo de control del boton de Modify an Album");
+        int selectedRow = tbMyAlbums.getSelectionModel().getSelectedIndex();
+        Album album = new Album();
+        album.setId(albumList.get(selectedRow).getId());
+        album.setName(txtAlbumName.getText());
+        LocalDate datePicker = dpCreationDate.getValue();
+        Date date = Date.from(datePicker.atStartOfDay(ZoneId.systemDefault()).toInstant());
+        album.setCreationDate(date);
+        album.setCreator(loggedUser);
+        album.setDescription(taAlbumDesc.getText());
+        album.setUsers(userList);
+
+        try {
+            client = FactoryAlbum.getModel();
+            client.updateAlbum_XML(album);
+
+            txtAlbumName.setText("");
+            dpCreationDate.setValue(null);
+            txtAlbumCreator.setText("");
+            taAlbumDesc.setText("");
+            checkShare.setSelected(false);
+            txtAddUser.setText("");
+            taUsers.setText("");
+
+            new Alert(Alert.AlertType.INFORMATION, "Album Modified", ButtonType.OK).showAndWait();
+            clientsData = FXCollections.observableArrayList(client.findMyAllAlbums_XML(new GenericType<List<Album>>() {
+            }, loggedUser.getLogin()));
+            tbMyAlbums.setItems(clientsData);
+            tbMyAlbums.refresh();
+        } catch (ClientErrorException ex) {
+            Logger.getLogger(ContentWindowController.class.getName()).log(Level.SEVERE, null, ex);
+
+        }
+
     }
 
     /**
@@ -378,26 +444,46 @@ public class AlbumsViewController {
     @FXML
     private void handleDeleteAlbumButtonAction(ActionEvent event) {
         LOGGER.info("Metodo de control del boton de Delete an Album");
-    }
+        /**
+         * First we ask the user for a confirmation
+         */
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setHeaderText("Delete Album");
+        alert.setTitle("Confirmation");
+        alert.setContentText("Are you sure you want to delete this album?");
+        Optional<ButtonType> action = alert.showAndWait();
+        //If you click on OK
+        if (action.get() == ButtonType.OK) {
+            int selectedRow = tbMyAlbums.getSelectionModel().getSelectedIndex();
+            Album album = new Album();
+            album.setId(albumList.get(selectedRow).getId());
+            album.setName(txtAlbumName.getText());
+            LocalDate datePicker = dpCreationDate.getValue();
+            Date date = Date.from(datePicker.atStartOfDay(ZoneId.systemDefault()).toInstant());
+            album.setCreationDate(date);
+            album.setCreator(loggedUser);
+            album.setDescription(taAlbumDesc.getText());
+            album.setUsers(userList);
 
-    /**
-     * Method that handles the button "Albums" from menu
-     *
-     * @param event The action event object
-     */
-    @FXML
-    private void handleAlbumsButtonAction(ActionEvent event) {
-        LOGGER.info("Metodo de control del boton de Albums");
-        this.stage.close();
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("UIAlbum.fxml"));
-            Parent root = (Parent) loader.load();
-            //Obtain the Sign In window controller
-            AlbumsViewController controller = (AlbumsViewController) loader.getController();
-            controller.setStage(stage);
-            controller.initStage(root, loggedUser);
-        } catch (IOException ex) {
-            Logger.getLogger(AlbumsViewController.class.getName()).log(Level.SEVERE, null, ex);
+            try {
+                client = FactoryAlbum.getModel();
+                client.removeAlbum(album.getId());
+
+                txtAlbumName.setText("");
+                dpCreationDate.setValue(null);
+                txtAlbumCreator.setText("");
+                taAlbumDesc.setText("");
+                checkShare.setSelected(false);
+                txtAddUser.setText("");
+                taUsers.setText("");
+
+                new Alert(Alert.AlertType.INFORMATION, "Album deleted", ButtonType.OK).showAndWait();
+                tbMyAlbums.setItems(clientsData);
+                tbMyAlbums.refresh();
+            } catch (ClientErrorException ex) {
+                Logger.getLogger(ContentWindowController.class.getName()).log(Level.SEVERE, null, ex);
+
+            }
         }
     }
 
@@ -412,6 +498,23 @@ public class AlbumsViewController {
         cbSearchType.getSelectionModel().selectFirst();
         checkShared.setSelected(false);
         txtValue.setText("");
+
+        //Charge tables data
+        try {
+            client = FactoryAlbum.getModel();
+            clientsData = FXCollections.observableArrayList(client.findMyAllAlbums_XML(new GenericType<List<Album>>() {
+            }, loggedUser.getLogin()));
+            tbMyAlbums.setItems(clientsData);
+            tbMyAlbums.refresh();
+
+            clientsData = FXCollections.observableArrayList(client.findMyAllSharedAlbums_XML(new GenericType<List<Album>>() {
+            }, loggedUser.getLogin()));
+            tbSharedAlbums.setItems(clientsData);
+            tbSharedAlbums.refresh();
+
+        } catch (Exception e) {
+            LOGGER.info(e.getMessage());
+        }
     }
 
     /**
@@ -423,7 +526,7 @@ public class AlbumsViewController {
     private void handleClearInfoButtonAction(ActionEvent event) {
         LOGGER.info("Metodo de control del boton de Clear info");
         txtAlbumName.setText("");
-        dpCreationDate.setValue(null);
+        dpCreationDate.getEditor().clear();
         txtAlbumCreator.setText("");
         taAlbumDesc.setText("");
         checkShare.setSelected(false);
@@ -517,32 +620,54 @@ public class AlbumsViewController {
     }
 
     /**
-     * MyAlbums and sharedAlbums tables selection changed event handler. It
-     * enables or disables buttons depending on selection state of the table.
+     * MyAlbums table selection changed event handler. It enables or disables
+     * buttons depending on selection state of the table.
      *
      * @param observable the property being observed: SelectedItem Property
      * @param oldValue old UserBean value for the property.
      * @param newValue new UserBean value for the property.
      */
-    private void handleUsersTableSelectionChanged(ObservableValue observable,
+    private void handleAlbumsTableSelectionChanged(ObservableValue observable,
             Object oldValue,
             Object newValue) {
         //If there is a row selected, move row data to corresponding fields in the
         //window and enable create, modify and delete buttons
+        Album album = (Album) newValue;
         if (newValue != null) {
-            Album album = (Album) newValue;
-            txtAlbumName.setText(album.getName());
-            //dpCreationDate.setValue(album.getCreationDate());
-            txtAlbumCreator.setText(album.getCreator().getLogin());
-            taAlbumDesc.setText(album.getDescription());
-            if (album.getUsers().isEmpty()) {
+
+            /**
+             * If the table of Album is selected the fields are introduced in
+             * the designated textfields and enable create, modify and delete
+             * buttons
+             */
+            int selectedRow = tbMyAlbums.getSelectionModel().getSelectedIndex();
+            txtAlbumName.setText(albumList.get(selectedRow).getName());
+            dpCreationDate.setValue(albumList.get(selectedRow).getCreationDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+            txtAlbumCreator.setText(albumList.get(selectedRow).getCreator().getLogin());
+            taAlbumDesc.setText(albumList.get(selectedRow).getDescription());
+            txtAddUser.setText("");
+
+            if (!albumList.get(selectedRow).getUsers().isEmpty()) {
+                taUsers.setText(arrayToString((ArrayList<User>) albumList.get(selectedRow).getUsers()));
                 checkShare.isSelected();
-                taUsers.setText(arrayToString((ArrayList<User>) album.getUsers()));
-            } else {
-                btnCreateAlbum.setDisable(false);
             }
-            btnModifyAlbum.setDisable(false);
-            btnDeleteAlbum.setDisable(false);
+            if (album.getCreator().getLogin().equalsIgnoreCase(albumList.get(selectedRow).getCreator().getLogin())) {
+                btnCreateAlbum.setDisable(false);
+                btnModifyAlbum.setDisable(false);
+                btnDeleteAlbum.setDisable(false);
+            } else {
+                txtAlbumName.setEditable(false);
+                txtAlbumCreator.setEditable(false);
+                taAlbumDesc.setEditable(false);
+                dpCreationDate.setEditable(false);
+                txtAddUser.setEditable(false);
+                taUsers.setEditable(false);
+
+                btnCreateAlbum.setDisable(true);
+                btnModifyAlbum.setDisable(true);
+                btnDeleteAlbum.setDisable(true);
+            }
+
         } else {
             //If there is not a row selected, clean window fields 
             //and disable create, modify and delete buttons
@@ -553,6 +678,7 @@ public class AlbumsViewController {
             checkShare.setSelected(false);
             txtAddUser.setText("");
             taUsers.setText("");
+            btnAdd.setDisable(true);
             btnCreateAlbum.setDisable(true);
             btnModifyAlbum.setDisable(true);
             btnDeleteAlbum.setDisable(true);
@@ -567,4 +693,119 @@ public class AlbumsViewController {
     public void setStage(Stage stage) {
         this.stage = stage;
     }
+
+    /**
+     * Method that handles the button "Albums" from menu
+     *
+     * @param event The action event object
+     */
+    @FXML
+    private void handleHelpButtonAction(ActionEvent event) {
+        LOGGER.info("Metodo de control del boton del Help");
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("AlbumHelp"));
+            Parent root = (Parent) loader.load();
+            //Obtain the Sign In window controller
+            AlbumHelpController controller = (AlbumHelpController) loader.getController();
+            controller.initAndShowStage(root);
+
+        } catch (IOException ex) {
+            Logger.getLogger(AlbumsViewController.class
+                    .getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    //Menu buttons---------------------------------------------------------------------------
+    /**
+     * Method that handles the button "Albums" from menu
+     *
+     * @param event The action event object
+     */
+    @FXML
+    private void handleLogoButtonAction(ActionEvent event) {
+        LOGGER.info("Metodo de control del boton del Logo");
+        this.stage.close();
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("UIAlbum.fxml"));
+            Parent root = (Parent) loader.load();
+            //Obtain the Sign In window controller
+            AlbumsViewController controller = (AlbumsViewController) loader.getController();
+            controller.setStage(stage);
+            controller.initStage(root, loggedUser);
+
+        } catch (IOException ex) {
+            Logger.getLogger(AlbumsViewController.class
+                    .getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    /**
+     * Method that handles the button "Albums" from menu
+     *
+     * @param event The action event object
+     */
+    @FXML
+    private void handleAlbumsButtonAction(ActionEvent event) {
+        LOGGER.info("Metodo de control del boton de Albums del menú");
+        this.stage.close();
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("UIAlbum.fxml"));
+            Parent root = (Parent) loader.load();
+            //Obtain the Sign In window controller
+            AlbumsViewController controller = (AlbumsViewController) loader.getController();
+            controller.setStage(stage);
+            controller.initStage(root, loggedUser);
+
+        } catch (IOException ex) {
+            Logger.getLogger(AlbumsViewController.class
+                    .getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    /**
+     * Method that handles the button "Content" from menu
+     *
+     * @param event The action event object
+     */
+    @FXML
+    private void handleContentButtonAction(ActionEvent event) {
+        LOGGER.info("Metodo de control del boton de Content del menú");
+        this.stage.close();
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/content/ContentWindow.fxml"));
+            Parent root = (Parent) loader.load();
+            //Obtain the Sign In window controller
+            ContentWindowController controller = (ContentWindowController) loader.getController();
+            controller.setStage(stage);
+            controller.initStage(root);
+
+        } catch (IOException ex) {
+            Logger.getLogger(AlbumsViewController.class
+                    .getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    /**
+     * Method that handles the button "Membership" from menu
+     *
+     * @param event The action event object
+     */
+    @FXML
+    private void handleMembershipButtonAction(ActionEvent event) {
+        LOGGER.info("Metodo de control del boton de Membership del menú");
+        this.stage.close();
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/membershipPlan/client/MembershipClient.fxml"));
+            Parent root = (Parent) loader.load();
+            //Obtain the Sign In window controller
+            ContentWindowController controller = (ContentWindowController) loader.getController();
+            controller.setStage(stage);
+            controller.initStage(root);
+
+        } catch (IOException ex) {
+            Logger.getLogger(AlbumsViewController.class
+                    .getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
 }
