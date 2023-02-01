@@ -28,8 +28,10 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javax.crypto.Cipher;
+
 import logic.objects.Privilege;
 import logic.objects.User;
+
 import ui.album.AlbumsViewController;
 import ui.userdata.admin.AdminUserDataWindowController;
 
@@ -106,20 +108,22 @@ public class SignInController {
         LOGGER.info("Inicio de sesion a la aplicación");
         try {
 
+
             if (Character.isDigit(txtLogin.getText().charAt(0)) || txtLogin.getText().contains(" ")) {
                 throw new LoginFormatException();
             }
-
             //Validates password format
             if (cpPassword.getText().contains(" ")) {
                 throw new LoginPasswordFormatException();
             }
+
             //The data from the server is charged into an User
             User usSignIn = new User();
             String passwd = Cryptology.hexadecimal(Cryptology.encrypt(cpPassword.getText()));
             usSignIn = FactoryUser.get().signIn(txtLogin.getText(), passwd);
             
             if (usSignIn == null) {
+
                 Alert alert = new Alert(AlertType.WARNING);
                 alert.setTitle("Error");
                 alert.setHeaderText("Login not exit exception");

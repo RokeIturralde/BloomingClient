@@ -3,39 +3,44 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package logic.objects;
+package objects;
 
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
-import javafx.beans.property.SimpleStringProperty;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
  * @author Roke
  */
+@XmlRootElement(name = "content")
 public class Content implements Serializable {
 
-    private Integer id;
+    private Integer contentId;
     private List<Album> albums;
-    private SimpleStringProperty name;
+    private String name;
     private Date uploadDate;
-    private SimpleStringProperty location;
+    private String location;
+
+    public Content() {
+
+    }
 
     public String getLocation() {
-        return this.location.get();
+        return this.location;
     }
 
     public void setLocation(String location) {
-        this.location.set(location);
+        this.location = location;
     }
 
     public Integer getContentId() {
-        return id;
+        return contentId;
     }
 
     public void setContentId(Integer id) {
-        this.id = id;
+        this.contentId = id;
     }
 
     public List<Album> getAlbums() {
@@ -47,11 +52,11 @@ public class Content implements Serializable {
     }
 
     public String getName() {
-        return this.name.get();
+        return this.name;
     }
 
     public void setName(String name) {
-        this.name.set(name);
+        this.name = name;
     }
 
     public Date getUploadDate() {
@@ -65,7 +70,7 @@ public class Content implements Serializable {
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
+        hash += (contentId != null ? contentId.hashCode() : 0);
         return hash;
     }
 
@@ -76,7 +81,7 @@ public class Content implements Serializable {
             return false;
         }
         Content other = (Content) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+        if ((this.contentId == null && other.contentId != null) || (this.contentId != null && !this.contentId.equals(other.contentId))) {
             return false;
         }
         return true;
@@ -84,6 +89,6 @@ public class Content implements Serializable {
 
     @Override
     public String toString() {
-        return "entities.Content[ id=" + id + " ]";
+        return "entities.Content[ id=" + contentId + " ]";
     }
 }

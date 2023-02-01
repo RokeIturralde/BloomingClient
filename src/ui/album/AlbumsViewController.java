@@ -34,8 +34,8 @@ import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javax.ws.rs.core.GenericType;
-import logic.objects.Album;
-import logic.objects.User;
+import objects.Album;
+import objects.User;
 
 /**
  * Album window controller.
@@ -345,19 +345,19 @@ public class AlbumsViewController {
         album.setCreator(loggedUser);
         taAlbumDesc.getText();
         taUsers.setText(arrayToString((ArrayList<User>) album.getUsers()));
-        
+
         client = FactoryAlbum.getModel();
         client.createAlbum_XML(album);
-        
+
         //Vaciar campos
-         txtAlbumName.setText("");
+        txtAlbumName.setText("");
         dpCreationDate.setValue(null);
         txtAlbumCreator.setText("");
         taAlbumDesc.setText("");
         checkShare.setSelected(false);
         txtAddUser.setText("");
         taUsers.setText("");
-        
+
     }
 
     /**

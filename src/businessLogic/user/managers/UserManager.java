@@ -11,6 +11,7 @@ import exceptions.ClientErrorException;
 import exceptions.LoginDoesNotExistException;
 import exceptions.NotThePasswordException;
 import logic.objects.User;
+
 import services.UserFacadeREST;
 
 public class UserManager implements UserInterface {

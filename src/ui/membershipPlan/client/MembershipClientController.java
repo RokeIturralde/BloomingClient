@@ -8,13 +8,9 @@ package ui.membershipPlan.client;
 import businessLogic.membership.MembershipPlanInterface;
 import businessLogic.user.MemberInterface;
 
-
-import java.net.URL;
-import java.util.ResourceBundle;
 import java.util.logging.Logger;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -24,14 +20,14 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-import logic.objects.MembershipPlan;
+import objects.MembershipPlan;
 
 /**
  * FXML Controller class
  *
  * @author minyb
  */
-public class MembershipClientController{
+public class MembershipClientController {
 
     @FXML
     private TableView tbPlans;
@@ -57,15 +53,15 @@ public class MembershipClientController{
     private TableColumn cUsers;
     @FXML
     private TableColumn cPrice;
-    
+
     private ObservableList<MembershipPlan> membershipPlanData;
     private Stage stage;
     private MembershipPlanInterface membershipClient;
     private MemberInterface memberClient;
     private static final Logger LOGGER = Logger.getLogger("package membership.client");
-    
+
     public void initStage(Parent root) {
-        LOGGER.info("Initializing MembershipPlanClient window");   
+        LOGGER.info("Initializing MembershipPlanClient window");
         Scene scene = new Scene(root);
         //Establishes the scenary
         stage.setScene(scene);
@@ -76,16 +72,15 @@ public class MembershipClientController{
         //Set the Event handlers
         stage.setOnShowing(this::handlerWindowShowing);
     }
-    
-     
+
     public void setStage(Stage stage) {
         this.stage = stage;
     }
-    
+
     public void handlerWindowShowing(WindowEvent event) {
         LOGGER.info("Iniciando AdminMembershipPlanController::handlerWindowShowing");
         btnSearch.setDisable(true);
         cbParameter.getItems().addAll("Name", "Price", "Duration");
     }
-    
+
 }
