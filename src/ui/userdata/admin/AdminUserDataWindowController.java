@@ -1,9 +1,11 @@
 package ui.userdata.admin;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -357,7 +359,7 @@ public class AdminUserDataWindowController {
             
 
         User u = null;
-        List <User> searchResults = null; // every result will be stored in here
+        List <User> searchResults = new LinkedList<>(); // every result will be stored in here
 
             try {
 
@@ -374,8 +376,10 @@ public class AdminUserDataWindowController {
                             .findUserByName(value);
 
                     // multiple results
-                    if (searchResults == null)
+                    if (searchResults == null && u != null)
                         Arrays.asList(u);
+                    else
+                        throw new Exception("Some error");
                 }
 
                 else { // case of being an enumerated search
@@ -393,17 +397,15 @@ public class AdminUserDataWindowController {
 
             } catch (Exception e) {
                 // TODO: handle
-                e.printStackTrace();
+                //e.printStackTrace();
+                new Alert(AlertType.INFORMATION, "No users were found with" + param + "=" + value);
             } 
 
-            LOGGER.info(
-            "Attempting to search users by " + param + "=" + value);
+        LOGGER.info(
+        "Attempting to search users by " + param + "=" + value);
 
-           
-        if (searchResults == null)
-            new Alert(AlertType.INFORMATION, "No users were found with" + param + "=" + value);
-        else
-            tableUsers.setItems(FXCollections.observableArrayList(searchResults));
+
+        tableUsers.setItems(FXCollections.observableArrayList(searchResults));
     }
 
     private void handleUsersTableSelectionChanged(
@@ -508,8 +510,30 @@ public class AdminUserDataWindowController {
         comboBoxSearch.getSelectionModel().clearSelection();
         comboBoxSearch.setVisible(false);
     }
+
+    private User createFromParams() {
+        User u = new User();
+        u.setLogin(txtLogin.getText());
+        u.setEmail(txtEmail.getText());
+        u.setFullName(txtFullName.getText());
+
+        u.setPassword("no password yet");
+
+        u.setPrivilege(Privilege.CLIENT);
+        u.setStatus(Status.ENABLE);
+        
+        u.setLastPasswordChange(Date.from(Instant.now()));
+        
+        
+        return u;
+    }
     @FXML
     private void handleAddUserButtonAction() {
+        try {
+            FactoryUser.get().createUser(createFromParams());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
     @FXML
     private void handleModifyUserButtonAction() {
