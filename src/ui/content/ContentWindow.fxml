@@ -162,7 +162,7 @@
                 <TableColumn fx:id="customTextDescription" prefWidth="147.199951171875" text="Description" />
             </columns>
         </TableView>
-        <Button fx:id="btnPrintCustomText" layoutX="830.0" layoutY="652.0" mnemonicParsing="false" prefHeight="16.0" prefWidth="81.0" text="Print">
+        <Button fx:id="btnPrintCustomText" layoutX="830.0" layoutY="652.0" mnemonicParsing="false" onAction="#handlePrintCustomTextButtonAction" prefHeight="16.0" prefWidth="81.0" text="Print">
             <cursor>
                 <Cursor fx:constant="HAND" />
             </cursor>
@@ -183,20 +183,15 @@
                 <Font size="18.0" />
             </font>
         </Label>
-        <Label layoutX="1136.0" layoutY="24.0" text="Help" textFill="#0c02a4" underline="true">
-            <cursor>
-                <Cursor fx:constant="HAND" />
-            </cursor>
-        </Label>
-        <Button id="bHelp" layoutX="1129.0" layoutY="20.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="39.0" text="Button" visible="false">
+        <Button fx:id="btnHelp" layoutX="1108.0" layoutY="20.0" mnemonicParsing="false" onAction="#handleHelpButtonAction" prefHeight="25.0" prefWidth="60.0" text="Help">
             <cursor>
                 <Cursor fx:constant="HAND" />
             </cursor>
         </Button>
-      <Button fx:id="btnClearSelection" layoutX="1038.0" layoutY="327.0" mnemonicParsing="false" onAction="#btnClearSelectionButtonAction" text="Clear Selection">
-         <cursor>
-            <Cursor fx:constant="HAND" />
-         </cursor>
-      </Button>
+        <Button fx:id="btnClearSelection" layoutX="1038.0" layoutY="327.0" mnemonicParsing="false" onAction="#btnClearSelectionButtonAction" text="Clear Selection">
+            <cursor>
+                <Cursor fx:constant="HAND" />
+            </cursor>
+        </Button>
     </children>
 </Pane>

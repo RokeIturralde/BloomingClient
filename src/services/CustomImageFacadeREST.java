@@ -6,6 +6,7 @@
 package services;
 
 import businessLogic.customImage.CustomImageInterface;
+import java.util.ResourceBundle;
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.WebTarget;
@@ -21,13 +22,14 @@ import javax.ws.rs.client.WebTarget;
  *        client.close();
  * </pre>
  *
- * @author Roke
+ * @author 2dam
  */
 public class CustomImageFacadeREST implements CustomImageInterface {
 
     private WebTarget webTarget;
     private Client client;
-    private static final String BASE_URI = "http://localhost:8080/bloomingwebb/webresources";
+    private static final ResourceBundle bundle = ResourceBundle.getBundle("files.URLCredentials");
+    private static final String BASE_URI = bundle.getString("BASE_URI");
 
     public CustomImageFacadeREST() {
         client = javax.ws.rs.client.ClientBuilder.newClient();
