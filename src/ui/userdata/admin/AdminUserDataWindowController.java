@@ -138,7 +138,7 @@ public class AdminUserDataWindowController {
                         .stream().map(p -> p.getName())
                             .collect(Collectors.toList());
         } catch (Exception e) {
-            return Arrays.asList("");
+            return Arrays.asList("1", "2", "3", "4");
         }
     } 
 
@@ -419,8 +419,6 @@ public class AdminUserDataWindowController {
             return;
         }
 
-        
-
         txtLogin.setText(u.getLogin());
         txtEmail.setText(u.getEmail());
         txtFullName.setText(u.getFullName()); 
@@ -439,16 +437,24 @@ public class AdminUserDataWindowController {
             radioButtonClient.setSelected(true);
         if (u.getPrivilege().equals(Privilege.MEMBER)) {
             radioButtonMember.setSelected(true);
-            
+
+            Member m = Member.class.cast(u);
+
+            comboBoxMembershipPlans.getSelectionModel()
+                .select(
+                    m.getPlan().getId());
+                
             datePickerStart.setValue(
                 toLocalDate(
-                    Member.class.cast(u)
-                    .getMemberStartingDate()));
+                    m.getMemberStartingDate()));
             datePickerEnd.setValue(
                 toLocalDate(
-                    Member.class.cast(u)
-                    .getMemberEndingDate()));
+                    m.getMemberEndingDate()));
+        } 
+        else {
+            comboBoxMembershipPlans.setPromptText(comboBoxMembershipPlansText);
         }
+
     }
 
 
