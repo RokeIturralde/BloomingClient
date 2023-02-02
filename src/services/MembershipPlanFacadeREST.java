@@ -5,48 +5,38 @@
  */
 package services;
 
-import businessLogic.membership.MembershipPlanInterface;
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.GenericType;
+
+import businessLogic.membership.MembershipPlanInterface;
 
 /**
  * Jersey REST client generated for REST resource:MembershipPlanFacadeREST
  * [entities.membershipplan]<br>
  * USAGE:
  * <pre>
- *        MembershipPlanFacadeRest client = new MembershipPlanFacadeRest();
+ *        MembershipPlanFacadeREST client = new MembershipPlanFacadeREST();
  *        Object response = client.XXX(...);
  *        // do whatever with response
  *        client.close();
  * </pre>
  *
- * @author minyb
+ * @author 2dam
  */
 public class MembershipPlanFacadeREST implements MembershipPlanInterface{
 
     private WebTarget webTarget;
     private Client client;
-    private static final String BASE_URI = "http://localhost:8080/bloomingweb/webresources";
+    private static final String BASE_URI = "http://localhost:8080/BloomingWeb/webresources";
 
-    public MembershipPlanFacadeREST() {
+    public MembershipPlanFacadeREST()  {
         client = javax.ws.rs.client.ClientBuilder.newClient();
         webTarget = client.target(BASE_URI).path("entities.membershipplan");
     }
 
-    public <T> T findPlanByName_XML(GenericType<T> responseType, String name) throws ClientErrorException {
-        WebTarget resource = webTarget;
-        resource = resource.path(java.text.MessageFormat.format("findByName/{0}", new Object[]{name}));
-        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
-    }
-
-    public <T> T findPlanByName_JSON(Class<T> responseType, String name) throws ClientErrorException {
-        WebTarget resource = webTarget;
-        resource = resource.path(java.text.MessageFormat.format("findByName/{0}", new Object[]{name}));
-        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(responseType);
-    }
-
+    @Override
     public <T> T findPlanByDuration_XML(GenericType<T> responseType, String duration) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("duration/{0}", new Object[]{duration}));
@@ -87,6 +77,7 @@ public class MembershipPlanFacadeREST implements MembershipPlanInterface{
         webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).post(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_JSON));
     }
 
+    @Override
     public <T> T findPlanByPrice_XML(GenericType<T> responseType, String price) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("price/{0}", new Object[]{price}));
@@ -99,6 +90,7 @@ public class MembershipPlanFacadeREST implements MembershipPlanInterface{
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(responseType);
     }
 
+    @Override
     public <T> T findAll_XML(GenericType<T> responseType) throws ClientErrorException {
         WebTarget resource = webTarget;
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
@@ -113,8 +105,22 @@ public class MembershipPlanFacadeREST implements MembershipPlanInterface{
         webTarget.path(java.text.MessageFormat.format("{0}", new Object[]{id})).request().delete();
     }
 
+    @Override
+    public <T> T findPlanByName_XML(GenericType<T> responseType, String name) throws ClientErrorException {
+        WebTarget resource = webTarget;
+        resource = resource.path(java.text.MessageFormat.format("findByName/{0}", new Object[]{name}));
+        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
+    }
+
+    public <T> T findContentByName_JSON(Class<T> responseType, String name) throws ClientErrorException {
+        WebTarget resource = webTarget;
+        resource = resource.path(java.text.MessageFormat.format("findByName/{0}", new Object[]{name}));
+        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(responseType);
+    }
+
     public void close() {
         client.close();
     }
+
     
 }

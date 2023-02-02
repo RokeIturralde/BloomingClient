@@ -5,8 +5,11 @@
  */
 package ui.signIn;
 
-import ui.signUp.SignUpController;
+import ui.signUp.SignUpWindowController;
 import businessLogic.album.AlbumInterface;
+import businessLogic.user.FactoryUser;
+import businessLogic.user.UserInterface;
+import encrypt.Cryptology;
 import exceptions.*;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -18,15 +21,21 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-import javax.crypto.Cipher;
+import objects.Privilege;
 import objects.User;
+
+import javax.crypto.Cipher;
+
+
 import ui.album.AlbumsViewController;
+import ui.userdata.admin.AdminUserDataWindowController;
 
 /**
  * Sign In FXML Controller class
@@ -48,7 +57,7 @@ public class SignInController {
 
     private Stage stage;
     private static final Logger LOGGER = Logger.getLogger("package ui.signIn");
-    private AlbumInterface client;
+    private UserInterface client;
 
     /**
      * Initializing the window method
@@ -97,9 +106,11 @@ public class SignInController {
      * @param event The action event object
      */
     @FXML
-    private void handleSignInButtonAction(ActionEvent event) {
+    private void handleSignInButtonAction(ActionEvent event) throws LoginPasswordFormatException, LoginFormatException {
+        LOGGER.info("Inicio de sesion a la aplicación");
         try {
-            /* LOGGER.info("Intentando abrir la ventana Album");
+
+
             if (Character.isDigit(txtLogin.getText().charAt(0)) || txtLogin.getText().contains(" ")) {
                 throw new LoginFormatException();
             }
@@ -107,35 +118,63 @@ public class SignInController {
             if (cpPassword.getText().contains(" ")) {
                 throw new LoginPasswordFormatException();
             }
-             */
-            //The data is charged into an User
-            User usSignIn = new User();
-            usSignIn.setLogin(txtLogin.getText());
-            //usSignIn.setPassword(cifrarClavePrivada(cpPassword.getText()));
 
-            //The factory is used to obtain the implementation, and the method signIn is called, sending the User from above. 
-            //client = (UserInterface) FactoryUser.get();
-            /*if (response.getResponseType() != ResponseType.OK) {
+            //The data from the server is charged into an User
+            User usSignIn = new User();
+            Cryptology crypto = new Cryptology();
+            String passwd = Cryptology.hexadecimal(crypto.encrypt(cpPassword.getText()));
+            try {
+                usSignIn = FactoryUser.get().signIn(txtLogin.getText(), passwd);
+            } catch (LoginDoesNotExistException ex) {
+                Logger.getLogger(SignInController.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (NotThePasswordException ex) {
+                Logger.getLogger(SignInController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+            if (usSignIn == null) {
+
                 Alert alert = new Alert(AlertType.WARNING);
                 alert.setTitle("Error");
-                alert.setHeaderText(response.getResponseType().name());
-                alert.setContentText("Try again");
+                alert.setHeaderText("Login not exit exception");
+                alert.setContentText("That login is not found, try with another one");
                 alert.showAndWait();
-            } else {*/
-            //Closing SignIn window
-            this.stage.close();
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("../album/UIAlbum.fxml"));
-            Parent root = (Parent) loader.load();
-            Stage stageAlbum = new Stage();
-            //Obtain the Sign In window controller
-            AlbumsViewController controller = (AlbumsViewController) loader.getController();
-            controller.setStage(stageAlbum);
-            controller.initStage(root, usSignIn);
-            //}
-
+            } else {
+                if (usSignIn.getPassword().equals("notFound")) {
+                    Alert alert = new Alert(AlertType.WARNING);
+                    alert.setTitle("Error");
+                    alert.setHeaderText("Not the password exception");
+                    alert.setContentText("Wrong password, try another one or try to recover it");
+                    alert.showAndWait();
+                } else if (usSignIn.getPrivilege().equals(Privilege.CLIENT) || usSignIn.getPrivilege().equals(Privilege.MEMBER)) {
+                    LOGGER.info("Inicio de sesion como " + usSignIn.getPrivilege().toString() + ": Intentando abrir la ventana Album");
+                    //Closing SignIn window
+                    this.stage.close();
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/album/UIAlbum.fxml"));
+                    Parent root = (Parent) loader.load();
+                    Stage stageAlbum = new Stage();
+                    //Obtain the Sign In window controller
+                    AlbumsViewController controller = (AlbumsViewController) loader.getController();
+                    controller.setStage(stageAlbum);
+                    controller.initStage(root, usSignIn);
+                } else {
+                    LOGGER.info("Inicio de sesion como " + usSignIn.getPrivilege().toString() + ": Intentando abrir la ventana Users");
+                    //Closing SignIn window
+                    this.stage.close();
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/userdata/admin/AdminUserDataWindow"));
+                    Parent root = (Parent) loader.load();
+                    Stage stageAlbum = new Stage();
+                    //Obtain the Sign In window controller
+                    AdminUserDataWindowController controller = (AdminUserDataWindowController) loader.getController();
+                    controller.setStage(stageAlbum);
+                    controller.initStage(root);
+                }
+            }
         } catch (IOException ex) {
             new Alert(Alert.AlertType.ERROR, ex.getMessage(), ButtonType.OK).showAndWait();
         }
+        /* } catch (LoginDoesNotExistException | NotThePasswordException ex) {
+            Logger.getLogger(SignInController.class.getName()).log(Level.SEVERE, null, ex);
+        } */
     }
 
     /**
@@ -152,11 +191,13 @@ public class SignInController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/signUp/SignUp.fxml"));
             Parent root = (Parent) loader.load();
             //Obtain the controller of the Sign Up window
-            SignUpController controller = (SignUpController) loader.getController();
+            SignUpWindowController controller = (SignUpWindowController) loader.getController();
             controller.setStage(stageSignUp);
             controller.initSignUp(root);
+
         } catch (IOException ex) {
-            Logger.getLogger(SignInController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(SignInController.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -205,6 +246,7 @@ public class SignInController {
      * @return An string with the encripted password pased to hexadecimal.
      */
     private String cifrarClavePrivada(String passwd) {
+
         //Coger clave publica del servidor 
         byte[] encodedPasswd = null;
         /*Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");

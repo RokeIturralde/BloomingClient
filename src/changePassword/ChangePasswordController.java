@@ -5,6 +5,10 @@
  */
 package changePassword;
 
+import businessLogic.user.FactoryUser;
+import encrypt.Cryptology;
+import exceptions.ClientErrorException;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -16,6 +20,8 @@ import javafx.scene.control.PasswordField;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import objects.User;
+import static org.hsqldb.Library.user;
 
 /**
  *
@@ -32,6 +38,7 @@ public class ChangePasswordController {
     Button btnChange;
     private Stage stage;
     private static final Logger LOGGER = Logger.getLogger("package changePassword");
+    private User user = new User();
     
     public void initStage(Parent root) {
         LOGGER.info("Initializing ChangePassword window");
@@ -44,13 +51,14 @@ public class ChangePasswordController {
         //Set resizability
         stage.setResizable(false);
         //Set window as modal
-        stage.initModality(Modality.APPLICATION_MODAL);
+        //stage.initModality(Modality.APPLICATION_MODAL);
         //Set the Event handlers
         stage.setOnShowing(this::handlerWindowShowing);
         //Listeners
         pfCurrent.textProperty().addListener(this::textPropertyChange);
         pfNew.textProperty().addListener(this::textPropertyChange);
         pfConfirm.textProperty().addListener(this::textPropertyChange);
+        stage.show();
     }
     
     private void textPropertyChange(ObservableValue observable,
@@ -69,7 +77,20 @@ public class ChangePasswordController {
     
     @FXML
     public void handleChangeButtonAction (ActionEvent event){
+        String pass = pfNew.getText();
+        Cryptology crypto = new Cryptology();
+        byte[] passByte = crypto.encrypt(pass);
+        String newPass = Cryptology.hexadecimal(passByte);
         
+        
+        try {
+            user = FactoryUser.get().findUserByLogin("u2");
+            user.setPassword(newPass);
+            FactoryUser.get().editUser(user);
+            
+        } catch (ClientErrorException ex) {
+            Logger.getLogger(ChangePasswordController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     public void handlerWindowShowing(WindowEvent event) {

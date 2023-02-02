@@ -4,6 +4,7 @@
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
@@ -73,32 +74,27 @@
       <Pane fx:id="paneUserData" layoutX="1022.0" layoutY="57.0" prefHeight="564.0" prefWidth="282.0" style="-fx-background-color: #FA7C4E;">
 
          <children>
-            <Text fontSmoothingType="LCD" layoutX="37.0" layoutY="44.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Credentials" wrappingWidth="158.13672637939453">
+            <Text fontSmoothingType="LCD" layoutX="22.0" layoutY="44.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Credentials" wrappingWidth="158.13672637939453">
                <font>
                   <Font name="Microsoft YaHei" size="13.0" />
                </font>
             </Text>
-            <Text fontSmoothingType="LCD" layoutX="37.0" layoutY="224.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Status" wrappingWidth="158.13672637939453">
-               <font>
-                  <Font name="Microsoft YaHei" size="13.0" />
-               </font>
-            </Text>
-
-            <CheckBox fx:id="checkBoxStatusEnabled" layoutX="47.0" layoutY="248.0" mnemonicParsing="false" text="Enabled" />
-            <CheckBox fx:id="checkBoxStatusDisabled" layoutX="133.0" layoutY="248.0" mnemonicParsing="false" text="Disabled" />
-
-            <Text fontSmoothingType="LCD" layoutX="37.0" layoutY="306.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Privilege" wrappingWidth="158.13672637939453">
+            <Text fontSmoothingType="LCD" layoutX="23.0" layoutY="226.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Status" wrappingWidth="158.13672637939453">
                <font>
                   <Font name="Microsoft YaHei" size="13.0" />
                </font>
             </Text>
 
-            <CheckBox fx:id="checkBoxPrivilegeAdmin" layoutX="48.0" layoutY="334.0" mnemonicParsing="false" text="Admin" />
-            <CheckBox fx:id="checkBoxPrivilegeUser" layoutX="130.0" layoutY="334.0" mnemonicParsing="false" text="Client" />
-            <CheckBox fx:id="checkBoxPrivilegeMember" layoutX="194.0" layoutY="333.0" mnemonicParsing="false" text="Member" />
+            <CheckBox fx:id="checkBoxStatus" layoutX="81.0" layoutY="249.0" mnemonicParsing="false" text="Disabled" />
+
+            <Text fontSmoothingType="LCD" layoutX="23.0" layoutY="307.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Privilege" wrappingWidth="158.13672637939453">
+               <font>
+                  <Font name="Microsoft YaHei" size="13.0" />
+               </font>
+            </Text>
             <ComboBox fx:id="comboBoxMembershipPlans" layoutX="41.0" layoutY="426.0" prefWidth="150.0" promptText="Membership plan" />
-            <DatePicker fx:id="datePickerStart" layoutX="42.0" layoutY="476.0" prefHeight="25.0" prefWidth="181.0" promptText="Membership starting date" />
-            <DatePicker fx:id="datePickerEnd" layoutX="40.0" layoutY="517.0" prefHeight="25.0" prefWidth="181.0" promptText="Membership ending date" />
+            <DatePicker fx:id="datePickerStart" layoutX="50.0" layoutY="478.0" prefHeight="25.0" prefWidth="181.0" promptText="Membership starting date" />
+            <DatePicker fx:id="datePickerEnd" layoutX="50.0" layoutY="515.0" prefHeight="25.0" prefWidth="181.0" promptText="Membership ending date" />
 
             <Text fontSmoothingType="LCD" layoutX="37.0" layoutY="394.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Membership info" wrappingWidth="158.13672637939453">
                <font>
@@ -106,16 +102,22 @@
                </font>
             </Text>
 
-            <TextField fx:id="txtLogin" layoutX="37.0" layoutY="73.0" promptText="Login" />
-            <TextField fx:id="txtEmail" layoutX="37.0" layoutY="119.0" promptText="Email" />
-            <TextField fx:id="txtFullName" layoutX="38.0" layoutY="165.0" promptText="Full name" />
+            <TextField fx:id="txtLogin" layoutX="101.0" layoutY="71.0" promptText="Login" />
+            <TextField fx:id="txtEmail" layoutX="101.0" layoutY="117.0" promptText="Email" />
+            <TextField fx:id="txtFullName" layoutX="102.0" layoutY="163.0" promptText="Full name" />
+            <RadioButton fx:id="radioButtonAdmin" layoutX="48.0" layoutY="335.0" mnemonicParsing="false" text="Admin" />
+            <RadioButton fx:id="radioButtonClient" layoutX="123.0" layoutY="335.0" mnemonicParsing="false" text="Client" />
+            <RadioButton fx:id="radioButtonMember" layoutX="189.0" layoutY="335.0" mnemonicParsing="false" text="Member" />
+            <Text fx:id="staticTextLogin" layoutX="25.0" layoutY="88.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Login" />
+            <Text fx:id="staticTextEmail" layoutX="26.0" layoutY="134.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Email" />
+            <Text fx:id="staticTextFullName" layoutX="25.0" layoutY="180.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Full name" />
          </children></Pane>
       <Button fx:id="btnPrint" layoutX="479.0" layoutY="609.0" mnemonicParsing="false" onAction="#handlePrintButtonAction" text="Print" />
       <Button fx:id="btnAddUser" layoutX="1022.0" layoutY="634.0" mnemonicParsing="false" onAction="#handleAddUserButtonAction" text="Add user" />
       <Button fx:id="btnModifyUser" layoutX="1124.0" layoutY="634.0" mnemonicParsing="false" onAction="#handleModifyUserButtonAction" text="Modify user" />
       <Button fx:id="btnDeleteUser" layoutX="1228.0" layoutY="634.0" mnemonicParsing="false" onAction="#handleDeleteUserButtonAction" text="Delete user" />
       <TextField fx:id="txtSearchValue" layoutX="330.0" layoutY="117.0" prefHeight="25.0" prefWidth="227.0" promptText="Value" />
-      <ComboBox fx:id="comboBoxMemberStatusSearch" layoutX="330.0" layoutY="117.0" prefWidth="150.0" promptText="Param/Status" />
+      <ComboBox fx:id="comboBoxSearch" layoutX="330.0" layoutY="117.0" prefWidth="150.0" promptText="Param/Status" />
 
    </children>
 </Pane>

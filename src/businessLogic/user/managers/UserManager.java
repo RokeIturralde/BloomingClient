@@ -1,22 +1,30 @@
 package businessLogic.user.managers;
 
+import businessLogic.user.FactoryMember;
 import businessLogic.user.UserInterface;
+import encrypt.Cryptology;
+
+import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import javax.ws.rs.core.GenericType;
 
 import exceptions.ClientErrorException;
+import exceptions.LoginDoesNotExistException;
+import exceptions.NotThePasswordException;
+import objects.Member;
 import objects.User;
 import services.UserFacadeREST;
 
 public class UserManager implements UserInterface {
 
-    //REST users web client
+    // REST users web client
     private UserFacadeREST webClient;
-    private static final Logger LOGGER
-            = Logger.getLogger("Blooming");
+    private static final Logger LOGGER = Logger.getLogger("Blooming");
 
     /**
      * Create a UserManagerImplementation object. It constructs a web client for
@@ -27,19 +35,14 @@ public class UserManager implements UserInterface {
         webClient = new UserFacadeREST();
     }
 
-    @Override
-    public List<User> find(SearchParameter sp, String value) throws ClientErrorException {
-
-        // TODO:
-        return null;
-    }
+    
 
     @Override
     public List<User> findUserByName(String name) throws ClientErrorException {
         List<User> l;
         try {
             LOGGER.info("MemberManager: Finding all members by name from REST service (XML).");
-            //Ask webClient for all members' data.
+            // Ask webClient for all members' data.
             l = webClient.findUserByName_XML(new GenericType<List<User>>() {
             }, name);
         } catch (Exception ex) {
@@ -69,7 +72,7 @@ public class UserManager implements UserInterface {
         List<User> l;
         try {
             LOGGER.info("UserManager: Finding all members by status from REST service (XML).");
-            //Ask webClient for all members' data.
+            // Ask webClient for all members' data.
             l = webClient.findUserByStatus_XML(new GenericType<List<User>>() {
             }, status);
         } catch (Exception ex) {
@@ -85,7 +88,7 @@ public class UserManager implements UserInterface {
     public void createUser(User user) throws ClientErrorException {
         try {
             LOGGER.info("MemberManager: Finding all members by login from REST service (XML).");
-            //Ask webClient for all members' data.
+            // Ask webClient for all members' data.
             webClient.create_XML(user);
         } catch (Exception ex) {
             LOGGER.log(Level.SEVERE,
@@ -101,7 +104,7 @@ public class UserManager implements UserInterface {
         User u;
         try {
             LOGGER.info("MemberManager: Finding all members by login from REST service (XML).");
-            //Ask webClient for all members' data.
+            // Ask webClient for all members' data.
             u = webClient.findUserByEmail_XML(User.class, email);
         } catch (Exception ex) {
             LOGGER.log(Level.SEVERE,
@@ -116,7 +119,7 @@ public class UserManager implements UserInterface {
     public void removeUser(String id) throws ClientErrorException {
         try {
             LOGGER.log(Level.INFO, "UserManager: Deleting member {0}.", id);
-            // 
+            //
             webClient.remove(id);
         } catch (Exception ex) {
             LOGGER.log(Level.SEVERE,
@@ -131,7 +134,7 @@ public class UserManager implements UserInterface {
         User u;
         try {
             LOGGER.info("MemberManager: Finding all members by login from REST service (XML).");
-            //Ask webClient for all members' data.
+            // Ask webClient for all members' data.
             u = webClient.findUserByLogin_XML(User.class, login);
         } catch (Exception ex) {
             LOGGER.log(Level.SEVERE,
@@ -140,6 +143,57 @@ public class UserManager implements UserInterface {
             throw new ClientErrorException("Error finding members:\n" + ex.getMessage());
         }
         return u;
+    }
+
+    @Override
+    public List<User> findUserByPrivilege(String privilege) throws ClientErrorException {
+
+        List <User> listMembers = new LinkedList <User> ();
+        
+        FactoryMember.get().getEveryMember()
+            .stream()
+            .filter(m -> 
+                m.getPrivilege().toString().equalsIgnoreCase(privilege))
+                .forEach(m -> {
+                    if (m.getPrivilege().toString().equalsIgnoreCase("member")) {
+                        listMembers.add(
+                            new User(
+                                m.getLogin(), m.getEmail(), 
+                                m.getFullName(), m.getPassword(), 
+                                m.getPrivilege(), m.getStatus(), 
+                                m.getLastPasswordChange())
+                        );
+                    }
+                    else
+                        listMembers.add(User.class.cast(m));
+
+                });
+
+        return listMembers;
+    }
+
+
+    
+    // FactoryUser.get().signIn("login", "password");
+
+    @Override
+    public User signIn(String login, String password) throws LoginDoesNotExistException, NotThePasswordException {
+        User u;
+        try {
+            LOGGER.info("User manager: attemting to log user with login=" + login);
+                u = webClient.signIn_XML(User.class, login, password);
+            if (u == null)
+                throw new NotThePasswordException();
+            else
+                return u;
+        } 
+        catch (Exception ex) {
+            LOGGER.log(Level.SEVERE,
+                    "UserManager: Error finding members, {0}",
+                    ex.getMessage());
+        }
+        
+        return null;
     }
 
 }

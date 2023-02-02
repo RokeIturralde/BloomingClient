@@ -1,8 +1,10 @@
 package ui.userdata.admin;
 
+import java.time.LocalDate;
 import java.util.regex.Pattern;
 
-public class AUDW {
+// User Param Formater class
+public class USF {
 
     public final static int MAX_LENGTH = 250;
 
@@ -10,18 +12,22 @@ public class AUDW {
 
     /**
      * TODO: it has to tell you wether it contains weird characters
+     * login properties are: 
+     *  1 not begining with a number
+     *  2 
      * @param login
      * @return
      */
 
     public static boolean isLoginFormat(String login) {
-        if (login.contains(" "))
-            return false;
-        return true;
+        String patternLogin = 
+            "([a-z]*)([a-z0-9]*)";
+        Pattern.matches(login, patternLogin);
+        return !login.contains(" ") 
+            && !(login.length() == 1 && login.charAt(0) == ' ');       
     }
 
     /**
-     * TODO: recomendable make this method static from another class
      * @param email
      * @return
      */
@@ -37,8 +43,19 @@ public class AUDW {
      * @param fullName
      * @return
      */
-    public static boolean isNameFormat(String fullName) {
+
+    public static boolean isFullNameFormat(String fullName) {
         return fullName.contains(" ");
+    }
+
+    /**
+     * TODO: check if the date is (or not) possible
+     * @param date
+     * @return
+     */
+    
+    public static boolean dateFormatIsFine(LocalDate date) {
+        return false;
     }
 
 

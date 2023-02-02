@@ -1,3 +1,8 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package services;
 
 import javax.ws.rs.ClientErrorException;
@@ -5,19 +10,18 @@ import javax.ws.rs.client.Client;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.GenericType;
 
-
 /**
  * Jersey REST client generated for REST resource:UserFacadeREST
  * [entities.user]<br>
  * USAGE:
  * <pre>
- *        UserFacadeRest client = new UserFacadeRest();
+ *        UserFacadeREST client = new UserFacadeREST();
  *        Object response = client.XXX(...);
  *        // do whatever with response
  *        client.close();
  * </pre>
  *
- * @author dani
+ * @author 2dam
  */
 public class UserFacadeREST {
 
@@ -30,14 +34,13 @@ public class UserFacadeREST {
         webTarget = client.target(BASE_URI).path("entities.user");
     }
 
-    
     public <T> T findUserByName_XML(GenericType<T> responseType, String name) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("findByName/{0}", new Object[]{name}));
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
     }
 
-    public <T> T findUserByName_JSON(Class<T> responseType, String name) throws ClientErrorException {
+    public <T> T findUserByName_JSON(GenericType<T> responseType, String name) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("findByName/{0}", new Object[]{name}));
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(responseType);
@@ -57,7 +60,7 @@ public class UserFacadeREST {
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
     }
 
-    public <T> T findUserByStatus_JSON(Class<T> responseType, String status) throws ClientErrorException {
+    public <T> T findUserByStatus_JSON(GenericType<T> responseType, String status) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("findByStatus/{0}", new Object[]{status}));
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(responseType);
@@ -96,6 +99,18 @@ public class UserFacadeREST {
     public <T> T findUserByLogin_JSON(Class<T> responseType, String login) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("findUseraByLogin/{0}", new Object[]{login}));
+        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(responseType);
+    }
+
+    public <T> T signIn_XML(Class<T> responseType, String login, String password) throws ClientErrorException {
+        WebTarget resource = webTarget;
+        resource = resource.path(java.text.MessageFormat.format("signIn/{0}/{1}", new Object[]{login, password}));
+        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
+    }
+
+    public <T> T signIn_JSON(Class<T> responseType, String login, String password) throws ClientErrorException {
+        WebTarget resource = webTarget;
+        resource = resource.path(java.text.MessageFormat.format("signIn/{0}/{1}", new Object[]{login, password}));
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(responseType);
     }
 
