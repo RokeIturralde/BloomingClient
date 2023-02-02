@@ -74,13 +74,13 @@ public class Cryptology {
         return buf.toString();
     }
     
-    public static byte[] encrypt(byte[] mensaje) {
+    public byte[] encrypt(byte[] mensaje) {
         Cipher cipher;
         byte[] contrasenaCifrada = null;
         PublicKey key;
         try {
             // Leemos la clave publica del archivo en el cual lo hemos escrito
-            key = readPublicKey("C:\\Users\\minyb\\OneDrive\\Documentos\\Reto2\\BloomingClient\\files\\public.key");
+            key = readPublicKey(getClass().getResource("Public.key").getPath());
             // Obtenemos una instancide de Cipher con el algoritmos que vamos a usar "RSA/ECB/OAEPWithSHA1AndMGF1Padding"
             cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
             // Iniciamos el Cipher en ENCRYPT_MODE y le pasamos la clave publica

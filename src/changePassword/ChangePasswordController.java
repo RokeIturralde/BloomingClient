@@ -122,7 +122,8 @@ public class ChangePasswordController {
     @FXML
     public void handleChangeButtonAction (ActionEvent event){
         byte[] pass = pfNew.getText().getBytes();
-        pass = Cryptology.encrypt(pass);
+        Cryptology crypto = new Cryptology();
+        pass = crypto.encrypt(pass);
         String newPass = Cryptology.hexadecimal(pass);
         
         
