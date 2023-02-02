@@ -8,6 +8,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.stage.Stage;
+import ui.content.ContentWindowController;
 import ui.membershipPlan.admin.AdminMembershipPlanController;
 import ui.signIn.SignInController;
 import ui.userdata.admin.AdminUserDataWindowController;
@@ -41,7 +42,7 @@ public class App extends Application {
             FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("ui/signIn/SignInCrud.fxml"));
             Parent root = (Parent) loader.load();
             //Obtain the Sign In window controller
-            SignInController controller = (SignInController) loader.getController();
+            ContentWindowController controller = (ContentWindowController) loader.getController();
 
             controller.setStage(stage);
             controller.initStage(root);
