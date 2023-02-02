@@ -5,7 +5,7 @@
  */
 package ui.signIn;
 
-import ui.signUp.SignUpController;
+import ui.signUp.SignUpWindowController;
 import businessLogic.album.AlbumInterface;
 import businessLogic.user.FactoryUser;
 import encrypt.Cryptology;
@@ -192,7 +192,7 @@ public class SignInController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/signUp/SignUpWindow"));
             Parent root = (Parent) loader.load();
             //Obtain the controller of the Sign Up window
-            SignUpController controller = (SignUpController) loader.getController();
+            SignUpWindowController controller = (SignUpWindowController) loader.getController();
             controller.setStage(stageSignUp);
             controller.initSignUp(root);
 
