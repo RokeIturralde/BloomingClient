@@ -351,58 +351,59 @@ public class AdminUserDataWindowController {
     @FXML
     private void handleSearchButtonAction() {
         String 
-            param = 
-                comboBoxSearchParameter
-                    .getSelectionModel().getSelectedItem(),
-            value = txtSearchValue.getText();
+            value ="default",
+            param = comboBoxSearchParameter
+                .getSelectionModel().getSelectedItem();
+            
 
-        LOGGER.info(
-            "Attempting to search users by " + param + "=" + value);
-
+        User u = null;
         List <User> searchResults = null; // every result will be stored in here
 
-
-        if (textSearches.contains(param)) // case of being a text search
             try {
-                switch (param) {
-                    case "Login" : searchResults = 
-                        Arrays.asList(
-                            FactoryUser.get()
-                            .findUserByLogin(value)
-                        );
-                    break;
-                
-                    case "Email" : searchResults =
-                        Arrays.asList(
-                            FactoryUser.get()
-                                .findUserByEmail(value)
-                        );
-                    break;
 
-                    case "Full Name" : searchResults = 
-                        FactoryUser.get()
-                            .findUserByName(value);   
-                    break;
-                    default:
-                    break;
+                if (textSearches.contains(param)) {// case of being a text search 
+                    value = txtSearchValue.getText();
+                    if (param.equalsIgnoreCase("login")) 
+                        u = FactoryUser.get()
+                            .findUserByLogin(value);
+                    else if (param.equalsIgnoreCase("email"))
+                        u = FactoryUser.get()
+                            .findUserByEmail(value);
+                    else if (param.equalsIgnoreCase("full name"))
+                        searchResults = FactoryUser.get()
+                            .findUserByName(value);
+
+                    // multiple results
+                    if (searchResults == null)
+                        Arrays.asList(u);
                 }
-            } catch (Exception e) {
-                
-            }
 
-        else
-            try {
-                searchResults = 
-                    param.equalsIgnoreCase("status") ?
-                        FactoryUser.get().findUserByStatus(value) :
-                        FactoryUser.get().findUserByPrivilege(value);
+                else { // case of being an enumerated search
+                    value = comboBoxSearch.getSelectionModel().getSelectedItem();
+                    if (param.equalsIgnoreCase("privilege"))
+                        searchResults = 
+                            FactoryUser.get()
+                                .findUserByPrivilege(value); 
+                
+                    else if (param.equalsIgnoreCase("status")) 
+                        searchResults = 
+                            FactoryUser.get()
+                                .findUserByStatus(value);
+                } 
+
             } catch (Exception e) {
-                // TODO: handle exception
-            }
+                // TODO: handle
+                e.printStackTrace();
+            } 
+
+            LOGGER.info(
+            "Attempting to search users by " + param + "=" + value);
+
+           
         if (searchResults == null)
             new Alert(AlertType.INFORMATION, "No users were found with" + param + "=" + value);
-
-        tableUsers.setItems(FXCollections.observableArrayList(searchResults));
+        else
+            tableUsers.setItems(FXCollections.observableArrayList(searchResults));
     }
 
     private void handleUsersTableSelectionChanged(

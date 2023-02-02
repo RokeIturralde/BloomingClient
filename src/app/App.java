@@ -21,6 +21,7 @@ public class App extends Application {
 
     public static void main(String[] args) {
 
+        
         List <User> l = new ArrayList <User> ();
         
         try {

@@ -22,9 +22,7 @@ public interface UserInterface {
         PRIVILEGE
     }
     
-    //public User signIn(String login, String password) throws LoginDoesNotExistException, NotThePasswordException;
-
-    public List<User> find(SearchParameter sp, String value) throws ClientErrorException;
+    public User signIn(String login, String password) throws LoginDoesNotExistException, NotThePasswordException;
 
 
     /*

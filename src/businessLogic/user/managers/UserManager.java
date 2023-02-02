@@ -2,6 +2,7 @@ package businessLogic.user.managers;
 
 import businessLogic.user.FactoryMember;
 import businessLogic.user.UserInterface;
+import encrypt.Cryptology;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -34,12 +35,7 @@ public class UserManager implements UserInterface {
         webClient = new UserFacadeREST();
     }
 
-    @Override
-    public List<User> find(SearchParameter sp, String value) throws ClientErrorException {
-
-        // TODO:
-        return null;
-    }
+    
 
     @Override
     public List<User> findUserByName(String name) throws ClientErrorException {
@@ -174,6 +170,39 @@ public class UserManager implements UserInterface {
                 });
 
         return listMembers;
+    }
+
+
+    
+    // FactoryUser.get().signIn("login", "password");
+
+    @Override
+    public User signIn(String login, String password) throws LoginDoesNotExistException, NotThePasswordException {
+        User u;
+        try {
+            LOGGER.info("User manager: attemting to log user with login=" + login);
+
+            if (findUserByLogin(login) == null) // not found
+                throw new LoginDoesNotExistException();
+            else 
+                u = webClient.signIn_XML(User.class, login, password);
+            
+            if (u == null)
+                throw new NotThePasswordException();
+            else
+                return u;
+
+            
+        } catch (ClientErrorException ce) {
+            // error searching user
+        } 
+        catch (Exception ex) {
+            LOGGER.log(Level.SEVERE,
+                    "UserManager: Error finding members, {0}",
+                    ex.getMessage());
+        }
+        
+        return null;
     }
 
 }
