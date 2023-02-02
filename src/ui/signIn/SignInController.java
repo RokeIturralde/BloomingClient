@@ -5,7 +5,7 @@
  */
 package ui.signIn;
 
-import ui.signUp.SignUpController;
+import ui.signUp.SignUpWindowController;
 import businessLogic.album.AlbumInterface;
 import businessLogic.user.FactoryUser;
 import encrypt.Cryptology;
@@ -121,7 +121,7 @@ public class SignInController {
             //The data from the server is charged into an User
             User usSignIn = new User();
             String passwd = Cryptology.hexadecimal(Cryptology.encrypt(cpPassword.getText()));
-            usSignIn = FactoryUser.get().signIn(txtLogin.getText(), passwd);
+            //usSignIn = FactoryUser.get().signIn(txtLogin.getText(), passwd);
             
             if (usSignIn == null) {
 
@@ -163,9 +163,10 @@ public class SignInController {
             }
         } catch (IOException ex) {
             new Alert(Alert.AlertType.ERROR, ex.getMessage(), ButtonType.OK).showAndWait();
-        } catch (LoginDoesNotExistException | NotThePasswordException ex) {
-            Logger.getLogger(SignInController.class.getName()).log(Level.SEVERE, null, ex);
         }
+        /* } catch (LoginDoesNotExistException | NotThePasswordException ex) {
+            Logger.getLogger(SignInController.class.getName()).log(Level.SEVERE, null, ex);
+        } */
     }
 
     /**
@@ -182,7 +183,7 @@ public class SignInController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/signUp/SignUp.fxml"));
             Parent root = (Parent) loader.load();
             //Obtain the controller of the Sign Up window
-            SignUpController controller = (SignUpController) loader.getController();
+            SignUpWindowController controller = (SignUpWindowController) loader.getController();
             controller.setStage(stageSignUp);
             controller.initSignUp(root);
 
