@@ -19,8 +19,7 @@ public class App extends Application {
         launch(args);
     }
 
-    /*
-    @Override
+    /*@Override
     public void start(Stage stage) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("changePassword/ChangePasswordWindow.fxml"));
@@ -42,13 +41,16 @@ public class App extends Application {
             FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("ui/signIn/SignInCrud.fxml"));
             Parent root = (Parent) loader.load();
             //Obtain the Sign In window controller
-            ContentWindowController controller = (ContentWindowController) loader.getController();
+            SignInController controller = (SignInController) loader.getController();
 
             controller.setStage(stage);
             controller.initStage(root);
         } catch (IOException ex) {
             Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    /*
     }*/
     
     
@@ -65,6 +67,7 @@ public class App extends Application {
         } catch (IOException ex) {
             Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }*/
     }
     
 
