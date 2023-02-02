@@ -22,7 +22,7 @@ public class App extends Application {
     public static void main(String[] args) {
 
         
-        List <User> l = new ArrayList <User> ();
+        /* List <User> l = new ArrayList <User> ();
         
         try {
             l = FactoryUser.get().findUserByPrivilege("MEMBER");
@@ -30,7 +30,7 @@ public class App extends Application {
             e.printStackTrace();
         }
 
-        l.forEach(u -> System.out.println(u));
+        l.forEach(u -> System.out.println(u)); */
 
         launch(args);
     }

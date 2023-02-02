@@ -13,9 +13,6 @@ import java.util.stream.Stream;
 
 import javax.ws.rs.core.GenericType;
 
-import org.apache.xpath.functions.FuncExtFunctionAvailable;
-import org.hibernate.loader.custom.CollectionReturn;
-
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -134,22 +131,16 @@ public class AdminUserDataWindowController {
 
     public List <String> membershipPlanNames() {
         try {
-            /* return MembershipPlanFactory.getModel()
-            .findAll_XML(
-                new GenericType <List<MembershipPlan>> () {}); */
            return
-            MembershipPlanFactory.getModel()
-                .findAll_XML(
-                    new GenericType <List<MembershipPlan>> () {})
-                    .stream().map(p -> p.getName())
-                        .collect(Collectors.toList());  
+                MembershipPlanFactory.getModel()
+                    .findAll_XML(
+                        new GenericType <List<MembershipPlan>> () {})
+                        .stream().map(p -> p.getName())
+                            .collect(Collectors.toList());
         } catch (Exception e) {
-            e.printStackTrace();
-            return Arrays.asList("bro que cojones");
+            return Arrays.asList("");
         }
     } 
-            
-
 
 
     // HANDLERS OF EVERY CHANGE IN THE WINDOW ------------------------------------------------------------------------------------------
@@ -334,6 +325,10 @@ public class AdminUserDataWindowController {
 
         LOGGER.info("Attempting to load users to the table.");
         
+        loadEveryUser();
+    }
+
+    private void loadEveryUser() {
         try {
             tableUsers.setItems(
                 FXCollections
@@ -376,7 +371,7 @@ public class AdminUserDataWindowController {
                             .findUserByName(value);
 
                     // multiple results
-                    if (searchResults == null && u != null)
+                    if (searchResults != null || u != null)
                         Arrays.asList(u);
                     else
                         throw new Exception("Some error");
@@ -402,7 +397,7 @@ public class AdminUserDataWindowController {
             } 
 
         LOGGER.info(
-        "Attempting to search users by " + param + "=" + value);
+        "Attempting to search users by " + param.toLowerCase() + "=" + value);
 
 
         tableUsers.setItems(FXCollections.observableArrayList(searchResults));
@@ -424,11 +419,6 @@ public class AdminUserDataWindowController {
             return;
         }
 
-        Member m;
-
-        // if (Member.class.isInstance(u))
-
-        
         txtLogin.setText(u.getLogin());
         txtEmail.setText(u.getEmail());
         txtFullName.setText(u.getFullName()); 
@@ -504,12 +494,27 @@ public class AdminUserDataWindowController {
         comboBoxSearchParameter.getSelectionModel().clearSelection();
         comboBoxSearchParameter.setPromptText(comboBoxSearchParameterText);
 
-        /* comboBoxMembershipPlans.getSelectionModel().clearSelection();
-        comboBoxMembershipPlans.setPromptText(comboBoxMembershipPlansText); */
+        comboBoxMembershipPlans.getSelectionModel().clearSelection();
+        comboBoxMembershipPlans.setPromptText(comboBoxMembershipPlansText);
 
         comboBoxSearch.getSelectionModel().clearSelection();
         comboBoxSearch.setVisible(false);
+
+        try {
+            tableUsers.setItems(
+                FXCollections
+                .observableArrayList(FactoryMember.get().getEveryUser())
+            );
+        } catch (Exception e) {
+            LOGGER.severe("There was an error loading users:\n" + e.getMessage());
+        }   
     }
+
+    /**
+     * function to load every 
+     * user parameter in an object
+     * @return user with every value in the boxes
+     */
 
     private User createFromParams() {
         User u = new User();
@@ -519,22 +524,43 @@ public class AdminUserDataWindowController {
 
         u.setPassword("no password yet");
 
-        u.setPrivilege(Privilege.CLIENT);
-        u.setStatus(Status.ENABLE);
+        Privilege p = Privilege.CLIENT; // default
+
+        if (u.getPrivilege().equals(Privilege.ADMIN))
+            p = Privilege.ADMIN;
+        else if (u.getPrivilege().equals(Privilege.MEMBER))
+            p = Privilege.CLIENT;
+        else if (u.getPrivilege().equals(Privilege.MEMBER))
+            p = Privilege.MEMBER;
+        
+        u.setPrivilege(p);
+
+        Status s = 
+            checkBoxStatus.isSelected() ? 
+                Status.ENABLE :
+                Status.DISABLE;
+
+        u.setStatus(s);
         
         u.setLastPasswordChange(Date.from(Instant.now()));
         
-        
         return u;
     }
+    
+    
     @FXML
     private void handleAddUserButtonAction() {
+        User u = createFromParams(); 
         try {
-            FactoryUser.get().createUser(createFromParams());
+            FactoryUser.get().createUser(u);
         } catch (Exception e) {
-            e.printStackTrace();
+            new Alert(
+                AlertType.ERROR, 
+                "There was an error recording.");
         }
+
     }
+
     @FXML
     private void handleModifyUserButtonAction() {
     }
@@ -635,13 +661,6 @@ public class AdminUserDataWindowController {
                 comboBoxSearch.getSelectionModel().isEmpty());
         });
 
-        /* comboBoxMembershipPlans.setItems(
-            FXCollections.observableArrayList(membershipPlanNames()));
- */
-        /* MembershipPlanFactory.getModel().findAll_XML(new GenericType<List<MembershipPlan>>() {});
-
-
-        MembershipPlanFactory.getModel().findPlanByName_XML(new GenericType<List<MembershipPlan>>() {}, "plan1"); */
 
         // table users 
         {
@@ -666,7 +685,7 @@ public class AdminUserDataWindowController {
                 new PropertyValueFactory<>("plan"));
 
             tbColLastPasswordChange.setCellValueFactory(
-                new PropertyValueFactory<>("lastPasswordChange"));  
+                new PropertyValueFactory<>("lastPasswordChange"));
         }
 
         handleClearButtonAction();
