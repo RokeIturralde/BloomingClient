@@ -6,6 +6,7 @@
 package services;
 
 import businessLogic.album.AlbumInterface;
+import java.util.ResourceBundle;
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.WebTarget;
@@ -28,9 +29,9 @@ public class AlbumFarcadeREST implements AlbumInterface{
 
     private final WebTarget webTarget;
     private final Client client;
-    //Mover a Archivo de Propiedades!!!!
-    private static final String BASE_URI = "http://localhost:8080/BloomingWeb/webresources";
-
+    private static final ResourceBundle bundle = ResourceBundle.getBundle("files.URLCredentials");
+    private static final String BASE_URI = bundle.getString("BASE_URI");
+    
     public AlbumFarcadeREST() {
         client = javax.ws.rs.client.ClientBuilder.newClient();
         webTarget = client.target(BASE_URI).path("entities.album");
@@ -74,19 +75,18 @@ public class AlbumFarcadeREST implements AlbumInterface{
     /**
      *
      * @param <T>
-     * @param genericType
+     * @param objectClass
      * @param id
      * @return
      * @throws ClientErrorException
      */
-    @Override
-    public <T> T findAlbumByID_XML(GenericType<T> genericType, String id) throws ClientErrorException {
+    public <T> T findAlbumByID_XML(Class<T> objectClass, Integer id) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("{0}", new Object[]{id}));
-        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(genericType);
+        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(objectClass);
     }
 
-    public <T> T findAlbumByID_JSON(GenericType<T> genericType, String id) throws ClientErrorException {
+    public <T> T findAlbumByID_JSON(GenericType<T> genericType, Integer id) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("{0}", new Object[]{id}));
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(genericType);
@@ -194,7 +194,7 @@ public class AlbumFarcadeREST implements AlbumInterface{
     }
 
     @Override
-    public void removeAlbum(String id) throws ClientErrorException {
+    public void removeAlbum(Integer id) throws ClientErrorException {
         webTarget.path(java.text.MessageFormat.format("{0}", new Object[]{id})).request().delete();
     }
 

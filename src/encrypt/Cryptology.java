@@ -6,6 +6,7 @@
 package encrypt;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -13,6 +14,7 @@ import java.security.InvalidKeyException;
 import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
+import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
@@ -91,6 +93,33 @@ public class Cryptology {
             Logger.getLogger(Cryptology.class.getName()).log(Level.SEVERE, null, ex);
         }
         return contrasenaCifrada;
+    }
+    
+    public static String hashPassword(String texto) {
+        MessageDigest messageDigest;
+        String passwordHashed = "";
+        try {
+            messageDigest = MessageDigest.getInstance("MD5");//"SHA-256"; Otra vez SHA-256???? es MD5
+            byte dataBytes[] = messageDigest.digest(texto.getBytes()); // Texto a bytes
+            messageDigest.update(dataBytes);
+            byte resumen[] = messageDigest.digest(dataBytes); // Se calcula el resumen
+            passwordHashed = hexadecimal(resumen);
+
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        return passwordHashed;
+    }
+    
+    public static String hexadecimal(byte[] encryptedText) {
+        char hexDigit[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
+        StringBuffer buf = new StringBuffer();
+        
+        for (int j = 0; j < encryptedText.length; j++) {
+            buf.append(hexDigit[(encryptedText[j] >> 4) & 0x0f]);
+            buf.append(hexDigit[encryptedText[j] & 0x0f]);
+        }
+        return buf.toString();
     }
     
     public static byte[] decrypt(byte[] ciphertext) {

@@ -39,6 +39,8 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.core.GenericType;
+import objects.Member;
+import objects.MembershipPlan;
 import logic.objects.Member;
 import logic.objects.MembershipPlan;
 import logic.objects.User;
@@ -155,7 +157,6 @@ public class AdminMembershipPlanController {
         this.stage = stage;
     }
 
-    
     private void handlePlansTableSelectionChanged(ObservableValue observable,
             Object oldValue,
             Object newValue) {
@@ -168,10 +169,9 @@ public class AdminMembershipPlanController {
             txtDuration.setText(plan.getDuration() + "");
             cbShareable.setSelected(plan.getShareable());
             btnShowUsers.setDisable(false);
-            if(plan.getMembers().isEmpty()){
+            if (plan.getMembers().isEmpty()) {
                 btnDelete.setDisable(false);
-            }
-            else{
+            } else {
                 btnDelete.setDisable(true);
             }
         } else {
@@ -278,31 +278,32 @@ public class AdminMembershipPlanController {
                 new Alert(Alert.AlertType.ERROR, "Album limit field has to be a digit", ButtonType.OK).showAndWait();
             }
         }
-        
+
         String floatPattern = "^([0-9]*[.])?[0-9]+$";
         if (!Pattern.matches(floatPattern, txtPrice.getText())) {
                 new Alert(Alert.AlertType.ERROR, "Price field has to be a digit", ButtonType.OK).showAndWait();
             }
     }
-    
+
     @FXML
-    public void handleShowUsersButtonAction(ActionEvent event){
+    public void handleShowUsersButtonAction(ActionEvent event) {
         MembershipPlan plan = (MembershipPlan) tbPlans.getSelectionModel().getSelectedItem();
         ArrayList<Member> members = (ArrayList<Member>) plan.getMembers();
         String membersString = "";
-        for (int i = 0; i < members.size(); i++){
-            membersString = membersString + members.get(i).getLogin()+", ";
+        for (int i = 0; i < members.size(); i++) {
+            membersString = membersString + members.get(i).getLogin() + ", ";
         }
         new Alert(Alert.AlertType.INFORMATION, membersString, ButtonType.OK).showAndWait();
         //new Alert(Alert.AlertType.ERROR, "The maximum length for the plan's price is 6 characters", ButtonType.OK).showAndWait();
     }
-    
+
     @FXML
     public void handleSearchButtonAction(ActionEvent event) {
         //If name is selected
         if (cboxParameter.getValue().toString().equals("Name")) {
-            try {                
-                membershipPlanData = FXCollections.observableArrayList(membershipClient.findPlanByName_XML(new GenericType<List<MembershipPlan>>(){}, txtSearch.getText()));
+            try {
+                membershipPlanData = FXCollections.observableArrayList(membershipClient.findPlanByName_XML(new GenericType<List<MembershipPlan>>() {
+                }, txtSearch.getText()));
                 for (int i = 0; i < membershipPlanData.size(); i++) {
                     membershipPlanData.get(i).setMembers(memberClient.findMembersByPlan(membershipPlanData.get(i).getId() + ""));
                 }
@@ -312,11 +313,12 @@ public class AdminMembershipPlanController {
                 e.printStackTrace();
             }
         }
-        
+
         //If duration is selected
         if (cboxParameter.getValue().toString().equals("Duration")) {
-            try {                
-                membershipPlanData = FXCollections.observableArrayList(membershipClient.findPlanByDuration_XML(new GenericType<List<MembershipPlan>>(){}, txtSearch.getText()));
+            try {
+                membershipPlanData = FXCollections.observableArrayList(membershipClient.findPlanByDuration_XML(new GenericType<List<MembershipPlan>>() {
+                }, txtSearch.getText()));
                 for (int i = 0; i < membershipPlanData.size(); i++) {
                     membershipPlanData.get(i).setMembers(memberClient.findMembersByPlan(membershipPlanData.get(i).getId() + ""));
                 }
@@ -326,11 +328,12 @@ public class AdminMembershipPlanController {
                 e.printStackTrace();
             }
         }
-        
+
         //If price is selected
-        if(cboxParameter.getValue().toString().equals("Price")){
-           try {                
-                membershipPlanData = FXCollections.observableArrayList(membershipClient.findPlanByPrice_XML(new GenericType<List<MembershipPlan>>(){}, txtSearch.getText()));
+        if (cboxParameter.getValue().toString().equals("Price")) {
+            try {
+                membershipPlanData = FXCollections.observableArrayList(membershipClient.findPlanByPrice_XML(new GenericType<List<MembershipPlan>>() {
+                }, txtSearch.getText()));
                 for (int i = 0; i < membershipPlanData.size(); i++) {
                     membershipPlanData.get(i).setMembers(memberClient.findMembersByPlan(membershipPlanData.get(i).getId() + ""));
                 }
@@ -338,11 +341,10 @@ public class AdminMembershipPlanController {
                 tbPlans.refresh();
             } catch (Exception e) {
                 e.printStackTrace();
-            } 
+            }
         }
     }
 
-    
     @FXML
     public void handleDeleteButtonAction(ActionEvent event) {
         MembershipPlan plan = (MembershipPlan) tbPlans.getSelectionModel().getSelectedItem();
@@ -463,7 +465,7 @@ public class AdminMembershipPlanController {
 
     @FXML
     public void handleUsersButtonAction(ActionEvent event) {
-        
+
     }
 
     @FXML

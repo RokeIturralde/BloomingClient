@@ -3,14 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package logic.objects;
+package objects;
 
 /**
  *
  * @author Roke
  */
-public enum Privilege {
-    CLIENT,
-    MEMBER,
-    ADMIN
+public enum Status {
+    ENABLE,
+    DISABLE
 }

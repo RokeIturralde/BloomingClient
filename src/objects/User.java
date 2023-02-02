@@ -1,4 +1,4 @@
-package logic.objects;
+package objects;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -9,7 +9,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  *
  * @author dani
  */
-@XmlRootElement(name="user")
+@XmlRootElement(name = "user")
 public class User implements Serializable {
 
     private String email;
@@ -20,8 +20,8 @@ public class User implements Serializable {
     private Status status;
 
     public User(
-    String login, String email, String fullName, String password, 
-    Privilege privilege, Status status, Date lastPasswordChange) {
+            String login, String email, String fullName, String password,
+            Privilege privilege, Status status, Date lastPasswordChange) {
         this.email = email;
         this.fullName = fullName;
         this.login = login;
@@ -32,13 +32,12 @@ public class User implements Serializable {
         this.createdAlbums = null;
         this.sharedAlbums = null;
     }
-    
+
     private Date lastPasswordChange;
     private List<Album> createdAlbums;
 
-    public User() {}
-
-    
+    public User() {
+    }
 
     public List<Album> getCreatedAlbums() {
         return createdAlbums;
@@ -56,7 +55,7 @@ public class User implements Serializable {
     public void setSharedAlbums(List<Album> sharedAlbums) {
         this.sharedAlbums = sharedAlbums;
     }
-    
+
     public String getEmail() {
         return email;
     }
