@@ -643,34 +643,6 @@ public class ContentWindowController {
     @FXML
     private void handleFindButtonAction(ActionEvent event
     ) {
-        /**
-         * First we check which option is selected from the Combobox
-         */
-        if (cboxParameter.getSelectionModel().getSelectedItem().equals("Location")) {
-            try {
-                /**
-                 * If location is selected the method is called and if
-                 * succesfull the data is shown
-                 */
-                contentList = FXCollections.observableArrayList(client.findContentByLocation_XML(new GenericType<List<Content>>() {
-                }, txtValue.getText()));
-                customImageList = findCustomImageByLocation(contentList, txtValue.getText());
-                //  customTextList = findCustomTextByLocation(contentList, txtValue.getText());
-                ObservableList<CustomImage> listCustomImage = FXCollections.observableArrayList(customImageList);
-                //  ObservableList<CustomText> listCustomText = FXCollections.observableArrayList(customTextList);
-                tableCustomImage.setItems(listCustomImage);
-                tableCustomImage.refresh();
-                // tableCustomText.setItems(listCustomText);
-                //  tableCustomText.refresh();
-            } catch (ClientErrorException ex) {
-                new Alert(Alert.AlertType.ERROR, ex.getMessage(), ButtonType.OK).showAndWait();
-                Logger
-                        .getLogger(ContentWindowController.class
-                                .getName()).log(Level.SEVERE, null, ex);
-            } catch (Exception e) {
-                new Alert(Alert.AlertType.ERROR, "Failed connecting to the server, try again later please", ButtonType.OK).showAndWait();
-            }
-        }
         if (cboxParameter.getSelectionModel().getSelectedItem().equals("Name")) {
             try {
                 /**
@@ -929,13 +901,10 @@ public class ContentWindowController {
         btnFind.setDisable(true);
         cboxParameter.getItems().addAll(
                 "",
-                "Location",
                 "Name"
         );
         cboxParameter.valueProperty().addListener((ObservableList, oldValue, newValue) -> {
-            if (newValue.equals("Location")) {
-                txtValue.setDisable(false);
-            } else if (newValue.equals("Name")) {
+            if (newValue.equals("Name")) {
                 txtValue.setDisable(false);
             } else {
                 txtValue.setDisable(true);
@@ -1088,90 +1057,6 @@ public class ContentWindowController {
                 new Alert(Alert.AlertType.ERROR, ex.getMessage(), ButtonType.OK).showAndWait();
             }
             if (customText != null) {
-                customTextList.add(customText);
-            }
-        }
-        return customTextList;
-    }
-
-    /**
-     * This method finds Custom Images by location
-     *
-     * @param contentList the list with all the contents
-     * @param txtValue the wanted location to be searcheds
-     * @return a list of Custom Images with the given parameter
-     */
-    private ArrayList<CustomImage> findCustomImageByLocation(ObservableList<Content> contentList, String txtValue) {
-        ArrayList<CustomImage> customImageList = new ArrayList<>();
-        CustomImage customImage = new CustomImage();
-        CustomImageInterface customImageInterface = CustomImageFactory.getModel();
-        for (int i = 0; i < contentList.size(); i++) {
-            if (contentList.get(i).getLocation().equalsIgnoreCase(txtValue)) {
-                try {
-                    customImage = customImageInterface.findCustomTextById_XML(CustomImage.class,
-                            contentList.get(i).getContentId() + "");
-
-                } catch (ClientErrorException ex) {
-                    Logger.getLogger(ContentWindowController.class
-                            .getName()).log(Level.SEVERE, null, ex);
-                    new Alert(Alert.AlertType.ERROR, ex.getMessage(), ButtonType.OK).showAndWait();
-                }
-                customImageList.add(customImage);
-            }
-        }
-        return customImageList;
-    }
-
-    /**
-     * This method finds Custom Texts by location
-     *
-     * @param contentList the list with all the contents
-     * @param txtValue the wanted location to be searcheds
-     * @return a list of Custom Texts with the given parameter
-     */
-    private ArrayList<CustomText> findCustomTextByLocation(ObservableList<Content> contentList, String txtValue) {
-        ArrayList<CustomText> customTextList = new ArrayList<>();
-        CustomText customImage = new CustomText();
-        CustomTextInterface customTextInterface = CustomTextFactory.getModel();
-        for (int i = 0; i < contentList.size(); i++) {
-            if (contentList.get(i).getLocation().equalsIgnoreCase(txtValue)) {
-                try {
-                    customImage = customTextInterface.findCustomTextById_XML(CustomText.class,
-                            contentList.get(i).getContentId() + "");
-
-                } catch (ClientErrorException ex) {
-                    Logger.getLogger(ContentWindowController.class
-                            .getName()).log(Level.SEVERE, null, ex);
-                    new Alert(Alert.AlertType.ERROR, ex.getMessage(), ButtonType.OK).showAndWait();
-                }
-                customTextList.add(customImage);
-            }
-        }
-        return customTextList;
-    }
-
-    /**
-     * Finds all the Custom Texts by Name
-     *
-     * @param contentList a list with all the contents
-     * @param txtValue the text with the name to be searched
-     * @return a list with the Custom Texts with the given name
-     */
-    private ArrayList<CustomText> findCustomTextByName(ObservableList<Content> contentList, String txtValue) {
-        ArrayList<CustomText> customTextList = new ArrayList<>();
-        CustomText customText = new CustomText();
-        CustomTextInterface customTextInterface = CustomTextFactory.getModel();
-        for (int i = 0; i < contentList.size(); i++) {
-            if (contentList.get(i).getName().equalsIgnoreCase(txtValue)) {
-                try {
-                    customText = customTextInterface.findCustomTextById_XML(CustomText.class,
-                            contentList.get(i).getContentId() + "");
-
-                } catch (ClientErrorException ex) {
-                    Logger.getLogger(ContentWindowController.class
-                            .getName()).log(Level.SEVERE, null, ex);
-                    new Alert(Alert.AlertType.ERROR, ex.getMessage(), ButtonType.OK).showAndWait();
-                }
                 customTextList.add(customText);
             }
         }
