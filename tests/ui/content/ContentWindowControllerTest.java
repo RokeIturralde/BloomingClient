@@ -133,7 +133,8 @@ public class ContentWindowControllerTest extends ApplicationTest {
         clickOn("#txtLocation");
         eraseText(15);
         write("ChangedLocation");
-        verifyThat("#btnFileChooser", isEnabled());
+        clickOn("#btnModifyContent");
+        push(KeyCode.ENTER);
     }
 
     /*   private void typeString(FxRobot robot, String str) {
@@ -159,6 +160,8 @@ public class ContentWindowControllerTest extends ApplicationTest {
 
     @Test
     public void test5_deleteContent() {
+        tableCustomImage = lookup("#tableCustomImage").query();
+        int numObjects = tableCustomImage.getItems().size();
         Node row = lookup(".table-row-cell").nth(3).query();
         clickOn(row);
         verifyThat("#txtName", isEnabled());
@@ -170,6 +173,8 @@ public class ContentWindowControllerTest extends ApplicationTest {
         verifyThat("#btnDeleteContent", isEnabled());
         clickOn("#btnDeleteContent");
         push(KeyCode.ENTER);
+        int numObjectEliminated = tableCustomImage.getItems().size();
+        assertNotEquals(numObjects, numObjectEliminated);
     }
 
 }
