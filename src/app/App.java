@@ -34,7 +34,7 @@ public class App extends Application {
         }
     }*/
     
-    
+    /*
     @Override
     public void start(Stage stage) {
         try {
@@ -48,9 +48,9 @@ public class App extends Application {
         } catch (IOException ex) {
             Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }
+    }*/
     
-    /*
+    
     @Override
     public void start(Stage stage) {
         try {
@@ -64,7 +64,7 @@ public class App extends Application {
         } catch (IOException ex) {
             Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }*/
+    }
     
 
 }

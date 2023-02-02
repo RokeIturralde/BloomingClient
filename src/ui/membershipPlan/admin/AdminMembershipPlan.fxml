@@ -83,11 +83,7 @@
       <Button fx:id="btnSearch" layoutX="600.0" layoutY="247.0" mnemonicParsing="false" onAction="#handleSearchButtonAction" text="Search" />
       <ComboBox fx:id="cboxParameter" layoutX="195.0" layoutY="247.0" prefWidth="150.0" />
       <Button fx:id="btnClear" layoutX="718.0" layoutY="247.0" mnemonicParsing="false" onAction="#handleClearButtonAction" prefHeight="25.0" prefWidth="59.0" text="Clear" />
-      <Label layoutX="1119.0" layoutY="21.0" prefHeight="24.0" prefWidth="39.0" text="Help" textFill="#3c75df" underline="true">
-         <font>
-            <Font size="15.0" />
-         </font>
-      </Label>
       <Button fx:id="btnShowUsers" layoutX="864.0" layoutY="247.0" mnemonicParsing="false" onAction="#handleShowUsersButtonAction" text="Show users" />
+      <Button fx:id="btnHelp" layoutX="1057.0" layoutY="14.0" mnemonicParsing="false" onAction="#handleHelpAction" text="Help" />
    </children>
 </Pane>
