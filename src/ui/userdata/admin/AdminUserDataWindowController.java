@@ -1,18 +1,17 @@
 package ui.userdata.admin;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javax.ws.rs.core.GenericType;
-
-import org.apache.xpath.functions.FuncExtFunctionAvailable;
-import org.hibernate.loader.custom.CollectionReturn;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -132,22 +131,16 @@ public class AdminUserDataWindowController {
 
     public List <String> membershipPlanNames() {
         try {
-            /* return MembershipPlanFactory.getModel()
-            .findAll_XML(
-                new GenericType <List<MembershipPlan>> () {}); */
            return
-            MembershipPlanFactory.getModel()
-                .findAll_XML(
-                    new GenericType <List<MembershipPlan>> () {})
-                    .stream().map(p -> p.getName())
-                        .collect(Collectors.toList());  
+                MembershipPlanFactory.getModel()
+                    .findAll_XML(
+                        new GenericType <List<MembershipPlan>> () {})
+                        .stream().map(p -> p.getName())
+                            .collect(Collectors.toList());
         } catch (Exception e) {
-            e.printStackTrace();
-            return Arrays.asList("bro que cojones");
+            return Arrays.asList("1", "2", "3", "4");
         }
     } 
-            
-
 
 
     // HANDLERS OF EVERY CHANGE IN THE WINDOW ------------------------------------------------------------------------------------------
@@ -332,6 +325,10 @@ public class AdminUserDataWindowController {
 
         LOGGER.info("Attempting to load users to the table.");
         
+        loadEveryUser();
+    }
+
+    private void loadEveryUser() {
         try {
             tableUsers.setItems(
                 FXCollections
@@ -357,7 +354,7 @@ public class AdminUserDataWindowController {
             
 
         User u = null;
-        List <User> searchResults = null; // every result will be stored in here
+        List <User> searchResults = new LinkedList<>(); // every result will be stored in here
 
             try {
 
@@ -374,8 +371,10 @@ public class AdminUserDataWindowController {
                             .findUserByName(value);
 
                     // multiple results
-                    if (searchResults == null)
+                    if (searchResults != null || u != null)
                         Arrays.asList(u);
+                    else
+                        throw new Exception("Some error");
                 }
 
                 else { // case of being an enumerated search
@@ -393,17 +392,15 @@ public class AdminUserDataWindowController {
 
             } catch (Exception e) {
                 // TODO: handle
-                e.printStackTrace();
+                //e.printStackTrace();
+                new Alert(AlertType.INFORMATION, "No users were found with" + param + "=" + value);
             } 
 
-            LOGGER.info(
-            "Attempting to search users by " + param + "=" + value);
+        LOGGER.info(
+        "Attempting to search users by " + param.toLowerCase() + "=" + value);
 
-           
-        if (searchResults == null)
-            new Alert(AlertType.INFORMATION, "No users were found with" + param + "=" + value);
-        else
-            tableUsers.setItems(FXCollections.observableArrayList(searchResults));
+
+        tableUsers.setItems(FXCollections.observableArrayList(searchResults));
     }
 
     private void handleUsersTableSelectionChanged(
@@ -422,11 +419,6 @@ public class AdminUserDataWindowController {
             return;
         }
 
-        Member m;
-
-        // if (Member.class.isInstance(u))
-
-        
         txtLogin.setText(u.getLogin());
         txtEmail.setText(u.getEmail());
         txtFullName.setText(u.getFullName()); 
@@ -445,16 +437,24 @@ public class AdminUserDataWindowController {
             radioButtonClient.setSelected(true);
         if (u.getPrivilege().equals(Privilege.MEMBER)) {
             radioButtonMember.setSelected(true);
-            
+
+            Member m = Member.class.cast(u);
+
+            comboBoxMembershipPlans.getSelectionModel()
+                .select(
+                    m.getPlan().getId());
+                
             datePickerStart.setValue(
                 toLocalDate(
-                    Member.class.cast(u)
-                    .getMemberStartingDate()));
+                    m.getMemberStartingDate()));
             datePickerEnd.setValue(
                 toLocalDate(
-                    Member.class.cast(u)
-                    .getMemberEndingDate()));
+                    m.getMemberEndingDate()));
+        } 
+        else {
+            comboBoxMembershipPlans.setPromptText(comboBoxMembershipPlansText);
         }
+
     }
 
 
@@ -502,20 +502,94 @@ public class AdminUserDataWindowController {
         comboBoxSearchParameter.getSelectionModel().clearSelection();
         comboBoxSearchParameter.setPromptText(comboBoxSearchParameterText);
 
-        /* comboBoxMembershipPlans.getSelectionModel().clearSelection();
-        comboBoxMembershipPlans.setPromptText(comboBoxMembershipPlansText); */
+        comboBoxMembershipPlans.getSelectionModel().clearSelection();
+        comboBoxMembershipPlans.setPromptText(comboBoxMembershipPlansText);
 
         comboBoxSearch.getSelectionModel().clearSelection();
         comboBoxSearch.setVisible(false);
+
+        try {
+            tableUsers.setItems(
+                FXCollections
+                .observableArrayList(FactoryMember.get().getEveryUser())
+            );
+        } catch (Exception e) {
+            LOGGER.severe("There was an error loading users:\n" + e.getMessage());
+        }   
     }
+
+    /**
+     * function to load every 
+     * user parameter in an object
+     * @return user with every value in the boxes
+     */
+
+    private User createFromParams() {
+        User u = new User();
+        u.setLogin(txtLogin.getText());
+        u.setEmail(txtEmail.getText());
+        u.setFullName(txtFullName.getText());
+
+        u.setPassword("no password yet");
+
+        Privilege p = Privilege.CLIENT; // default
+
+        if (u.getPrivilege().equals(Privilege.ADMIN))
+            p = Privilege.ADMIN;
+        else if (u.getPrivilege().equals(Privilege.MEMBER))
+            p = Privilege.CLIENT;
+        else if (u.getPrivilege().equals(Privilege.MEMBER))
+            p = Privilege.MEMBER;
+        
+        u.setPrivilege(p);
+
+        Status s = 
+            checkBoxStatus.isSelected() ? 
+                Status.ENABLE :
+                Status.DISABLE;
+
+        u.setStatus(s);
+        
+        u.setLastPasswordChange(Date.from(Instant.now()));
+        
+        return u;
+    }
+    
+    
     @FXML
     private void handleAddUserButtonAction() {
+        User u = createFromParams(); 
+        try {
+            FactoryUser.get().createUser(u);
+        } catch (Exception e) {
+            new Alert(
+                AlertType.ERROR, 
+                "There was an error recording user "+ u +".");
+        }
+
     }
+
     @FXML
     private void handleModifyUserButtonAction() {
+        User u = createFromParams(); 
+        try {
+            FactoryUser.get().editUser(u);
+        } catch (Exception e) {
+            new Alert(
+                AlertType.ERROR, 
+                "There was an error editing user " + u + ".");
+        }
     }
     @FXML
     private void handleDeleteUserButtonAction() {
+        User u = createFromParams(); 
+        try {
+            FactoryUser.get().removeUser(u.getLogin());
+        } catch (Exception e) {
+            new Alert(
+                AlertType.ERROR, 
+                "There was an error deleting user " + u +".");
+        }
     }
     @FXML
     private void handlePrintButtonAction() {
@@ -611,39 +685,32 @@ public class AdminUserDataWindowController {
                 comboBoxSearch.getSelectionModel().isEmpty());
         });
 
-        /* comboBoxMembershipPlans.setItems(
-            FXCollections.observableArrayList(membershipPlanNames()));
- */
-        /* MembershipPlanFactory.getModel().findAll_XML(new GenericType<List<MembershipPlan>>() {});
-
-
-        MembershipPlanFactory.getModel().findPlanByName_XML(new GenericType<List<MembershipPlan>>() {}, "plan1"); */
 
         // table users 
-        {
-            tableUsers.getSelectionModel().selectedItemProperty()
-                .addListener(this::handleUsersTableSelectionChanged);
-            
-            tbColLogin.setCellValueFactory(
-                new PropertyValueFactory<>("login"));
-            tbColEmail.setCellValueFactory(
-                new PropertyValueFactory<>("email"));
+        
+        tableUsers.getSelectionModel().selectedItemProperty()
+           .addListener(this::handleUsersTableSelectionChanged);
+        
+        tbColLogin.setCellValueFactory(
+            new PropertyValueFactory<>("login"));
+        tbColEmail.setCellValueFactory(
+            new PropertyValueFactory<>("email"));
 
-            tbColFullName.setCellValueFactory(
-                new PropertyValueFactory<>("fullName"));
+        tbColFullName.setCellValueFactory(
+            new PropertyValueFactory<>("fullName"));
 
-            tbColStatus.setCellValueFactory(
-                new PropertyValueFactory<>("status"));
+        tbColStatus.setCellValueFactory(
+            new PropertyValueFactory<>("status"));
 
-            tbColPrivilege.setCellValueFactory(
-                new PropertyValueFactory<>("privilege"));
+        tbColPrivilege.setCellValueFactory(
+            new PropertyValueFactory<>("privilege"));
 
-            tbColMembershipPlan.setCellValueFactory(
-                new PropertyValueFactory<>("plan"));
+        tbColMembershipPlan.setCellValueFactory(
+            new PropertyValueFactory<>("plan"));
 
-            tbColLastPasswordChange.setCellValueFactory(
-                new PropertyValueFactory<>("lastPasswordChange"));  
-        }
+        tbColLastPasswordChange.setCellValueFactory(
+            new PropertyValueFactory<>("lastPasswordChange"));
+        
 
         handleClearButtonAction();
 

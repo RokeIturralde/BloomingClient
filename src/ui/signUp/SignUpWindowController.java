@@ -36,7 +36,7 @@ public class SignUpWindowController {
 
     @FXML
     private PasswordField password, passwordConfirmation;
-    private final String passwordPromptText = "Passsworrdd pleasee",
+    private final String passwordPromptText = "Password",
             passwordConfirmationPromptText = "Repeat the password";
 
     @FXML
@@ -78,12 +78,8 @@ public class SignUpWindowController {
     private void handleTextChanged(
             ObservableValue observableValue,
             String oldvalue, String newValue) {
-        /*
-         * boolean lesgoo = everyUserParamIsCorrect();
-         * 
-         * btnRegister.setDisable(!lesgoo);
-         */
 
+           btnRegister.setDisable(everyUserParamIsCorrect());
     }
 
     /**
@@ -124,7 +120,7 @@ public class SignUpWindowController {
             password.setPromptText(passwordPromptText);
         else if (passwordConfirmation.getText().isEmpty())
             passwordConfirmation.setPromptText(passwordConfirmationPromptText);
-
+            
         nicely = nicely && (password.equals(passwordConfirmationPromptText));
 
         // TODO: are both passwords the same?
@@ -165,10 +161,19 @@ public class SignUpWindowController {
         btnClear.setText(btnClearText);
         btnExit.setText(btnExitText);
 
+        btnRegister.setDisable(false);
+        btnClear.setDisable(false);
+        btnExit.setDisable(false);
+
         clearEverything();
         // TODO: set all the texts
+
+
     }
 
+    /**
+     * clears ever character
+     */
     private void clearEverything() {
         // text
         txtLogin.clear();
@@ -186,11 +191,11 @@ public class SignUpWindowController {
         passwordConfirmation.setPromptText(passwordConfirmationPromptText);
     }
 
-    /**
+    /* /**
      * checks if the spaces have values
      * 
      * @return
-     */
+     
     private boolean everyUserParamIsEmpty() {
         return 
             txtLogin.getText().isEmpty() &&
@@ -198,12 +203,22 @@ public class SignUpWindowController {
             txtFullName.getText().isEmpty() &&
 
             password.getText().isEmpty() &&
-            passwordConfirmation.getText().isEmpty();
+            passwordConfirmation.getText().isEmpty(); 
+    }*/
+
+    private User generateFromFields() {
+        User u = new User();
+        // TODO
+        return u;
     }
 
     @FXML
     private void handlerRegisterButtonAction() {
-
+        try {
+            FactoryUser.get().createUser(generateFromFields());
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
     }
 
     @FXML
@@ -213,7 +228,7 @@ public class SignUpWindowController {
 
     @FXML
     private void handlerExitButtonAction() {
-
+        // TODO:
     }
 
 

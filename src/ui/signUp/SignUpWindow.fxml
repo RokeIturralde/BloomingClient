@@ -1,19 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.image.Image?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
-<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
-<?import javafx.scene.text.Text?> 
+<?import javafx.scene.text.Text?>
 
 <Pane fx:id="Pane" prefHeight="682.0" prefWidth="1187.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.signUp.SignUpWindowController">
    <children>
-      <Pane prefHeight="688.0" prefWidth="1187.0" style="-fx-background-color: FF926A;">
+      <Pane prefHeight="688.0" prefWidth="1195.0" style="-fx-background-color: FF926A;">
          <children>
             <Text fontSmoothingType="LCD" layoutX="542.0" layoutY="33.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Sign Up" wrappingWidth="158.13672637939453">
                <font>
@@ -38,7 +36,7 @@
                   <Font name="Microsoft YaHei" size="13.0" />
                </font>
             </Text>
-            <Button fx:id="btnRegister" layoutX="463.0" layoutY="610.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="108.0" text="Register" onAction="#handlerRegisterButtonAction"/>
+            <Button fx:id="btnRegister" layoutX="463.0" layoutY="610.0" mnemonicParsing="false" onAction="#handlerRegisterButtonAction" prefHeight="25.0" prefWidth="108.0" text="Register" />
             <Text fontSmoothingType="LCD" layoutX="512.0" layoutY="440.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Password" wrappingWidth="158.13672637939453">
                <font>
                   <Font name="Microsoft YaHei" size="13.0" />
@@ -49,8 +47,8 @@
                   <Font name="Microsoft YaHei" size="13.0" />
                </font>
             </Text>
-            <Button fx:id="btnClear" layoutX="621.0" layoutY="611.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="108.0" text="Clear" onAction="#handlerClearButtonAction"/>
-            <Button fx:id="btnExit" layoutX="542.0" layoutY="649.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="108.0" text="Exit" onAction="#handlerExitButtonAction"/>
+            <Button fx:id="btnClear" layoutX="621.0" layoutY="611.0" mnemonicParsing="false" onAction="#handlerClearButtonAction" prefHeight="25.0" prefWidth="108.0" text="Clear" />
+            <Button fx:id="btnExit" layoutX="542.0" layoutY="649.0" mnemonicParsing="false" onAction="#handlerExitButtonAction" prefHeight="25.0" prefWidth="108.0" text="Exit" />
             <ImageView fitHeight="125.0" fitWidth="149.0" layoutX="512.0" layoutY="48.0">
                <image>
                   <Image url="@../../resources/bloomingPNG.png" />
