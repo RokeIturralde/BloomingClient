@@ -234,7 +234,6 @@ public class AlbumsViewController {
         btnDeleteAlbum.setDisable(true);
 
         //Filds disabled at first
-        txtAddUser.setDisable(false);
         taUsers.setDisable(true);
 
         //Charge into the combobox the select actions and selecting the first.
@@ -276,35 +275,43 @@ public class AlbumsViewController {
         LOGGER.info("Metodo de control del boton de Find");
         String busqueda = (String) cbSearchType.getSelectionModel().getSelectedItem();
         String text = txtValue.getText();
-        if (busqueda.equalsIgnoreCase("Name")) {
-            if (checkShared.isSelected()) {
-                clientsData = FXCollections.observableArrayList(client.findMySharedAlbumsByName_XML(new GenericType<List<Album>>() {
-                }, loggedUser.getLogin(), text));
-                tbMyAlbums.setItems(clientsData);
-                tbMyAlbums.refresh();
-            } else {
-                clientsData = FXCollections.observableArrayList(client.findMyAlbumsByName_XML(new GenericType<List<Album>>() {
+        try {
+            if (busqueda.equalsIgnoreCase("Name")) {
+                if (checkShared.isSelected()) {
+                    clientsData = FXCollections.observableArrayList(client.findMySharedAlbumsByName_XML(new GenericType<List<Album>>() {
+                    }, loggedUser.getLogin(), text));
+                    tbMyAlbums.setItems(clientsData);
+                    tbMyAlbums.refresh();
+                } else {
+                    clientsData = FXCollections.observableArrayList(client.findMyAlbumsByName_XML(new GenericType<List<Album>>() {
+                    }, loggedUser.getLogin(), text));
+                    tbSharedAlbums.setItems(clientsData);
+                    tbSharedAlbums.refresh();
+                }
+            } else if ((busqueda.equalsIgnoreCase("Date"))) {
+                if (checkShared.isSelected()) {
+                    clientsData = FXCollections.observableArrayList(client.findMySharedAlbumsByDate_XML(new GenericType<List<Album>>() {
+                    }, loggedUser.getLogin(), text));
+                    tbMyAlbums.setItems(clientsData);
+                    tbMyAlbums.refresh();
+                } else {
+                    clientsData = FXCollections.observableArrayList(client.findMyAlbumsByDate_XML(new GenericType<List<Album>>() {
+                    }, loggedUser.getLogin(), text));
+                    tbSharedAlbums.setItems(clientsData);
+                    tbSharedAlbums.refresh();
+                }
+            } else if ((busqueda.equalsIgnoreCase("Creator"))) {
+                clientsData = FXCollections.observableArrayList(client.findMySharedAlbumsByCreator_XML(new GenericType<List<Album>>() {
                 }, loggedUser.getLogin(), text));
                 tbSharedAlbums.setItems(clientsData);
                 tbSharedAlbums.refresh();
             }
-        } else if ((busqueda.equalsIgnoreCase("Date"))) {
-            if (checkShared.isSelected()) {
-                clientsData = FXCollections.observableArrayList(client.findMySharedAlbumsByDate_XML(new GenericType<List<Album>>() {
-                }, loggedUser.getLogin(), text));
-                tbMyAlbums.setItems(clientsData);
-                tbMyAlbums.refresh();
-            } else {
-                clientsData = FXCollections.observableArrayList(client.findMyAlbumsByDate_XML(new GenericType<List<Album>>() {
-                }, loggedUser.getLogin(), text));
-                tbSharedAlbums.setItems(clientsData);
-                tbSharedAlbums.refresh();
+            
+            if(clientsData.isEmpty()){
+                new Alert(Alert.AlertType.INFORMATION, "No hay ningun album con esa caracteristica", ButtonType.OK).showAndWait();
             }
-        } else if ((busqueda.equalsIgnoreCase("Creator"))) {
-            clientsData = FXCollections.observableArrayList(client.findMySharedAlbumsByCreator_XML(new GenericType<List<Album>>() {
-            }, loggedUser.getLogin(), text));
-            tbSharedAlbums.setItems(clientsData);
-            tbSharedAlbums.refresh();
+        } catch (Exception e) {
+           new Alert(Alert.AlertType.INFORMATION, "No hay ningun album con esa caracteristica", ButtonType.OK).showAndWait();
         }
     }
 
@@ -368,8 +375,8 @@ public class AlbumsViewController {
         client.createAlbum_XML(album);
         /**
          * After the method is done the user gets a notification of the
-         * successfully added content and all the data is cleared, also
-         * tables are refreshed, showing the new created content
+         * successfully added content and all the data is cleared, also tables
+         * are refreshed, showing the new created content
          */
         new Alert(Alert.AlertType.INFORMATION, "Album added successfully", ButtonType.OK).showAndWait();
         txtAlbumName.setText("");
@@ -405,7 +412,6 @@ public class AlbumsViewController {
         album.setCreator(loggedUser);
         album.setDescription(taAlbumDesc.getText());
         album.setUsers(userList);
-
         try {
             client = FactoryAlbum.getModel();
             client.updateAlbum_XML(album);
