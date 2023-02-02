@@ -40,6 +40,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -61,6 +62,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.WindowEvent;
 import javafx.util.Callback;
 import javax.imageio.ImageIO;
+import javax.swing.WindowConstants;
 import javax.ws.rs.core.GenericType;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperCompileManager;
@@ -72,6 +74,7 @@ import net.sf.jasperreports.view.JasperViewer;
 import objects.CustomImage;
 import objects.Content;
 import objects.CustomText;
+import ui.content.help.HelpController;
 
 /**
  * FXML Controller class
@@ -748,6 +751,28 @@ public class ContentWindowController {
     ) {
     }
 
+    @FXML
+    private void handleHelpButtonAction(ActionEvent event
+    ) {
+        try {
+            LOGGER.info("Loading help view...");
+            //Load node graph from fxml file
+            FXMLLoader loader
+                    = new FXMLLoader(getClass().getResource("/ui/content/help/Help.fxml"));
+            Parent root = (Parent) loader.load();
+            HelpController helpController
+                    = ((HelpController) loader.getController());
+            //Initializes and shows help stage
+            helpController.initAndShowStage(root);
+        } catch (Exception ex) {
+            //If there is an error show message and
+            //log it.
+            LOGGER.log(Level.SEVERE,
+                    "UI ContentWindowController: Error loading help window: {0}",
+                    ex.getMessage());
+        }
+    }
+
     /**
      * This method deals with the file chooser button
      *
@@ -806,9 +831,9 @@ public class ContentWindowController {
             JRBeanCollectionDataSource dataItems = new JRBeanCollectionDataSource((Collection<Content>) this.tableCustomImage.getItems());
             Map<String, Object> parameters = new HashMap<>();
             JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameters, dataItems);
-            JasperViewer jasperViewer = new JasperViewer(jasperPrint);
+            JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
             jasperViewer.setVisible(true);
-
+            // jasperViewer.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
         } catch (JRException ex) {
             Logger.getLogger(ContentWindowController.class
                     .getName()).log(Level.SEVERE, null, ex);
