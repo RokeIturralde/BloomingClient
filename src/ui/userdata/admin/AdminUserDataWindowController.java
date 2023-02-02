@@ -112,9 +112,9 @@ public class AdminUserDataWindowController {
     
 
 
-    /**
-     * HANDLERS OF EVERY CHANGE IN THE WINDOW ------------------------------------------------------------------------------------------
-     */
+
+    // HANDLERS OF EVERY CHANGE IN THE WINDOW ------------------------------------------------------------------------------------------
+
 
 
      /**
@@ -174,6 +174,8 @@ public class AdminUserDataWindowController {
         btnDeleteUser.setDefaultButton(!correctParams);
     }
 
+
+
     /**
      * TODO: checking should be correct
      * puts every prompt text
@@ -230,10 +232,13 @@ public class AdminUserDataWindowController {
         return nicely;
     }
 
+
+
     /**
      * checks if the spaces have values
      * @return
      */
+
     private boolean everyUserParamIsEmpty() {
         return 
             txtLogin.getText().isEmpty() &&
@@ -253,8 +258,38 @@ public class AdminUserDataWindowController {
     }
     
 
+    /**
+     * 
+     * @param event
+     */
+
     private void handlerWindowShowing(WindowEvent event) {
         LOGGER.info("Initializing UserWindowController::handlerWindowShowing");
+
+        // buttons
+        btnSearch.setText(btnSearchText);
+        btnClear.setText(btnClearText);
+        btnAddUser.setText(btnAddUserText);
+        btnModifyUser.setText(btnModifyUserText);
+        btnDeleteUser.setText(btnDeleteUserText);
+
+        btnClear.setDisable(false);
+
+
+        // radio button
+        radioButtonAdmin.setText(
+            radioButtonAdminText);
+        radioButtonClient.setText(
+            radioButtonClientText);
+        radioButtonMember.setText(
+            radioButtonMemberText);
+
+
+        // combo box
+        comboBoxSearchParameter
+        .getItems().addAll(textSearches);
+        comboBoxSearchParameter
+        .getItems().addAll(enumeratedSearches);
         
         try {
             tableUsers.setItems(
@@ -348,6 +383,7 @@ public class AdminUserDataWindowController {
 
     private void clearEverything() {
         txtSearchValue.setPromptText(txtSearchValuePromptText);
+            txtSearchValue.setVisible(true);
         txtLogin.setPromptText(txtLoginPromptText);
         txtEmail.setPromptText(txtEmailPromptText);
         txtFullName.setPromptText(txtFullNamePromptText);
@@ -358,6 +394,7 @@ public class AdminUserDataWindowController {
         btnDeleteUser.setDisable(true);
 
         checkBoxStatus.setSelected(false);
+        checkBoxStatus.setText(checkBoxStatusDisableText);
 
         radioButtonAdmin.setSelected(false);
         radioButtonClient.setSelected(false);
@@ -366,20 +403,10 @@ public class AdminUserDataWindowController {
         datePickerStart.setPromptText(datePickerStartText);
         datePickerEnd.setPromptText(datePickerEndText);
 
-        /*
-         * btnSearch
-         * btnClear
-         * 
-         * checkBoxStatus
-         * radioButtonAdmin
-         * radioButtonClient
-         * radioButtonMember
-         * 
-         * comboBoxSearchParameter
-         * comboBoxMembershipPlans
-         * comboBoxMemberStatusSearch
-         * 
-         */
+        comboBoxSearchParameter.setPromptText(comboBoxSearchParameterText);
+        comboBoxMembershipPlans.setPromptText(comboBoxMembershipPlansText);
+        comboBoxMemberStatusSearch.setVisible(false);
+         
 
     }
 
@@ -481,27 +508,6 @@ public class AdminUserDataWindowController {
             this::handleTextChanged);
 
 
-        // buttons
-        btnSearch.setText(btnSearchText);
-        btnClear.setText(btnClearText);
-        btnAddUser.setText(btnAddUserText);
-        btnModifyUser.setText(btnModifyUserText);
-        btnDeleteUser.setText(btnDeleteUserText);
-
-        btnClear.setDisable(false);
-
-
-        // radio button
-        radioButtonAdmin.setText(
-            radioButtonAdminText);
-        radioButtonClient.setText(
-            radioButtonClientText);
-        radioButtonMember.setText(
-            radioButtonMemberText);
-            
-        // TODO: listener
-
-
 
         // checkbox
         checkBoxStatus.selectedProperty()
@@ -518,54 +524,35 @@ public class AdminUserDataWindowController {
                 }
             });
         
-
-        // combo box
-        comboBoxSearchParameter
-            .getItems().addAll(textSearches);
-        comboBoxSearchParameter
-            .getItems().addAll(enumeratedSearches);
-
-
         comboBoxSearchParameter.setOnAction((event) -> {
             //comboBoxMemberStatusSearch.getItems().clear();
+            btnSearch.setDisable(true);
+            txtSearchValue.setPromptText(txtSearchValuePromptText);;
 
-            String v = comboBoxSearchParameter.getSelectionModel().getSelectedItem();
+            String searchMode = 
+                comboBoxSearchParameter.getSelectionModel().getSelectedItem();
 
-            //if (v.equals(comboBoxMembershipPlansText)) 
-                
-            
 
-            
+            if (!textSearches.contains(searchMode)) {
+                comboBoxMemberStatusSearch.getItems().clear();
+                if (searchMode.equals("privilege"))
+                    comboBoxMemberStatusSearch.getItems().addAll(privileges);
+                else
+                    comboBoxMemberStatusSearch.getItems().addAll(status);
 
-            // TODO: pulir 
-
-                switch (v) {
-                case "Privilege":
-
-                    
-                        comboBoxMemberStatusSearch.setItems(
-                            FXCollections
-                            .observableArrayList(privileges));
-                            txtSearchValue.setVisible(false);
-            comboBoxMemberStatusSearch.setVisible(true);
-                break;
-
-                case "Status":
-                    
-                        comboBoxMemberStatusSearch.setItems(
-                            FXCollections
-                            .observableArrayList(status));
-                            txtSearchValue.setVisible(false);
-                    comboBoxMemberStatusSearch.setVisible(true);
-                break;
-
-                default:
-                    comboBoxMemberStatusSearch.setVisible(false);
+                txtSearchValue.setVisible(false);
+                comboBoxMemberStatusSearch.setVisible(true);
+            }
+            else {
+                comboBoxMemberStatusSearch.setVisible(false);
                     txtSearchValue.setVisible(true);
                     txtSearchValue.setPromptText(txtSearchValuePromptText);
-                    //handleTextChanged(null, null, null);
-                break;
-            } 
+                    handleTextChanged(null, null, null);
+            }
+                
+                    
+               
+            
 
             
        
@@ -609,6 +596,8 @@ public class AdminUserDataWindowController {
             tbColLastPasswordChange.setCellValueFactory(
                 new PropertyValueFactory<>("lastPasswordChange"));  
         }
+
+        clearEverything();
 
         stage.show();
     }
