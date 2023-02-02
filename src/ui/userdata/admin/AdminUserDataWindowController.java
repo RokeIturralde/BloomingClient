@@ -374,7 +374,8 @@ public class AdminUserDataWindowController {
                 
                     case "Email" : searchResults =
                         Arrays.asList(
-                            FactoryUser.get().findUserByEmail(value)
+                            FactoryUser.get()
+                                .findUserByEmail(value)
                         );
                     break;
 
@@ -383,10 +384,10 @@ public class AdminUserDataWindowController {
                             .findUserByName(value);   
                     break;
                     default:
-                        break;
+                    break;
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                
             }
 
 
@@ -399,6 +400,8 @@ public class AdminUserDataWindowController {
             } catch (Exception e) {
                 // TODO: handle exception
             }
+        if (searchResults == null)
+            new Alert(AlertType.INFORMATION, "No users were found with" + param + "=" + value);
 
         tableUsers.setItems(FXCollections.observableArrayList(searchResults));
     }

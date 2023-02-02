@@ -1,15 +1,20 @@
 package businessLogic.user.managers;
 
+import businessLogic.user.FactoryMember;
 import businessLogic.user.UserInterface;
+
+import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import javax.ws.rs.core.GenericType;
 
 import exceptions.ClientErrorException;
 import exceptions.LoginDoesNotExistException;
 import exceptions.NotThePasswordException;
+import objects.Member;
 import objects.User;
 import services.UserFacadeREST;
 
@@ -27,21 +32,6 @@ public class UserManager implements UserInterface {
      */
     public UserManager() {
         webClient = new UserFacadeREST();
-    }
-
-    // TODO: if there's time do it inside
-    @Override
-    public User signIn(String login, String password) /*throws LoginDoesNotExistException, NotThePasswordException*/ {
-        User u = null;
-        try {
-            LOGGER.info("User manager: Sign in user with login " + login);
-            u = webClient.signIn_XML(User.class, login, password);
-        } catch (Exception e) {
-            LOGGER.log(Level.SEVERE,
-                    "UserManager: Exception all members by name, {0}",
-                    e.getMessage());
-        }
-        return u;
     }
 
     @Override
@@ -161,8 +151,24 @@ public class UserManager implements UserInterface {
 
     @Override
     public List<User> findUserByPrivilege(String privilege) throws ClientErrorException {
-        // TODO Auto-generated method stub
-        return null;
+
+        List <Member> l = new LinkedList <Member> ();
+        
+        FactoryMember.get().getEveryUser()
+            .stream()
+            .forEach(m -> {
+                if (m.getPrivilege()
+                    .toString()
+                    .equalsIgnoreCase(privilege))
+                l.add(m);
+            });
+
+        List <User> lu = new LinkedList <User> ();
+
+        l.forEach(m -> lu.add(User.class.cast(m)));
+
+
+        return lu;
     }
 
 

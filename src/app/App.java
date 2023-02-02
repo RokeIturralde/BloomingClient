@@ -1,12 +1,17 @@
 package app;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import businessLogic.user.FactoryUser;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.stage.Stage;
+import objects.User;
 import ui.signUp.SignUpWindowController;
 import ui.userdata.admin.AdminUserDataWindowController;
 
@@ -15,7 +20,26 @@ public class App extends Application {
     private static int OPTION = 1;
 
     public static void main(String[] args) {
-        launch(args);
+
+        List <User> l = new ArrayList <User> ();
+        
+        try {
+            l = FactoryUser.get().findUserByPrivilege("ADMIN");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        l.forEach(u -> System.out.println(u));
+
+        
+        
+        
+
+
+
+
+
+        //launch(args);
     }
 
     @Override
