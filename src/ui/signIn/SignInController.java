@@ -121,7 +121,7 @@ public class SignInController {
             //The data from the server is charged into an User
             User usSignIn = new User();
             String passwd = Cryptology.hexadecimal(Cryptology.encrypt(cpPassword.getText()));
-            usSignIn = FactoryUser.get().signIn(txtLogin.getText(), passwd);
+            //usSignIn = FactoryUser.get().signIn(txtLogin.getText(), passwd);
             
             if (usSignIn == null) {
 
@@ -163,9 +163,10 @@ public class SignInController {
             }
         } catch (IOException ex) {
             new Alert(Alert.AlertType.ERROR, ex.getMessage(), ButtonType.OK).showAndWait();
-        } catch (LoginDoesNotExistException | NotThePasswordException ex) {
-            Logger.getLogger(SignInController.class.getName()).log(Level.SEVERE, null, ex);
         }
+        /* } catch (LoginDoesNotExistException | NotThePasswordException ex) {
+            Logger.getLogger(SignInController.class.getName()).log(Level.SEVERE, null, ex);
+        } */
     }
 
     /**

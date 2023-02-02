@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import javax.ws.rs.core.GenericType;
@@ -20,10 +21,9 @@ import services.UserFacadeREST;
 
 public class UserManager implements UserInterface {
 
-    //REST users web client
+    // REST users web client
     private UserFacadeREST webClient;
-    private static final Logger LOGGER
-            = Logger.getLogger("Blooming");
+    private static final Logger LOGGER = Logger.getLogger("Blooming");
 
     /**
      * Create a UserManagerImplementation object. It constructs a web client for
@@ -46,7 +46,7 @@ public class UserManager implements UserInterface {
         List<User> l;
         try {
             LOGGER.info("MemberManager: Finding all members by name from REST service (XML).");
-            //Ask webClient for all members' data.
+            // Ask webClient for all members' data.
             l = webClient.findUserByName_XML(new GenericType<List<User>>() {
             }, name);
         } catch (Exception ex) {
@@ -76,7 +76,7 @@ public class UserManager implements UserInterface {
         List<User> l;
         try {
             LOGGER.info("UserManager: Finding all members by status from REST service (XML).");
-            //Ask webClient for all members' data.
+            // Ask webClient for all members' data.
             l = webClient.findUserByStatus_XML(new GenericType<List<User>>() {
             }, status);
         } catch (Exception ex) {
@@ -92,7 +92,7 @@ public class UserManager implements UserInterface {
     public void createUser(User user) throws ClientErrorException {
         try {
             LOGGER.info("MemberManager: Finding all members by login from REST service (XML).");
-            //Ask webClient for all members' data.
+            // Ask webClient for all members' data.
             webClient.create_XML(user);
         } catch (Exception ex) {
             LOGGER.log(Level.SEVERE,
@@ -108,7 +108,7 @@ public class UserManager implements UserInterface {
         User u;
         try {
             LOGGER.info("MemberManager: Finding all members by login from REST service (XML).");
-            //Ask webClient for all members' data.
+            // Ask webClient for all members' data.
             u = webClient.findUserByEmail_XML(User.class, email);
         } catch (Exception ex) {
             LOGGER.log(Level.SEVERE,
@@ -123,7 +123,7 @@ public class UserManager implements UserInterface {
     public void removeUser(String id) throws ClientErrorException {
         try {
             LOGGER.log(Level.INFO, "UserManager: Deleting member {0}.", id);
-            // 
+            //
             webClient.remove(id);
         } catch (Exception ex) {
             LOGGER.log(Level.SEVERE,
@@ -138,7 +138,7 @@ public class UserManager implements UserInterface {
         User u;
         try {
             LOGGER.info("MemberManager: Finding all members by login from REST service (XML).");
-            //Ask webClient for all members' data.
+            // Ask webClient for all members' data.
             u = webClient.findUserByLogin_XML(User.class, login);
         } catch (Exception ex) {
             LOGGER.log(Level.SEVERE,
@@ -152,24 +152,28 @@ public class UserManager implements UserInterface {
     @Override
     public List<User> findUserByPrivilege(String privilege) throws ClientErrorException {
 
-        List <Member> l = new LinkedList <Member> ();
+        List <User> listMembers = new LinkedList <User> ();
         
-        FactoryMember.get().getEveryUser()
+        FactoryMember.get().getEveryMember()
             .stream()
-            .forEach(m -> {
-                if (m.getPrivilege()
-                    .toString()
-                    .equalsIgnoreCase(privilege))
-                l.add(m);
-            });
+            .filter(m -> 
+                m.getPrivilege().toString().equalsIgnoreCase(privilege))
+                .forEach(m -> {
+                    if (m.getPrivilege().toString().equalsIgnoreCase("member")) {
+                        listMembers.add(
+                            new User(
+                                m.getLogin(), m.getEmail(), 
+                                m.getFullName(), m.getPassword(), 
+                                m.getPrivilege(), m.getStatus(), 
+                                m.getLastPasswordChange())
+                        );
+                    }
+                    else
+                        listMembers.add(User.class.cast(m));
 
-        List <User> lu = new LinkedList <User> ();
+                });
 
-        l.forEach(m -> lu.add(User.class.cast(m)));
-
-
-        return lu;
+        return listMembers;
     }
-
 
 }

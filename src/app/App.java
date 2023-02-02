@@ -24,22 +24,14 @@ public class App extends Application {
         List <User> l = new ArrayList <User> ();
         
         try {
-            l = FactoryUser.get().findUserByPrivilege("ADMIN");
+            l = FactoryUser.get().findUserByPrivilege("MEMBER");
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         l.forEach(u -> System.out.println(u));
 
-        
-        
-        
-
-
-
-
-
-        //launch(args);
+        launch(args);
     }
 
     @Override

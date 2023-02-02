@@ -63,7 +63,6 @@ public class SignUpWindowController {
         this.stage = stage;
     }
 
-
     /**
      * HANDLERS OF EVERY POSSIBLE CHANGE IN THE WINDOW ------------------
      */

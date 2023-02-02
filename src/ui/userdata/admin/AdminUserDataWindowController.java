@@ -390,7 +390,6 @@ public class AdminUserDataWindowController {
                 
             }
 
-
         else
             try {
                 searchResults = 
@@ -583,12 +582,12 @@ public class AdminUserDataWindowController {
             if (!textSearches.contains(searchMode)) {
                 comboBoxSearch.getItems().clear();
                 if (searchMode.equalsIgnoreCase("status")) {
-                    comboBoxSearch.getItems().addAll(privileges);
+                    comboBoxSearch.getItems().addAll(status);
                     comboBoxSearch.setPromptText(comboBoxSearchStatusText);
                 }
                     
                 else {
-                    comboBoxSearch.getItems().addAll(status);
+                    comboBoxSearch.getItems().addAll(privileges);
                     comboBoxSearch.setPromptText(comboBoxSearchPrivilegeText);
                 } 
 
