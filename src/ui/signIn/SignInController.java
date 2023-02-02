@@ -8,6 +8,7 @@ package ui.signIn;
 import ui.signUp.SignUpWindowController;
 import businessLogic.album.AlbumInterface;
 import businessLogic.user.FactoryUser;
+import businessLogic.user.UserInterface;
 import encrypt.Cryptology;
 import exceptions.*;
 import java.io.IOException;
@@ -56,7 +57,7 @@ public class SignInController {
 
     private Stage stage;
     private static final Logger LOGGER = Logger.getLogger("package ui.signIn");
-    private AlbumInterface client;
+    private UserInterface client;
 
     /**
      * Initializing the window method
@@ -120,8 +121,15 @@ public class SignInController {
 
             //The data from the server is charged into an User
             User usSignIn = new User();
-            String passwd = Cryptology.hexadecimal(Cryptology.encrypt(cpPassword.getText()));
-            //usSignIn = FactoryUser.get().signIn(txtLogin.getText(), passwd);
+            Cryptology crypto = new Cryptology();
+            String passwd = Cryptology.hexadecimal(crypto.encrypt(cpPassword.getText()));
+            try {
+                usSignIn = FactoryUser.get().signIn(txtLogin.getText(), passwd);
+            } catch (LoginDoesNotExistException ex) {
+                Logger.getLogger(SignInController.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (NotThePasswordException ex) {
+                Logger.getLogger(SignInController.class.getName()).log(Level.SEVERE, null, ex);
+            }
             
             if (usSignIn == null) {
 

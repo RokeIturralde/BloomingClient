@@ -35,32 +35,27 @@ import javax.crypto.NoSuchPaddingException;
  */
 public class Cryptology {
     public void generate() {
-        final String algorithm = "RSA";
-        KeyPairGenerator keyPairGenerator;
+        KeyPairGenerator generator;
         try {
-            //Creating a KeyPairGenerator Instance
-            keyPairGenerator = KeyPairGenerator.getInstance(algorithm);
-            //Initializing the KeyPairGenerator
-            keyPairGenerator.initialize(2048);
-            //Generating a Key Pair
-            KeyPair keyPair = keyPairGenerator.generateKeyPair();
-            PublicKey publicKey = keyPair.getPublic(); // Clave Pública
-            PrivateKey privateKey = keyPair.getPrivate(); // Clave Privada
-            //Create the file to save the public key
+            generator = KeyPairGenerator.getInstance("RSA");
+            generator.initialize(1024); 
+            KeyPair keypair = generator.generateKeyPair();
+            PublicKey publicKey = keypair.getPublic();
+            PrivateKey privateKey = keypair.getPrivate();
+
+            // Public
             X509EncodedKeySpec x509EncodedKeySpec = new X509EncodedKeySpec(publicKey.getEncoded());
-            FileOutputStream fileOutputStream = new FileOutputStream("./src/files/public.key");
+            FileOutputStream fileOutputStream = new FileOutputStream("C:\\Users\\minyb\\OneDrive\\Documentos\\Reto2\\BloomingWeb\\src\\java\\encrypt\\public.key");
             fileOutputStream.write(x509EncodedKeySpec.getEncoded());
             fileOutputStream.close();
-            //FileOutputStream filePublic = new FileOutputStream("C:\\Users\\minyb\\OneDrive\\Documentos\\Reto2\\BloomingWeb\\src\\files\\public.key");
-            //Create the file to save the private key
+
+            // Private
             PKCS8EncodedKeySpec pKCS8EncodedKeySpec = new PKCS8EncodedKeySpec(privateKey.getEncoded());
-            fileOutputStream = new FileOutputStream("./src/files/private.key");
+            fileOutputStream = new FileOutputStream("C:\\Users\\minyb\\OneDrive\\Documentos\\Reto2\\BloomingWeb\\src\\java\\encrypt\\private.key");
             fileOutputStream.write(pKCS8EncodedKeySpec.getEncoded());
             fileOutputStream.close();
-            //FileOutputStream filePrivate = new FileOutputStream("C:\\Users\\minyb\\OneDrive\\Documentos\\Reto2\\BloomingWeb\\src\\files\\private.key");
-
-        } catch (Exception e){
-            
+        } catch (Exception e) {
+            e.printStackTrace();            
         }
     }
 
@@ -72,23 +67,20 @@ public class Cryptology {
         }
     }
     
-    public static byte[] encrypt(String mensaje) {
-        Cipher cipher;
-        byte[] contrasenaCifrada = null;
-        PublicKey key;
+    public byte[] encrypt(String mensaje) {
+        byte[] encodedMessage = null;
         try {
-            // Leemos la clave publica del archivo en el cual lo hemos escrito
-            key = readPublicKey("./src/files/public.key");
-            // Obtenemos una instancide de Cipher con el algoritmos que vamos a usar "RSA/ECB/OAEPWithSHA1AndMGF1Padding"
-            cipher = Cipher.getInstance("RSA/ECB/OAEPWithSHA1AndMGF1Padding");
-            // Iniciamos el Cipher en ENCRYPT_MODE y le pasamos la clave publica
-            cipher.init(Cipher.ENCRYPT_MODE, key);
-            // Le decimos que cifre (método doFinal(mensaje))
-            contrasenaCifrada = cipher.doFinal(mensaje.getBytes());
-        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IllegalBlockSizeException | BadPaddingException ex) {
-            Logger.getLogger(Cryptology.class.getName()).log(Level.SEVERE, null, ex);
+            byte fileKey[] = fileReader(getClass().getResource("public.key").getPath());
+            KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+            X509EncodedKeySpec x509EncodedKeySpec = new X509EncodedKeySpec(fileKey);
+            PublicKey publicKey = keyFactory.generatePublic(x509EncodedKeySpec);
+            Cipher c = Cipher.getInstance("RSA/ECB/PKCS1Padding");
+            c.init(Cipher.ENCRYPT_MODE, publicKey);
+            encodedMessage = c.doFinal(mensaje.getBytes());
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        return contrasenaCifrada;
+        return encodedMessage;
     }
     
     public static String hashPassword(String texto) {
@@ -118,23 +110,20 @@ public class Cryptology {
         return buf.toString();
     }
     
-    public static byte[] decrypt(byte[] ciphertext) {
-        Cipher cipher;
-        byte[] bs = null;
-        PrivateKey key;
+    public byte[] decrypt(byte[] mensaje) {
+        byte[] decodedMessage = null;
         try {
-            // Leemos la clave privada del archivo en el cual lo hemos escrito
-            key = readPrivateKey("./src/files/private.key");
-            // Obtenemos una instancide de Cipher con el algoritmos que vamos a usar "RSA/ECB/OAEPWithSHA1AndMGF1Padding"
-            cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
-            // Iniciamos el Cipher en DECRYPT_MODE y le pasamos la clave privada
-            cipher.init(Cipher.DECRYPT_MODE, key);
-            // Le decimos que descifre (método doFinal(mensaje))
-            bs = cipher.doFinal(ciphertext);
-        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IllegalBlockSizeException | BadPaddingException ex) {
-            Logger.getLogger(Cryptology.class.getName()).log(Level.SEVERE, null, ex);
+            byte fileKey[] = fileReader(getClass().getResource("private.key").getPath());
+            KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+            PKCS8EncodedKeySpec pkcs8EncodedKeySpec = new PKCS8EncodedKeySpec(fileKey);
+            PrivateKey privateKey = keyFactory.generatePrivate(pkcs8EncodedKeySpec);
+            Cipher c = Cipher.getInstance("RSA/ECB/PKCS1Padding");
+            c.init(Cipher.DECRYPT_MODE, privateKey);
+            decodedMessage = c.doFinal(mensaje);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        return bs;
+        return decodedMessage;
     }
     
     public static PublicKey readPublicKey(String filename) {
