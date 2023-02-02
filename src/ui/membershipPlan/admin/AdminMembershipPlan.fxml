@@ -17,6 +17,7 @@
 
 <Pane prefHeight="688.0" prefWidth="1187.0" style="-fx-background-color: FF926A;" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.membershipPlan.admin.AdminMembershipPlanController">
    <children>
+      
       <Pane layoutX="-7.0" layoutY="-8.0" prefHeight="694.0" prefWidth="134.0" style="-fx-background-color: #FA7C4E;">
          <children>
             <Text fontSmoothingType="LCD" layoutX="-10.0" layoutY="244.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Membership" textAlignment="CENTER" underline="true" wrappingWidth="158.13672637939453">
@@ -83,11 +84,7 @@
       <Button fx:id="btnSearch" layoutX="600.0" layoutY="247.0" mnemonicParsing="false" onAction="#handleSearchButtonAction" text="Search" />
       <ComboBox fx:id="cboxParameter" layoutX="195.0" layoutY="247.0" prefWidth="150.0" />
       <Button fx:id="btnClear" layoutX="718.0" layoutY="247.0" mnemonicParsing="false" onAction="#handleClearButtonAction" prefHeight="25.0" prefWidth="59.0" text="Clear" />
-      <Label layoutX="1119.0" layoutY="21.0" prefHeight="24.0" prefWidth="39.0" text="Help" textFill="#3c75df" underline="true">
-         <font>
-            <Font size="15.0" />
-         </font>
-      </Label>
       <Button fx:id="btnShowUsers" layoutX="864.0" layoutY="247.0" mnemonicParsing="false" onAction="#handleShowUsersButtonAction" text="Show users" />
+      <Button fx:id="btnHelp" layoutX="1055.0" layoutY="14.0" mnemonicParsing="false" onAction="#handleHelpAction" prefHeight="25.0" prefWidth="81.0" text="Help" />
    </children>
 </Pane>

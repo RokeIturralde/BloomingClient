@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>Help page</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+            body {
+                font: 16px arial, sans-serif;
+            }            
+            h3 {
+                font: 20px arial, sans-serif;
+                text-decoration: underline;
+                font-weight: bold;
+            }            
+            h4 {
+                font: 18px arial, sans-serif;
+                text-decoration: underline;
+                font-weight: bold;
+            }            
+        </style>    
+    </head>
+    <body>
+        <div>
+            <h3>Gestión de Usuarios: Ayuda</h3>
+            <img src="GestionUsuarios.png" alt="Ventana de gestión de usuarios."/>
+            <h4>Descripción general</h4>
+            <p>Esta ventana permite realizar las operaciones de mantenimiento 
+            básico de los datos de los planes de membresía. El usuario podrá mediante los controles
+            de los que dispone la ventana crear, modificar y eliminar los planes de 
+            la aplicación. Así mismo podrá generar un informe que contiene un listado 
+            de los planes con sus correspondientes datos. Además, puede realizar búsquedas por 
+			tres parámetros diferentes: nombre, precio y duración del planes.</p>
+            <h4>Operaciones</h4>
+            <strong>Crear planes</strong>
+            <p>Para crear un plan deberá introducir un identificador único
+            que se utilizará como login y el nombre del usuario en los campos de entrada
+            correspondientes. 
+				<ul>
+					<li> Name: Nombre del plan (Tiene un límite de 25 caracteres).</li>
+					<li> Description: Descripción del plan (Tiene un límite de 150 caracteres).</li>
+					<li> Album limit: Limite de álbumes que puede tener un usuario con este plan (Tiene un límite de 6 caracteres y solamente permite números)</li>
+					<li> Duration: Duración del plan en meses (Tiene un límite de 6 caracteres y solamente permite números)</li>
+					<li> Price: Precio del plan (Tiene un límite de 6 caracteres y solamente permite números con decimales separados por un “.”</li>
+					<li> Shareable: Propiedad del plan que indica que el usuario puede compartir álbumes (marcada para sí, desmarcada para no)</li>
+				</ul>
+            Una vez realizadas las acciones anteriores, deberá pulsar el botón <strong>Create</strong> 
+            para crear el plan. Si no se produce ningún error, se creará el plan y aparecerá en la 
+            tabla de planes que se muestra en la ventana.</p>
+            <strong>Modificar datos de los planes</strong>
+            <p>Para modificar los datos de un usuario primero deberá seleccionar el usuario 
+            haciendo click en fila deseada de la tabla de usuarios. Los campos de entrada de la 
+            ventana se informarán con los datos del usuario seleccionado. Dichos campos se pueden 
+            utilizar para modificar los datos del usuario.
+            Una vez realizadas las acciones anteriores, deberá pulsar el botón <strong>Modificar</strong> 
+            para finalizar la operación. Si no se produce ningún error, se modificarán los datos
+            del usuario y los datos actualizados del usuario aparecerán en la tabla de usuarios que se 
+            muestra en la ventana.</p>
+            <strong>Eliminar usuarios</strong>
+            <p>Para eliminar un usuario deberá seleccionar el usuario a borrar
+            haciendo click en fila deseada de la tabla de usuarios. A continuación, pulse en el botón
+            <strong>Eliminar</strong>, y se le solicitará confirmación para eliminar el usuario.
+            Si confirma el borrado y no se produce ningún error se eliminará el usuario y se actualizará 
+            la tabla de usuarios que se muestra en la ventana.</p>
+            <strong>Imprimir listado de usuarios</strong>
+            <p>Pulsando el botón <strong>Imprimir</strong> se abrirá una ventana donde puede ver un documento
+                que contiene un listado de los usuarios que existen en la aplicación:<br><br>
+                <img src="report.png" alt="Ventana de informe de usuarios"/><br><br>
+            Mediante los botones de la parte superior de la ventana podrá imprimir o almacenar dicho informe.</p>
+            <strong>Salir de la aplicación</strong>
+            <p>Pulsando el botón <strong>Salir</strong> se cerrará la aplicación.</p>
+            <strong>Ayuda</strong>
+            <p>Pulsando el botón <strong>Ayuda</strong> verá este documento de ayuda.</p>
+        </div>
+    </body>
+</html>

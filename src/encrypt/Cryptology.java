@@ -44,23 +44,16 @@ public class Cryptology {
             keyPairGenerator.initialize(2048);
             //Generating a Key Pair
             KeyPair keyPair = keyPairGenerator.generateKeyPair();
-            PublicKey publicKey = keyPair.getPublic(); // Clave Pública
-            PrivateKey privateKey = keyPair.getPrivate(); // Clave Privada
             //Create the file to save the public key
-            X509EncodedKeySpec x509EncodedKeySpec = new X509EncodedKeySpec(publicKey.getEncoded());
-            FileOutputStream fileOutputStream = new FileOutputStream("./src/files/public.key");
-            fileOutputStream.write(x509EncodedKeySpec.getEncoded());
-            fileOutputStream.close();
-            //FileOutputStream filePublic = new FileOutputStream("C:\\Users\\minyb\\OneDrive\\Documentos\\Reto2\\BloomingWeb\\src\\files\\public.key");
+            File filePublic = new File("./src/files/public.key");
+            //Writting the public key into an external File
+            fileWriter(filePublic.getPath(), keyPair.getPublic().getEncoded());
             //Create the file to save the private key
-            PKCS8EncodedKeySpec pKCS8EncodedKeySpec = new PKCS8EncodedKeySpec(privateKey.getEncoded());
-            fileOutputStream = new FileOutputStream("./src/files/private.key");
-            fileOutputStream.write(pKCS8EncodedKeySpec.getEncoded());
-            fileOutputStream.close();
-            //FileOutputStream filePrivate = new FileOutputStream("C:\\Users\\minyb\\OneDrive\\Documentos\\Reto2\\BloomingWeb\\src\\files\\private.key");
-
-        } catch (Exception e){
-            
+            File filePrivate = new File("./src/files/private.key");
+            //Writting the private key into an external File
+            fileWriter(filePrivate.getPath(), keyPair.getPrivate().getEncoded());
+        } catch (NoSuchAlgorithmException ex) {
+            Logger.getLogger(Cryptology.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -72,19 +65,30 @@ public class Cryptology {
         }
     }
     
-    public static byte[] encrypt(String mensaje) {
+    public static String hexadecimal(byte[] encryptedText) {
+        char hexDigit[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
+        StringBuffer buf = new StringBuffer();
+        
+        for (int j = 0; j < encryptedText.length; j++) {
+            buf.append(hexDigit[(encryptedText[j] >> 4) & 0x0f]);
+            buf.append(hexDigit[encryptedText[j] & 0x0f]);
+        }
+        return buf.toString();
+    }
+    
+    public byte[] encrypt(byte[] mensaje) {
         Cipher cipher;
         byte[] contrasenaCifrada = null;
         PublicKey key;
         try {
             // Leemos la clave publica del archivo en el cual lo hemos escrito
-            key = readPublicKey("./src/files/public.key");
+            key = readPublicKey(getClass().getResource("Public.key").getPath());
             // Obtenemos una instancide de Cipher con el algoritmos que vamos a usar "RSA/ECB/OAEPWithSHA1AndMGF1Padding"
-            cipher = Cipher.getInstance("RSA/ECB/OAEPWithSHA1AndMGF1Padding");
+            cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
             // Iniciamos el Cipher en ENCRYPT_MODE y le pasamos la clave publica
             cipher.init(Cipher.ENCRYPT_MODE, key);
             // Le decimos que cifre (método doFinal(mensaje))
-            contrasenaCifrada = cipher.doFinal(mensaje.getBytes());
+            contrasenaCifrada = cipher.doFinal(mensaje);
         } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IllegalBlockSizeException | BadPaddingException ex) {
             Logger.getLogger(Cryptology.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -126,7 +130,7 @@ public class Cryptology {
             // Leemos la clave privada del archivo en el cual lo hemos escrito
             key = readPrivateKey("./src/files/private.key");
             // Obtenemos una instancide de Cipher con el algoritmos que vamos a usar "RSA/ECB/OAEPWithSHA1AndMGF1Padding"
-            cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
+            cipher = Cipher.getInstance("RSA/ECB/OAEPWithSHA1AndMGF1Padding");
             // Iniciamos el Cipher en DECRYPT_MODE y le pasamos la clave privada
             cipher.init(Cipher.DECRYPT_MODE, key);
             // Le decimos que descifre (método doFinal(mensaje))
