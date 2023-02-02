@@ -199,6 +199,7 @@ public class AlbumsViewController {
             clientsData = FXCollections.observableArrayList(client.findMyAllSharedAlbums_XML(new GenericType<List<Album>>() {
             }, loggedUser.getLogin()));
             tbSharedAlbums.setItems(clientsData);
+            clientsData.stream().forEach(cd -> System.out.println(cd));
             tbSharedAlbums.refresh();
 
         } catch (Exception e) {
@@ -238,9 +239,10 @@ public class AlbumsViewController {
         taUsers.setDisable(true);
 
         //Charge into the combobox the select actions and selecting the first.
-        cbSearchType.getItems().set(1, "Name");
-        cbSearchType.getItems().set(2, "Date");
-        cbSearchType.getItems().set(3, "Creator");
+        cbSearchType.getItems().addAll(
+                "Name",
+                "Date",
+                "Creator");
         cbSearchType.getSelectionModel().selectFirst();
 
         //Set factories for cell values in users table columns (My albums table)

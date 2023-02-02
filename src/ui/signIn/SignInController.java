@@ -102,7 +102,7 @@ public class SignInController {
      * @param event The action event object
      */
     @FXML
-    private void handleSignInButtonAction(ActionEvent event) throws LoginPasswordFormatException, LoginFormatException {
+    private void handleSignInButtonAction(ActionEvent event) throws LoginPasswordFormatException, LoginFormatException, ClientErrorException {
         LOGGER.info("Inicio de sesion a la aplicación");
         try {
 
@@ -131,8 +131,9 @@ public class SignInController {
 
             //The data from the server is charged into an User
             User usSignIn = new User();
-            String passwd = Cryptology.hexadecimal(Cryptology.encrypt(cpPassword.getText()));
-            usSignIn = FactoryUser.get().signIn(txtLogin.getText(), passwd);
+            String passwd = usSignIn.getPassword();//Cryptology.hexadecimal(Cryptology.encrypt(cpPassword.getText()));
+            usSignIn = FactoryUser.get().findUserByLogin(txtLogin.getText());
+            System.out.println("ui.signIn.SignInController.handleSignInButtonAction()");
             if (usSignIn == null) {
                 Alert alert = new Alert(AlertType.WARNING);
                 alert.setTitle("Error");
@@ -172,8 +173,6 @@ public class SignInController {
             }
         } catch (IOException ex) {
             new Alert(Alert.AlertType.ERROR, ex.getMessage(), ButtonType.OK).showAndWait();
-        } catch (LoginDoesNotExistException | NotThePasswordException ex) {
-            Logger.getLogger(SignInController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

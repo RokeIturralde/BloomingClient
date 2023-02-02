@@ -6,6 +6,7 @@
 package services;
 
 import businessLogic.album.AlbumInterface;
+import java.util.ResourceBundle;
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.WebTarget;
@@ -28,9 +29,9 @@ public class AlbumFarcadeREST implements AlbumInterface{
 
     private final WebTarget webTarget;
     private final Client client;
-    //Mover a Archivo de Propiedades!!!!
-    private static final String BASE_URI = "http://localhost:8080/BloomingWeb/webresources";
-
+    private static final ResourceBundle bundle = ResourceBundle.getBundle("files.URLCredentials");
+    private static final String BASE_URI = bundle.getString("BASE_URI");
+    
     public AlbumFarcadeREST() {
         client = javax.ws.rs.client.ClientBuilder.newClient();
         webTarget = client.target(BASE_URI).path("entities.album");

@@ -8,7 +8,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.stage.Stage;
 import ui.signIn.SignInController;
-import ui.userdata.admin.AdminUserDataWindowController;
 
 public class App extends Application {
 
@@ -20,11 +19,13 @@ public class App extends Application {
     public void start(Stage stage) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/signIn/SignInCrud.fxml"));
-
+            //FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/album/UIAlbum.fxml"));
             Parent root = (Parent) loader.load();
             //Obtain the Sign In window controller
+            //AlbumsViewController controller = (AlbumsViewController) loader.getController();
             SignInController controller = (SignInController) loader.getController();
             controller.setStage(stage);
+            //User us = new User();
             controller.initStage(root);
         } catch (IOException ex) {
             Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
