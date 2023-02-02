@@ -6,8 +6,13 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.ws.rs.core.GenericType;
+
+import org.apache.xpath.functions.FuncExtFunctionAvailable;
+import org.hibernate.loader.custom.CollectionReturn;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -42,7 +47,7 @@ public class AdminUserDataWindowController {
         btnSearch, btnClear, btnAddUser,
         btnModifyUser,btnDeleteUser;
     private final String
-        btnSearchText = "Search", btnClearText = "Clear", btnModifyUserText = "Add user",
+        btnSearchText = "Search", btnClearText = "Clear", btnModifyUserText = "Modify user",
         btnAddUserText = "Add user", btnDeleteUserText = "Delete user";
 
 
@@ -57,7 +62,7 @@ public class AdminUserDataWindowController {
     @FXML
     private ComboBox <String> 
         comboBoxSearchParameter,
-        comboBoxSearch, comboBoxMembershipPlans;
+        comboBoxSearch; private ComboBox <MembershipPlan> comboBoxMembershipPlans;
     private final String 
         comboBoxSearchParameterText = "Parameter",
         comboBoxSearchStatusText = "Status",
@@ -114,10 +119,24 @@ public class AdminUserDataWindowController {
         status = 
             Arrays.asList("Enable", "Disable");
 
-    // TODO: MEMBERSHIP PLAN SEARCHER
+    // memberhsip plan names
+
+    public List <MembershipPlan> membershipPlanNames() {
+        try {
+            return MembershipPlanFactory.getModel()
+            .findAll_XML(
+                new GenericType <List<MembershipPlan>> () {});
+           /* return
+            MembershipPlanFactory.getModel()
+                .findAll_XML(
+                    new GenericType <List<MembershipPlan>> () {})
+                    .stream().map(p -> p.getName())
+                        .collect(Collectors.toList());  */ 
+        } catch (Exception e) {
+            return Arrays.asList();
+        }
+    } 
             
-    
-    
 
 
 
@@ -139,10 +158,9 @@ public class AdminUserDataWindowController {
 
         String 
             value = txtSearchValue.getText(),
-            param = 
-                comboBoxSearchParameter
-                    .getSelectionModel()
-                    .getSelectedItem().toString();
+            param = (!comboBoxSearchParameter.getSelectionModel().isEmpty()) ?
+                comboBoxSearchParameter.getSelectionModel().getSelectedItem() :
+                "";
 
         if (value.isEmpty()) 
             btnSearch.setDisable(true);
@@ -210,28 +228,30 @@ public class AdminUserDataWindowController {
             nicely = nicely && USF.isEmailFormat(txtEmail.getText()); 
 
 
-        // date checkings
-        
-        if (datePickerStart.getTypeSelector().isEmpty())
-            datePickerStart.setPromptText(datePickerStartText);
-        else
-            nicely = nicely && USF.dateFormatIsFine(datePickerStart.getValue());
-        
-        if (datePickerEnd.getTypeSelector().isEmpty())
-            datePickerEnd.setPromptText(datePickerEndText);
-        else
-            nicely = nicely && USF.dateFormatIsFine(datePickerEnd.getValue());
-
-
         // radio buttons
 
         nicely = nicely &&
             (radioButtonMember.isSelected() 
-            || radioButtonClient.isSelected()) && 
+            || radioButtonClient.isSelected()
+            || radioButtonAdmin.isSelected());
             
-        // the checkbox
+        
+        // date checkings
 
-            comboBoxMembershipPlans.isArmed();
+        /* if (radioButtonMember.isSelected()) {
+            if (datePickerStart.getTypeSelector().isEmpty())
+                datePickerStart.setPromptText(datePickerStartText);
+            else
+                nicely = nicely && USF.dateFormatIsFine(datePickerStart.getValue());
+            
+            if (datePickerEnd.getTypeSelector().isEmpty())
+                datePickerEnd.setPromptText(datePickerEndText);
+
+            else
+                nicely = nicely && USF.dateFormatIsFine(datePickerEnd.getValue());
+        } */
+        
+        
 
         return nicely;
     }
@@ -372,39 +392,10 @@ public class AdminUserDataWindowController {
     private void handleUsersTableSelectionChanged(
     ObservableValue observable,
     Object oldValue, Object newValue) {
-        clearEverything();
+        handleClearButtonAction();
 
         User u = User.class.cast(newValue);
         loadUserData(u);
-
-    }
-
-    private void clearEverything() {
-        txtSearchValue.setPromptText(txtSearchValuePromptText);
-            txtSearchValue.setVisible(true);
-        txtLogin.setPromptText(txtLoginPromptText);
-        txtEmail.setPromptText(txtEmailPromptText);
-        txtFullName.setPromptText(txtFullNamePromptText);
-
-        btnSearch.setDisable(true);
-        btnAddUser.setDisable(true); 
-        btnModifyUser.setDisable(true);  
-        btnDeleteUser.setDisable(true);
-
-        checkBoxStatus.setSelected(false);
-        checkBoxStatus.setText(checkBoxStatusDisableText);
-
-        radioButtonAdmin.setSelected(false);
-        radioButtonClient.setSelected(false);
-        radioButtonMember.setSelected(false);
-
-        datePickerStart.setPromptText(datePickerStartText);
-        datePickerEnd.setPromptText(datePickerEndText);
-
-        comboBoxSearchParameter.setPromptText(comboBoxSearchParameterText);
-        comboBoxMembershipPlans.setPromptText(comboBoxMembershipPlansText);
-        comboBoxSearch.setVisible(false);
-         
 
     }
 
@@ -442,7 +433,7 @@ public class AdminUserDataWindowController {
                 toLocalDate(
                     Member.class.cast(u)
                     .getMemberStartingDate()));
-            datePickerStart.setValue(
+            datePickerEnd.setValue(
                 toLocalDate(
                     Member.class.cast(u)
                     .getMemberEndingDate()));
@@ -458,7 +449,41 @@ public class AdminUserDataWindowController {
 
     @FXML
     private void handleClearButtonAction() {
-        clearEverything();
+        txtSearchValue.clear();
+        txtSearchValue.setPromptText(txtSearchValuePromptText);
+        // it has to be shown
+        txtSearchValue.setVisible(true);
+
+        txtLogin.clear();
+        txtLogin.setPromptText(txtLoginPromptText);
+        txtEmail.clear();
+        txtEmail.setPromptText(txtEmailPromptText);
+        txtFullName.clear();
+        txtFullName.setPromptText(txtFullNamePromptText);
+
+        btnSearch.setDisable(true);
+        btnAddUser.setDisable(true); 
+        btnModifyUser.setDisable(true);  
+        btnDeleteUser.setDisable(true);
+
+        checkBoxStatus.setSelected(false);
+        checkBoxStatus.setText(checkBoxStatusDisableText);
+
+        radioButtonAdmin.setSelected(false);
+        radioButtonClient.setSelected(false);
+        radioButtonMember.setSelected(false);
+
+        datePickerStart.setValue(null);
+        datePickerStart.setPromptText(datePickerStartText);
+        datePickerEnd.setValue(null);
+        datePickerEnd.setPromptText(datePickerEndText);
+
+        comboBoxSearchParameter.getSelectionModel().clearSelection();
+        comboBoxSearchParameter.setPromptText(comboBoxSearchParameterText);
+        comboBoxMembershipPlans.getSelectionModel().clearSelection();
+        comboBoxMembershipPlans.setPromptText(comboBoxMembershipPlansText);
+        comboBoxSearch.getSelectionModel().clearSelection();
+        comboBoxSearch.setVisible(false);
     }
     @FXML
     private void handleAddUserButtonAction() {
@@ -563,6 +588,10 @@ public class AdminUserDataWindowController {
                 comboBoxSearch.getSelectionModel().isEmpty());
         });
 
+        /* comboBoxMembershipPlans.setItems(
+            FXCollections.observableArrayList(membershipPlanNames())); */
+
+        MembershipPlanFactory.getModel().findAll_XML(new GenericType<List<MembershipPlan>>() {});
 
         // table users 
         {
@@ -590,7 +619,7 @@ public class AdminUserDataWindowController {
                 new PropertyValueFactory<>("lastPasswordChange"));  
         }
 
-        clearEverything();
+        handleClearButtonAction();
 
         stage.show();
     }
