@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package ui.signUp;
 
 import java.util.Arrays;
@@ -24,6 +19,7 @@ import objects.User;
 import ui.userdata.admin.USF;
 import businessLogic.user.FactoryMember;
 import businessLogic.user.FactoryUser;
+import javafx.scene.layout.AnchorPane;
 
 /**
  *
@@ -31,9 +27,11 @@ import businessLogic.user.FactoryUser;
  */
 public class SignUpWindowController {
 
+    private TextField txtLogin;
+
     @FXML
     private TextField 
-        txtLogin, txtEmail, txtFullName;
+        txtEmail, txtFullName;
     private final String
         txtLoginPromptText = "", txtEmailPromptText = "", 
         txtFullNamePromptText = "";
@@ -47,12 +45,12 @@ public class SignUpWindowController {
         passwordConfirmationPromptText = "Repeat the password";
 
 
-    @FXML Button 
+    @FXML 
+    private Button 
         btnRegister, btnClear, btnExit;
     private final String 
         btnRegisterText = "Register", 
         btnClearText = "Clear", btnExitText = "Exit";
-
 
 
     private Stage stage;
@@ -62,6 +60,8 @@ public class SignUpWindowController {
     // LOGGER that will be used to note every event of the window.
     private static final Logger LOGGER =
         Logger.getLogger("package user;");
+    @FXML
+    private AnchorPane AnchorPane;
 
 
 
@@ -89,9 +89,9 @@ public class SignUpWindowController {
      private void handleTextChanged(
     ObservableValue observableValue,
     String oldvalue, String newValue) {
-        boolean lesgoo = everyUserParamIsCorrect();
+        /* boolean lesgoo = everyUserParamIsCorrect();
         
-        btnRegister.setDisable(!lesgoo);
+        btnRegister.setDisable(!lesgoo); */
 
 
 
@@ -150,16 +150,16 @@ public class SignUpWindowController {
         return nicely;
     }
 
-    @FXML
     private void handlerWindowShowing(WindowEvent event) {
         LOGGER.info("Initializing UserWindowController::handlerWindowShowing");
+
+        // TODO: set all the texts
     }
 
     /**
      * void that initiates the whole window.
      * @param root parent 
      */
-
      
      public void initStage(Parent root) {
         LOGGER.info("Initializing 'SignUp' window");

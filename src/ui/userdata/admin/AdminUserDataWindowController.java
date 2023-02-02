@@ -62,7 +62,7 @@ public class AdminUserDataWindowController {
     @FXML
     private ComboBox <String> 
         comboBoxSearchParameter,
-        comboBoxSearch; private ComboBox <MembershipPlan> comboBoxMembershipPlans;
+        comboBoxSearch, comboBoxMembershipPlans;
     private final String 
         comboBoxSearchParameterText = "Parameter",
         comboBoxSearchStatusText = "Status",
@@ -121,19 +121,20 @@ public class AdminUserDataWindowController {
 
     // memberhsip plan names
 
-    public List <MembershipPlan> membershipPlanNames() {
+    public List <String> membershipPlanNames() {
         try {
-            return MembershipPlanFactory.getModel()
+            /* return MembershipPlanFactory.getModel()
             .findAll_XML(
-                new GenericType <List<MembershipPlan>> () {});
-           /* return
+                new GenericType <List<MembershipPlan>> () {}); */
+           return
             MembershipPlanFactory.getModel()
                 .findAll_XML(
                     new GenericType <List<MembershipPlan>> () {})
                     .stream().map(p -> p.getName())
-                        .collect(Collectors.toList());  */ 
+                        .collect(Collectors.toList());  
         } catch (Exception e) {
-            return Arrays.asList();
+            e.printStackTrace();
+            return Arrays.asList("bro que cojones");
         }
     } 
             
@@ -315,6 +316,10 @@ public class AdminUserDataWindowController {
         .getItems().addAll(textSearches);
         comboBoxSearchParameter
         .getItems().addAll(enumeratedSearches);
+        comboBoxMembershipPlans
+        .getItems().addAll(membershipPlanNames());
+
+        membershipPlanNames().forEach(m -> System.out.println(m));
 
         LOGGER.info("Attempting to load users to the table.");
         
@@ -480,8 +485,10 @@ public class AdminUserDataWindowController {
 
         comboBoxSearchParameter.getSelectionModel().clearSelection();
         comboBoxSearchParameter.setPromptText(comboBoxSearchParameterText);
+
         comboBoxMembershipPlans.getSelectionModel().clearSelection();
         comboBoxMembershipPlans.setPromptText(comboBoxMembershipPlansText);
+
         comboBoxSearch.getSelectionModel().clearSelection();
         comboBoxSearch.setVisible(false);
     }
@@ -589,9 +596,12 @@ public class AdminUserDataWindowController {
         });
 
         /* comboBoxMembershipPlans.setItems(
-            FXCollections.observableArrayList(membershipPlanNames())); */
+            FXCollections.observableArrayList(membershipPlanNames()));
+ */
+        /* MembershipPlanFactory.getModel().findAll_XML(new GenericType<List<MembershipPlan>>() {});
 
-        MembershipPlanFactory.getModel().findAll_XML(new GenericType<List<MembershipPlan>>() {});
+
+        MembershipPlanFactory.getModel().findPlanByName_XML(new GenericType<List<MembershipPlan>>() {}, "plan1"); */
 
         // table users 
         {

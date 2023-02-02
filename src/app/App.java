@@ -13,7 +13,7 @@ import ui.userdata.admin.AdminUserDataWindowController;
 public class App extends Application {
 
     private final String path = 
-        "/ui/userdata/admin/AdminUserDataWindow.fxml";
+        "/ui/signUp/SignUpWindow.fxml";
 
     public static void main(String[] args) {
         launch(args);
@@ -26,9 +26,9 @@ public class App extends Application {
                 new FXMLLoader(getClass().getResource(path));
 
             Parent root = Parent.class.cast(loader.load());
-            //Obtain the Sign In window controller
-            AdminUserDataWindowController controller = 
-                AdminUserDataWindowController.class
+            //Obtain the window controller
+            SignUpWindowController controller = 
+                SignUpWindowController.class
                     .cast(loader.getController());
                     
             controller.setStage(stage);
