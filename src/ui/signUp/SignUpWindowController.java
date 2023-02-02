@@ -65,7 +65,7 @@ public class SignUpWindowController {
 
 
     /**
-     * HANLERS OF EVERY POSSIBLE CHANGE IN THE WINDOW ------------------
+     * HANDLERS OF EVERY POSSIBLE CHANGE IN THE WINDOW ------------------
      */
 
     /**
