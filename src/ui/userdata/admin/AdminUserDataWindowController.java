@@ -45,7 +45,9 @@ public class AdminUserDataWindowController {
     @FXML
     private Button 
         btnSearch, btnClear, btnAddUser,
-        btnModifyUser,btnDeleteUser;
+        btnModifyUser,btnDeleteUser, btnPrint,
+        // pane
+        btnBlooming, btnMembership, btnUser, btnMyProfile;
     private final String
         btnSearchText = "Search", btnClearText = "Clear", btnModifyUserText = "Modify user",
         btnAddUserText = "Add user", btnDeleteUserText = "Delete user";
@@ -580,6 +582,7 @@ public class AdminUserDataWindowController {
                 "There was an error editing user " + u + ".");
         }
     }
+
     @FXML
     private void handleDeleteUserButtonAction() {
         User u = createFromParams(); 
@@ -591,8 +594,29 @@ public class AdminUserDataWindowController {
                 "There was an error deleting user " + u +".");
         }
     }
+
+    @FXML
+    private void handleBloomingButtonAction() {
+    }
+
+    @FXML
+    private void handleMembershipButtonAction() {
+
+    }
+
+    @FXML
+    private void handleUserButtonAction() {
+        
+    }
+
+    @FXML
+    private void handleMyProfileButtonAction() {
+        
+    }
+
     @FXML
     private void handlePrintButtonAction() {
+        
     }
 
 
@@ -626,7 +650,6 @@ public class AdminUserDataWindowController {
 
         txtFullName.textProperty().addListener(
             this::handleTextChanged);
-
 
 
         // checkbox
