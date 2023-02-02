@@ -32,11 +32,15 @@ public interface UserInterface {
      * LA IDEA ES UN SISTEMA QUE HACE LA BUSQUEDA DE FORMA MUCHO MAS AUTOMATICA.
      * LAS LLAMADAS AL MÉTODO RESULTARÍAN MUCHO MAS FACILES
      */
+
+
     public List<User> findUserByName(String name) throws ClientErrorException;
 
     public void editUser(User user) throws ClientErrorException;
 
     public List<User> findUserByStatus(String status) throws ClientErrorException;
+
+    public List<User> findUserByPrivilege(String privilege) throws ClientErrorException;
 
     public void createUser(User user) throws ClientErrorException;
 

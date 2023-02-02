@@ -159,5 +159,11 @@ public class UserManager implements UserInterface {
         return u;
     }
 
+    @Override
+    public List<User> findUserByPrivilege(String privilege) throws ClientErrorException {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
 
 }
