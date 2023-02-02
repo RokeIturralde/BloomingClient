@@ -419,6 +419,8 @@ public class AdminUserDataWindowController {
             return;
         }
 
+        
+
         txtLogin.setText(u.getLogin());
         txtEmail.setText(u.getEmail());
         txtFullName.setText(u.getFullName()); 
@@ -556,16 +558,32 @@ public class AdminUserDataWindowController {
         } catch (Exception e) {
             new Alert(
                 AlertType.ERROR, 
-                "There was an error recording.");
+                "There was an error recording user "+ u +".");
         }
 
     }
 
     @FXML
     private void handleModifyUserButtonAction() {
+        User u = createFromParams(); 
+        try {
+            FactoryUser.get().editUser(u);
+        } catch (Exception e) {
+            new Alert(
+                AlertType.ERROR, 
+                "There was an error editing user " + u + ".");
+        }
     }
     @FXML
     private void handleDeleteUserButtonAction() {
+        User u = createFromParams(); 
+        try {
+            FactoryUser.get().removeUser(u.getLogin());
+        } catch (Exception e) {
+            new Alert(
+                AlertType.ERROR, 
+                "There was an error deleting user " + u +".");
+        }
     }
     @FXML
     private void handlePrintButtonAction() {
@@ -663,30 +681,30 @@ public class AdminUserDataWindowController {
 
 
         // table users 
-        {
-            tableUsers.getSelectionModel().selectedItemProperty()
-                .addListener(this::handleUsersTableSelectionChanged);
-            
-            tbColLogin.setCellValueFactory(
-                new PropertyValueFactory<>("login"));
-            tbColEmail.setCellValueFactory(
-                new PropertyValueFactory<>("email"));
+        
+        tableUsers.getSelectionModel().selectedItemProperty()
+           .addListener(this::handleUsersTableSelectionChanged);
+        
+        tbColLogin.setCellValueFactory(
+            new PropertyValueFactory<>("login"));
+        tbColEmail.setCellValueFactory(
+            new PropertyValueFactory<>("email"));
 
-            tbColFullName.setCellValueFactory(
-                new PropertyValueFactory<>("fullName"));
+        tbColFullName.setCellValueFactory(
+            new PropertyValueFactory<>("fullName"));
 
-            tbColStatus.setCellValueFactory(
-                new PropertyValueFactory<>("status"));
+        tbColStatus.setCellValueFactory(
+            new PropertyValueFactory<>("status"));
 
-            tbColPrivilege.setCellValueFactory(
-                new PropertyValueFactory<>("privilege"));
+        tbColPrivilege.setCellValueFactory(
+            new PropertyValueFactory<>("privilege"));
 
-            tbColMembershipPlan.setCellValueFactory(
-                new PropertyValueFactory<>("plan"));
+        tbColMembershipPlan.setCellValueFactory(
+            new PropertyValueFactory<>("plan"));
 
-            tbColLastPasswordChange.setCellValueFactory(
-                new PropertyValueFactory<>("lastPasswordChange"));
-        }
+        tbColLastPasswordChange.setCellValueFactory(
+            new PropertyValueFactory<>("lastPasswordChange"));
+        
 
         handleClearButtonAction();
 
