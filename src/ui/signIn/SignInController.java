@@ -115,9 +115,9 @@ public class SignInController {
                 throw new LoginPasswordFormatException();
             }
             //Modo de abrir la ventana por si acaso no va el login
-            if (txtLogin.getText().equalsIgnoreCase("FBe_") && cpPassword.getText().equalsIgnoreCase("FBe_")) {
+            if (txtLogin.getText().equalsIgnoreCase("u1") && cpPassword.getText().equalsIgnoreCase("u1")) {
                 User usSignIn = new User();
-                usSignIn.setLogin("FBe_");
+                usSignIn.setLogin("u1");
                 //Closing SignIn window
                 this.stage.close();
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/album/UIAlbum.fxml"));

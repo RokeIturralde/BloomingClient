@@ -1,18 +1,28 @@
 package app;
 
+import businessLogic.album.FactoryAlbum;
 import java.io.IOException;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.stage.Stage;
+import javax.ws.rs.core.GenericType;
+import logic.objects.Album;
 import ui.signIn.SignInController;
 
 public class App extends Application {
 
     public static void main(String[] args) {
-        launch(args);
+        List <Album> l = FactoryAlbum.getModel().findMyAllAlbums_XML(new GenericType<List<Album>>() {}, "u1");
+        System.out.println(l);
+        l.forEach(a -> System.out.println(a));
+        
+        
+
+//launch(args);
     }
 
     @Override

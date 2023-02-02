@@ -232,10 +232,9 @@ public class AlbumsViewController {
         btnCreateAlbum.setDisable(true);
         btnModifyAlbum.setDisable(true);
         btnDeleteAlbum.setDisable(true);
-        btnAdd.setDisable(true);
 
         //Filds disabled at first
-        txtAddUser.setDisable(true);
+        txtAddUser.setDisable(false);
         taUsers.setDisable(true);
 
         //Charge into the combobox the select actions and selecting the first.
@@ -318,6 +317,7 @@ public class AlbumsViewController {
     private void handleAddButtonAction(ActionEvent event) {
         LOGGER.info("Metodo de control del boton de Add");
         ArrayList<User> users = new ArrayList();
+        users = this.userList;
         try {
             String login = txtAddUser.getText();
             //buscar usuario por login
@@ -338,7 +338,7 @@ public class AlbumsViewController {
     private String arrayToString(ArrayList<User> users) {
         String array = "Users logins: "
                 + "\n";
-        String userLogin = null;
+        String userLogin = "";
         for (int i = 0; i < users.size(); i++) {
             userLogin = users.get(i).getLogin();
             array = array.concat(userLogin + "\n");
@@ -380,6 +380,7 @@ public class AlbumsViewController {
             checkShare.setSelected(false);
             txtAddUser.setText("");
             taUsers.setText("");
+            this.userList.removeAll(userList);
 
             //Refress the table to charge the new info
             clientsData = FXCollections.observableArrayList(client.findMyAllAlbums_XML(new GenericType<List<Album>>() {
@@ -405,7 +406,6 @@ public class AlbumsViewController {
         LOGGER.info("Metodo de control del boton de Modify an Album");
         int selectedRow = tbMyAlbums.getSelectionModel().getSelectedIndex();
         Album album = new Album();
-        album.setId(albumList.get(selectedRow).getId());
         album.setName(txtAlbumName.getText());
         LocalDate datePicker = dpCreationDate.getValue();
         Date date = Date.from(datePicker.atStartOfDay(ZoneId.systemDefault()).toInstant());
@@ -458,7 +458,6 @@ public class AlbumsViewController {
         if (action.get() == ButtonType.OK) {
             int selectedRow = tbMyAlbums.getSelectionModel().getSelectedIndex();
             Album album = new Album();
-            album.setId(albumList.get(selectedRow).getId());
             album.setName(txtAlbumName.getText());
             LocalDate datePicker = dpCreationDate.getValue();
             Date date = Date.from(datePicker.atStartOfDay(ZoneId.systemDefault()).toInstant());
@@ -615,6 +614,7 @@ public class AlbumsViewController {
         } //Else, enable button
         else {
             btnAdd.setDisable(false);
+            btnCreateAlbum.setDisable(false);
             btnModifyAlbum.setDisable(false);
             btnDeleteAlbum.setDisable(false);
         }
