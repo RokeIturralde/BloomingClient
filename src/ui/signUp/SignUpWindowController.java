@@ -217,4 +217,8 @@ public class SignUpWindowController {
 
     }
 
+
+    public void initSignUp(Parent root) {
+    }
+
 }

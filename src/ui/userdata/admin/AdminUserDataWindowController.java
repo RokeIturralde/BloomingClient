@@ -24,6 +24,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import objects.Member;
@@ -58,6 +59,14 @@ public class AdminUserDataWindowController {
     private final String
         txtSearchValuePromptText = "Search", txtLoginPromptText = "Login",
         txtEmailPromptText = "Email", txtFullNamePromptText = "Full name";
+    
+    @FXML
+    private Text 
+        staticTextLogin, staticTextEmail, staticTextFullName;
+    private final String 
+        staticTextLoginValue = "Login", 
+        staticTextEmailValue = "Email", 
+        staticTextFullNameValue = "Full name";
 
     @FXML
     private ComboBox <String> 
@@ -369,7 +378,7 @@ public class AdminUserDataWindowController {
                         );
                     break;
 
-                    case "Name" : searchResults = 
+                    case "Full Name" : searchResults = 
                         FactoryUser.get()
                             .findUserByName(value);   
                     break;
@@ -377,7 +386,7 @@ public class AdminUserDataWindowController {
                         break;
                 }
             } catch (Exception e) {
-                // TODO: handle exception :((((((
+                e.printStackTrace();
             }
 
 
@@ -466,6 +475,10 @@ public class AdminUserDataWindowController {
         txtFullName.clear();
         txtFullName.setPromptText(txtFullNamePromptText);
 
+        staticTextLogin.setText(staticTextLoginValue);
+        staticTextEmail.setText(staticTextEmailValue);
+        staticTextFullName.setText(staticTextFullNameValue);
+
         btnSearch.setDisable(true);
         btnAddUser.setDisable(true); 
         btnModifyUser.setDisable(true);  
@@ -486,8 +499,8 @@ public class AdminUserDataWindowController {
         comboBoxSearchParameter.getSelectionModel().clearSelection();
         comboBoxSearchParameter.setPromptText(comboBoxSearchParameterText);
 
-        comboBoxMembershipPlans.getSelectionModel().clearSelection();
-        comboBoxMembershipPlans.setPromptText(comboBoxMembershipPlansText);
+        /* comboBoxMembershipPlans.getSelectionModel().clearSelection();
+        comboBoxMembershipPlans.setPromptText(comboBoxMembershipPlansText); */
 
         comboBoxSearch.getSelectionModel().clearSelection();
         comboBoxSearch.setVisible(false);
