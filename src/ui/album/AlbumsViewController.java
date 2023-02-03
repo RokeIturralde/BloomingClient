@@ -190,6 +190,13 @@ public class AlbumsViewController {
         tbSharedAlbums.getSelectionModel().selectedItemProperty()
                 .addListener(this::handleAlbumsTableSelectionChanged);
 
+        //Charge into the combobox the select actions and selecting the first.
+        cbSearchType.getItems().addAll(
+            "Name",
+            "Date",
+            "Creator");
+    cbSearchType.getSelectionModel().selectFirst();
+
         
         //Show the window
         stage.show();
@@ -222,12 +229,7 @@ public class AlbumsViewController {
         //Filds disabled at first
         taUsers.setDisable(true);
 
-        //Charge into the combobox the select actions and selecting the first.
-        cbSearchType.getItems().addAll(
-                "Name",
-                "Date",
-                "Creator");
-        cbSearchType.getSelectionModel().selectFirst();
+       
 
         //Set factories for cell values in users table columns (My albums table)
         columnNameMyAlbums.setCellValueFactory(
