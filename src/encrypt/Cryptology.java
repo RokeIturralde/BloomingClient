@@ -31,10 +31,12 @@ import javax.crypto.NoSuchPaddingException;
 
 /**
  *
- * @author minyb
+ * @author Eneko
  */
 public class Cryptology {
+    private static final Logger LOGGER = Logger.getLogger("package encrypt");
     public void generate() {
+        
         KeyPairGenerator generator;
         try {
             generator = KeyPairGenerator.getInstance("RSA");
@@ -55,7 +57,7 @@ public class Cryptology {
             fileOutputStream.write(pKCS8EncodedKeySpec.getEncoded());
             fileOutputStream.close();
         } catch (Exception e) {
-            e.printStackTrace();            
+            Logger.getLogger(Cryptology.class.getName()).log(Level.SEVERE, null, e);           
         }
     }
 
@@ -78,7 +80,7 @@ public class Cryptology {
             c.init(Cipher.ENCRYPT_MODE, publicKey);
             encodedMessage = c.doFinal(mensaje.getBytes());
         } catch (Exception e) {
-            e.printStackTrace();
+           Logger.getLogger(Cryptology.class.getName()).log(Level.SEVERE, null, e);   
         }
         return encodedMessage;
     }
@@ -94,7 +96,7 @@ public class Cryptology {
             passwordHashed = hexadecimal(resumen);
 
         } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
+            Logger.getLogger(Cryptology.class.getName()).log(Level.SEVERE, null, e);   
         }
         return passwordHashed;
     }
@@ -121,7 +123,7 @@ public class Cryptology {
             c.init(Cipher.DECRYPT_MODE, privateKey);
             decodedMessage = c.doFinal(mensaje);
         } catch (Exception e) {
-            e.printStackTrace();
+            Logger.getLogger(Cryptology.class.getName()).log(Level.SEVERE, null, e);   
         }
         return decodedMessage;
     }

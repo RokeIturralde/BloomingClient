@@ -21,22 +21,6 @@ public class App extends Application {
         launch(args);
     }
 
-    /*@Override
-    public void start(Stage stage) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("changePassword/ChangePasswordWindow.fxml"));
-            Parent root = (Parent) loader.load();
-            //Obtain the Sign In window controller
-            ChangePasswordController controller = (ChangePasswordController) loader.getController();
-
-            controller.setStage(stage);
-            controller.initStage(root);
-        } catch (IOException ex) {
-            Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }*/
-    
-    
     @Override
     public void start(Stage stage) {
         try {

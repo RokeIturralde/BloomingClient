@@ -27,7 +27,7 @@ import static org.hsqldb.Library.user;
 
 /**
  *
- * @author minyb
+ * @author Eneko
  */
 public class ChangePasswordController {
     @FXML

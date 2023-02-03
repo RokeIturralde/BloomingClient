@@ -5,7 +5,7 @@ import javax.ws.rs.core.GenericType;
 
 /**
  *
- * @author minyb
+ * @author Eneko
  */
 public interface MembershipPlanInterface {
     

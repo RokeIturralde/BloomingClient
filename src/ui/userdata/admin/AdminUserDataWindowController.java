@@ -540,7 +540,7 @@ public class AdminUserDataWindowController {
 
             } catch (Exception e) {
                 // TODO: handle
-                //e.printStackTrace();
+
                 new Alert(AlertType.INFORMATION, "No users were found with" + param + "=" + value);
             } 
 
