@@ -472,16 +472,6 @@ public class AdminUserDataWindowController {
             radioButtonMemberText);
 
 
-        // combo box
-
-        comboBoxSearchParameter
-        .getItems().addAll(textSearches);
-        comboBoxSearchParameter
-        .getItems().addAll(enumeratedSearches);
-        comboBoxMembershipPlans
-        .getItems().addAll(membershipPlanNames());
-
-        membershipPlanNames().forEach(m -> System.out.println(m));
 
         LOGGER.info("Attempting to load users to the table.");
         
@@ -555,10 +545,12 @@ public class AdminUserDataWindowController {
     ObservableValue observable,
     Object oldValue, Object newValue) {
         handleClearButtonAction();
-
-        User u = User.class.cast(newValue);
-        loadUserData(u);
-
+        if (newValue != null) {
+            User u = User.class.cast(newValue);
+            loadUserData(u);
+        }
+        else 
+            new Alert(AlertType.ERROR, "Error with selection.");
     }
 
     
@@ -607,14 +599,7 @@ public class AdminUserDataWindowController {
         comboBoxSearch.getSelectionModel().clearSelection();
         comboBoxSearch.setVisible(false);
 
-        try {
-            tableUsers.setItems(
-                FXCollections
-                .observableArrayList(FactoryMember.get().getEveryUser())
-            );
-        } catch (Exception e) {
-            LOGGER.severe("There was an error loading users:\n" + e.getMessage());
-        }   
+        loadEveryUser();
     }
 
     
@@ -631,6 +616,7 @@ public class AdminUserDataWindowController {
                 "There was an error recording user "+ u +".");
         }
 
+        loadEveryUser(); // refresh table.
     }
 
     @FXML
@@ -643,6 +629,7 @@ public class AdminUserDataWindowController {
                 AlertType.ERROR, 
                 "There was an error editing user " + u + ".");
         }
+        loadEveryUser(); // refresh table.
     }
 
     @FXML
@@ -655,6 +642,7 @@ public class AdminUserDataWindowController {
                 AlertType.ERROR, 
                 "There was an error deleting user " + login + ".");
         }
+        loadEveryUser(); // refresh table.
     }
 
     @FXML
@@ -747,6 +735,15 @@ public class AdminUserDataWindowController {
                         checkBoxStatus.setText(checkBoxStatusDisableText);
                 }
             });
+
+                    // combo box
+
+        comboBoxSearchParameter
+        .getItems().addAll(textSearches);
+        comboBoxSearchParameter
+        .getItems().addAll(enumeratedSearches);
+        comboBoxMembershipPlans
+        .getItems().addAll(membershipPlanNames());
 
         // combo box
         comboBoxSearchParameter.setOnAction((event) -> {
