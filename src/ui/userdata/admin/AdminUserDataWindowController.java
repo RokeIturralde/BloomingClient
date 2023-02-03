@@ -3,6 +3,7 @@ package ui.userdata.admin;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.LinkedList;
@@ -162,7 +163,7 @@ public class AdminUserDataWindowController {
 
         // text checkings
 
-        if (txtSearchValue.getText().isEmpty())
+        if (txtSearchValue.getText().isEmpty()) // just in case
             txtSearchValue.setPromptText(txtSearchValuePromptText);
 
 
@@ -190,7 +191,9 @@ public class AdminUserDataWindowController {
             || radioButtonAdmin.isSelected());
             
         
-        // date checkings
+        // date checkings TODO: bro what
+
+        // check if the date is a valid value
 
         /* if (radioButtonMember.isSelected()) {
             if (datePickerStart.getTypeSelector().isEmpty())
@@ -204,8 +207,6 @@ public class AdminUserDataWindowController {
             else
                 nicely = nicely && USF.dateFormatIsFine(datePickerEnd.getValue());
         }  */
-        
-        
 
         return nicely;
     }
@@ -213,7 +214,7 @@ public class AdminUserDataWindowController {
 
     /**
      * checks if the spaces have values
-     * @return
+     * @return 
      */
 
     private boolean everyUserParamIsEmpty() {
@@ -234,6 +235,10 @@ public class AdminUserDataWindowController {
             datePickerEnd.isArmed());
     }
 
+    /**
+     * puts every user of the database in the table.
+     */
+
     private void loadEveryUser() {
         try {
             tableUsers.setItems(
@@ -241,67 +246,80 @@ public class AdminUserDataWindowController {
                 .observableArrayList(FactoryMember.get().getEveryUser())
             );
         } catch (Exception e) {
-            LOGGER.severe("There was an error loading users:\n" + e.getMessage());
+            new Alert(AlertType.ERROR, "There was an error loading all users.");
+            LOGGER.severe("Error loading users:\n" + e.getMessage());
         }   
     }
     
+    /**
+     * method that puts the user data at the table
+     * @param u
+     */
     private void loadUserData(User u) {
-        Platform.runLater(new Runnable() {
-            @Override public void run() {
-                if (u == null) {
-                    new Alert(AlertType.ERROR, "Some error");
-                    return;
-                }
-        
-                txtLogin.setText(u.getLogin());
-                txtEmail.setText(u.getEmail());
-                txtFullName.setText(u.getFullName()); 
-        
-                boolean enabled = u.getStatus().equals(Status.ENABLE);
-                if (enabled)
-                    checkBoxStatus.setText(checkBoxStatusEnableText);
-                else 
-                    checkBoxStatus.setText(checkBoxStatusDisableText);
-                
-                checkBoxStatus.setSelected(enabled);
-        
-                if (u.getPrivilege().equals(Privilege.ADMIN))
-                    radioButtonAdmin.setSelected(true);
-                if (u.getPrivilege().equals(Privilege.CLIENT))
-                    radioButtonClient.setSelected(true);
-                if (u.getPrivilege().equals(Privilege.MEMBER)) {
-                    radioButtonMember.setSelected(true);
-        
-                    Member m = Member.class.cast(u);
-        
-                    comboBoxMembershipPlans.getSelectionModel()
-                        .select(
-                            m.getPlan().getId());
-                        
-                    datePickerStart.setValue(
-                        toLocalDate(
-                            m.getMemberStartingDate()));
-                    datePickerEnd.setValue(
-                        toLocalDate(
-                            m.getMemberEndingDate()));
-                } 
-                else {
-                    comboBoxMembershipPlans.setPromptText(comboBoxMembershipPlansText);
-                }
-        }});
-        
+        if (u == null) {
+            new Alert(AlertType.ERROR, "Not valid value");
+            LOGGER.severe("User value is null.");
+            return;
+        }
 
+        LOGGER.info("Loading user data of user of login=" + u.getLogin());
+
+        txtLogin.setText(u.getLogin());
+        txtEmail.setText(u.getEmail());
+        txtFullName.setText(u.getFullName()); 
+
+        boolean enabled = u.getStatus().equals(Status.ENABLE);
+        if (enabled)
+            checkBoxStatus.setText(checkBoxStatusEnableText);
+        else 
+            checkBoxStatus.setText(checkBoxStatusDisableText);
+        
+        checkBoxStatus.setSelected(enabled);
+
+        if (u.getPrivilege().equals(Privilege.ADMIN))
+            radioButtonAdmin.setSelected(true);
+        if (u.getPrivilege().equals(Privilege.CLIENT))
+            radioButtonClient.setSelected(true);
+        if (u.getPrivilege().equals(Privilege.MEMBER)) {
+            radioButtonMember.setSelected(true);
+
+            Member m = Member.class.cast(u);
+
+            comboBoxMembershipPlans.getSelectionModel()
+                .select(
+                    m.getPlan().getId());
+                
+            datePickerStart.setValue(
+                toLocalDate(
+                    m.getMemberStartingDate()));
+            datePickerEnd.setValue(
+                toLocalDate(
+                    m.getMemberEndingDate()));
+        } 
+        else {
+            comboBoxMembershipPlans.setPromptText(comboBoxMembershipPlansText);
+        }
     }
 
-
+    /**
+     * convert value to LocalDate
+     * @param date 
+     * @return new value in LocalDate
+     */
     private LocalDate toLocalDate(Date date) {
         return date.toInstant()
             .atZone(ZoneId.systemDefault())
                 .toLocalDate();
     }
 
+    /**
+     * convert the value to Date
+     * @param date
+     * @return
+     */
+
     private Date toDate(LocalDate date) {
-        return null;// Date.from(Instant.of)
+        return Date.from(date.atStartOfDay(ZoneId.systemDefault()).toInstant());
     }
     
     /**
@@ -310,14 +328,34 @@ public class AdminUserDataWindowController {
      * @return user with every value in the boxes
      */
 
-    private User createFromParams() { // ------------------------------------------------------
+    private User createFromParams() { // 
+        LOGGER.info("Creating user from parameters.");
         User u = new User();
 
         Privilege p = Privilege.CLIENT; // default
 
         if (radioButtonAdmin.isSelected()) {
             p = Privilege.MEMBER;
-            //Member.class.cast(u).setMemberStartingDate(this.toLocalDate(datePickerStart.getValue()));
+            Member.class.cast(u)
+                .setMemberStartingDate(
+                    this.toDate(datePickerStart.getValue()));
+            Member.class.cast(u)
+                .setMemberEndingDate(
+                    this.toDate(datePickerEnd.getValue()));
+
+            List <MembershipPlan> l = new LinkedList<MembershipPlan>();
+
+            try {
+               l = MembershipPlanFactory.getModel()
+                    .findPlanByName_XML(
+                        new GenericType<List<MembershipPlan>>() {},
+                        comboBoxMembershipPlans.getSelectionModel()
+                    .getSelectedItem());                
+            } catch (Exception e) {
+                // TODO: handle exception
+            }
+                if (!l.isEmpty())
+                    Member.class.cast(u).setPlan(l.get(0));
         }
             
         else if (radioButtonClient.isSelected())
@@ -325,14 +363,13 @@ public class AdminUserDataWindowController {
         else if (radioButtonMember.isSelected())
             p = Privilege.CLIENT;
 
-
         
         u.setLogin(txtLogin.getText());
         u.setEmail(txtEmail.getText());
         u.setFullName(txtFullName.getText());
 
-        u.setPassword("no password yet");
-        
+        u.setPassword("DEFAULT"); // default passwords.
+
         u.setPrivilege(p);
 
         Status s = 
@@ -343,6 +380,8 @@ public class AdminUserDataWindowController {
         u.setStatus(s);
         
         u.setLastPasswordChange(Date.from(Instant.now()));
+
+        LOGGER.info("User " + u.toString() + " created.");
         
         return u;
     }
@@ -448,9 +487,6 @@ public class AdminUserDataWindowController {
         
         loadEveryUser();
     }
-
-   
-
 
     /**
      * method that makes the research.
