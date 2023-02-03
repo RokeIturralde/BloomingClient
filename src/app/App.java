@@ -26,7 +26,7 @@ public class App extends Application {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("ui/signIn/SignInCrud.fxml"));
             Parent root = (Parent) loader.load();
-            //Obtain the Sign In window controller
+            // Obtain the Sign In window controller
             SignInController controller = (SignInController) loader.getController();
 
             controller.setStage(stage);
@@ -35,7 +35,4 @@ public class App extends Application {
             Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
-    }
-    
-
+}

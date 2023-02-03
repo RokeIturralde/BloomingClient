@@ -23,7 +23,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import objects.User;
-import static org.hsqldb.Library.user;
+
 
 /**
  *
