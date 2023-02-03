@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package ui.membershipPlan.admin;
+
 import businessLogic.membership.MembershipPlanFactory;
 import businessLogic.membership.MembershipPlanInterface;
 import businessLogic.user.FactoryMember;
@@ -56,9 +57,10 @@ import ui.signIn.SignInController;
 import ui.userdata.admin.AdminUserDataWindowController;
 
 /**
- * Controller class for Admin membership plan window. 
- * CRUD for MembershipPlan entity
- * @author Eneko 
+ * Controller class for Admin membership plan window. CRUD for MembershipPlan
+ * entity
+ *
+ * @author Eneko
  */
 public class AdminMembershipPlanController {
 
@@ -122,7 +124,6 @@ public class AdminMembershipPlanController {
     //Creates logger
     private static final Logger LOGGER = Logger.getLogger("package membership.admin");
 
-    
     public void initStage(Parent root, User user) {
         this.user = user;
         LOGGER.info("Initializing MembershipPlanAdminController window");
@@ -280,24 +281,24 @@ public class AdminMembershipPlanController {
         cbShareable.setSelected(false);
         cboxParameter.getItems().addAll("Name", "Price", "Duration");
     }
-    
-    private void fieldValidator(){
-        for(int i = 0; i < txtDuration.getText().length();i++){
-            if(!Character.isDigit(txtDuration.getText().charAt(i))){
+
+    private void fieldValidator() {
+        for (int i = 0; i < txtDuration.getText().length(); i++) {
+            if (!Character.isDigit(txtDuration.getText().charAt(i))) {
                 new Alert(Alert.AlertType.ERROR, "Duration field has to be a digit", ButtonType.OK).showAndWait();
             }
         }
-        
-        for(int i = 0; i < txtAlbumLimit.getText().length();i++){
-            if(!Character.isDigit(txtAlbumLimit.getText().charAt(i))){
+
+        for (int i = 0; i < txtAlbumLimit.getText().length(); i++) {
+            if (!Character.isDigit(txtAlbumLimit.getText().charAt(i))) {
                 new Alert(Alert.AlertType.ERROR, "Album limit field has to be a digit", ButtonType.OK).showAndWait();
             }
         }
 
         String floatPattern = "^([0-9]*[.])?[0-9]+$";
         if (!Pattern.matches(floatPattern, txtPrice.getText())) {
-                new Alert(Alert.AlertType.ERROR, "Price field has to be a digit", ButtonType.OK).showAndWait();
-            }
+            new Alert(Alert.AlertType.ERROR, "Price field has to be a digit", ButtonType.OK).showAndWait();
+        }
     }
 
     @FXML
@@ -309,7 +310,7 @@ public class AdminMembershipPlanController {
             membersString = membersString + members.get(i).getLogin() + ", ";
         }
         new Alert(Alert.AlertType.INFORMATION, membersString, ButtonType.OK).showAndWait();
-        
+
     }
 
     @FXML
@@ -325,8 +326,8 @@ public class AdminMembershipPlanController {
                 tbPlans.setItems(membershipPlanData);
                 tbPlans.refresh();
             } catch (Exception e) {
-               Logger.getLogger(AdminMembershipPlanController.class.getName()).log(Level.SEVERE, null, e);
-               new Alert(Alert.AlertType.ERROR, "Error in server", ButtonType.OK).showAndWait();
+                Logger.getLogger(AdminMembershipPlanController.class.getName()).log(Level.SEVERE, null, e);
+                new Alert(Alert.AlertType.ERROR, "Error in server", ButtonType.OK).showAndWait();
             }
         }
 
@@ -380,15 +381,15 @@ public class AdminMembershipPlanController {
         plan.setDescription(txtaDescription.getText());
         plan.setDuration(Integer.parseInt(txtDuration.getText()));
         plan.setShareable(cbShareable.isSelected());
-        try{
-          reset();  
-          membershipClient.edit_XML(plan);
-          tbPlans.getSelectionModel().clearSelection();
+        try {
+            reset();
+            membershipClient.edit_XML(plan);
+            tbPlans.getSelectionModel().clearSelection();
         } catch (ClientErrorException ex) {
             Logger.getLogger(AdminMembershipPlanController.class.getName()).log(Level.SEVERE, null, ex);
             new Alert(Alert.AlertType.ERROR, "Error in server", ButtonType.OK).showAndWait();
-        }   
-        
+        }
+
     }
 
     @FXML
@@ -438,11 +439,11 @@ public class AdminMembershipPlanController {
     @FXML
     public void handlePrintButtonAction(ActionEvent event) {
         try {
-            
-            JasperReport report = JasperCompileManager.compileReport("src/report/MembershipPlan.jrxml");
-            Collection<MembershipPlan> plansis= this.tbPlans.getItems();
+
+            JasperReport report = JasperCompileManager.compileReport(getClass().getResource("MembershipPlan.jrxml").getPath());
+            Collection<MembershipPlan> plansis = this.tbPlans.getItems();
             JRBeanCollectionDataSource dataItems = new JRBeanCollectionDataSource((Collection<MembershipPlan>) this.tbPlans.getItems());
-            
+
             Map<String, Object> parameters = new HashMap<>();
             JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameters, dataItems);
             JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
@@ -454,26 +455,26 @@ public class AdminMembershipPlanController {
             new Alert(Alert.AlertType.ERROR, ex.getMessage(), ButtonType.OK).showAndWait();
         }
     }
-    
+
     @FXML
-    private void handleHelpAction(ActionEvent event){
-        try{
+    private void handleHelpAction(ActionEvent event) {
+        try {
             LOGGER.info("Loading help view...");
             //Load node graph from fxml file
-            FXMLLoader loader=
-                new FXMLLoader(getClass().getResource("/ui/membershipPlan/admin/help/Help.fxml"));
-                Parent root = (Parent)loader.load();
-                HelpController helpController=
-                        ((HelpController)loader.getController());
-                //Initializes and shows help stage
-                helpController.initAndShowStage(root);
-        }catch(Exception ex){
-                //If there is an error show message and
-                //log it.
-                Alert alert=new Alert(Alert.AlertType.ERROR, "Error al mostrar ventana de ayuda", ButtonType.OK);
-                LOGGER.log(Level.SEVERE,
-                            "UI AdminMembershipPlanController: Error loading help window: {0}",
-                            ex.getMessage());
+            FXMLLoader loader
+                    = new FXMLLoader(getClass().getResource("/ui/membershipPlan/admin/help/Help.fxml"));
+            Parent root = (Parent) loader.load();
+            HelpController helpController
+                    = ((HelpController) loader.getController());
+            //Initializes and shows help stage
+            helpController.initAndShowStage(root);
+        } catch (Exception ex) {
+            //If there is an error show message and
+            //log it.
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Error al mostrar ventana de ayuda", ButtonType.OK);
+            LOGGER.log(Level.SEVERE,
+                    "UI AdminMembershipPlanController: Error loading help window: {0}",
+                    ex.getMessage());
         }
 
     }

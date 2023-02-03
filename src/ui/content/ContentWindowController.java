@@ -317,7 +317,7 @@ public class ContentWindowController {
         } catch (Exception e) {
             new Alert(Alert.AlertType.ERROR, "Failed connecting to the server, try again later please", ButtonType.OK).showAndWait();
         }
-        
+
         LOGGER.info("Iniciando ContentWindowController::handlerWindowShowing");
         btnDeleteContent.setDisable(true);
         btnAddContent.setDisable(true);
@@ -865,7 +865,7 @@ public class ContentWindowController {
          * information
          */
         try {
-            JasperReport report = JasperCompileManager.compileReport("src/report/CustomImage.jrxml");
+            JasperReport report = JasperCompileManager.compileReport(getClass().getResource("CustomImage.jrxml").getPath());
             JRBeanCollectionDataSource dataItems = new JRBeanCollectionDataSource((Collection<Content>) this.tableCustomImage.getItems());
             Map<String, Object> parameters = new HashMap<>();
             JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameters, dataItems);
