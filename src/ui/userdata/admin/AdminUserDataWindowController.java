@@ -11,13 +11,16 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import javax.swing.text.html.parser.Entity;
 import javax.ws.rs.core.GenericType;
 
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -31,6 +34,8 @@ import objects.MembershipPlan;
 import objects.Privilege;
 import objects.Status;
 import objects.User;
+import ui.membershipPlan.admin.AdminMembershipPlanController;
+import ui.signIn.SignInController;
 import businessLogic.membership.MembershipPlanFactory;
 import businessLogic.user.FactoryMember;
 import businessLogic.user.FactoryUser;
@@ -416,46 +421,50 @@ public class AdminUserDataWindowController {
     }
 
     private void loadUserData(User u) {
-        if (u == null) {
-            new Alert(AlertType.ERROR, "Some error");
-            return;
-        }
-
-        txtLogin.setText(u.getLogin());
-        txtEmail.setText(u.getEmail());
-        txtFullName.setText(u.getFullName()); 
-
-        boolean enabled = u.getStatus().equals(Status.ENABLE);
-        if (enabled)
-            checkBoxStatus.setText(checkBoxStatusEnableText);
-        else 
-            checkBoxStatus.setText(checkBoxStatusDisableText);
+        Platform.runLater(new Runnable() {
+            @Override public void run() {
+                if (u == null) {
+                    new Alert(AlertType.ERROR, "Some error");
+                    return;
+                }
         
-        checkBoxStatus.setSelected(enabled);
-
-        if (u.getPrivilege().equals(Privilege.ADMIN))
-            radioButtonAdmin.setSelected(true);
-        if (u.getPrivilege().equals(Privilege.CLIENT))
-            radioButtonClient.setSelected(true);
-        if (u.getPrivilege().equals(Privilege.MEMBER)) {
-            radioButtonMember.setSelected(true);
-
-            Member m = Member.class.cast(u);
-
-            comboBoxMembershipPlans.getSelectionModel()
-                .select(
-                    m.getPlan().getId());
+                txtLogin.setText(u.getLogin());
+                txtEmail.setText(u.getEmail());
+                txtFullName.setText(u.getFullName()); 
+        
+                boolean enabled = u.getStatus().equals(Status.ENABLE);
+                if (enabled)
+                    checkBoxStatus.setText(checkBoxStatusEnableText);
+                else 
+                    checkBoxStatus.setText(checkBoxStatusDisableText);
                 
-            datePickerStart.setValue(
-                toLocalDate(
-                    m.getMemberStartingDate()));
-            datePickerEnd.setValue(
-                toLocalDate(
-                    m.getMemberEndingDate()));
-        } 
-        else {
-            comboBoxMembershipPlans.setPromptText(comboBoxMembershipPlansText);
-        }
+                checkBoxStatus.setSelected(enabled);
+        
+                if (u.getPrivilege().equals(Privilege.ADMIN))
+                    radioButtonAdmin.setSelected(true);
+                if (u.getPrivilege().equals(Privilege.CLIENT))
+                    radioButtonClient.setSelected(true);
+                if (u.getPrivilege().equals(Privilege.MEMBER)) {
+                    radioButtonMember.setSelected(true);
+        
+                    Member m = Member.class.cast(u);
+        
+                    comboBoxMembershipPlans.getSelectionModel()
+                        .select(
+                            m.getPlan().getId());
+                        
+                    datePickerStart.setValue(
+                        toLocalDate(
+                            m.getMemberStartingDate()));
+                    datePickerEnd.setValue(
+                        toLocalDate(
+                            m.getMemberEndingDate()));
+                } 
+                else {
+                    comboBoxMembershipPlans.setPromptText(comboBoxMembershipPlansText);
+                }
+        }});
+        
 
     }
 
@@ -597,11 +606,32 @@ public class AdminUserDataWindowController {
 
     @FXML
     private void handleBloomingButtonAction() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/signIn/SignInCrud.fxml"));
+            Parent root = (Parent) loader.load();
+            Stage stageAlbum = new Stage();
+            //Obtain the Sign In window controller
+            SignInController controller = (SignInController) loader.getController();
+            controller.setStage(stageAlbum);
+            controller.initStage(root);
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
     }
 
     @FXML
     private void handleMembershipButtonAction() {
-
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/membershipPlan/admin/AdminMembershipPlan.fxml"));
+            Parent root = (Parent) loader.load();
+            Stage stageAlbum = new Stage();
+            //Obtain the Sign In window controller
+            AdminMembershipPlanController controller = (AdminMembershipPlanController) loader.getController();
+            controller.setStage(stageAlbum);
+            controller.initStage(root);
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
     }
 
     @FXML
@@ -616,7 +646,7 @@ public class AdminUserDataWindowController {
 
     @FXML
     private void handlePrintButtonAction() {
-        
+
     }
 
 
