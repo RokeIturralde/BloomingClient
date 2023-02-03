@@ -84,9 +84,9 @@ public class AlbumsViewController {
 
     //Tables
     @FXML
-    private TableView tbMyAlbums;
+    private TableView<Album> tbMyAlbums;
     @FXML
-    private TableView tbSharedAlbums;
+    private TableView<Album> tbSharedAlbums;
 
     //Table Columns
     @FXML
@@ -135,8 +135,6 @@ public class AlbumsViewController {
     private Button btnAlbums;
     @FXML
     private Button btnContent;
-    @FXML
-    private Button btnMembership;
     @FXML
     private Button btnAboutUs;
     @FXML
@@ -265,7 +263,6 @@ public class AlbumsViewController {
         clientsData = FXCollections.observableArrayList(client.findMyAllSharedAlbums_XML(new GenericType<List<Album>>() {
         }, loggedUser.getLogin()));
         tbSharedAlbums.setItems(clientsData);
-        clientsData.stream().forEach(cd -> System.out.println(cd));
         tbSharedAlbums.refresh();
 
     } catch (Exception e) {
@@ -285,7 +282,7 @@ public class AlbumsViewController {
         String text = txtValue.getText();
         try {
             if (busqueda.equalsIgnoreCase("Name")) {
-                if (checkShared.isSelected()) {
+                if (!checkShared.isSelected()) {
                     clientsData = FXCollections.observableArrayList(client.findMySharedAlbumsByName_XML(new GenericType<List<Album>>() {
                     }, loggedUser.getLogin(), text));
                     tbMyAlbums.setItems(clientsData);
@@ -413,6 +410,7 @@ public class AlbumsViewController {
         LOGGER.info("Metodo de control del boton de Modify an Album");
         int selectedRow = tbMyAlbums.getSelectionModel().getSelectedIndex();
         Album album = new Album();
+        album.setId(tbMyAlbums.getSelectionModel().getSelectedItem().getId());
         album.setName(txtAlbumName.getText());
         LocalDate datePicker = dpCreationDate.getValue();
         Date date = Date.from(datePicker.atStartOfDay(ZoneId.systemDefault()).toInstant());
@@ -464,6 +462,7 @@ public class AlbumsViewController {
         if (action.get() == ButtonType.OK) {
             int selectedRow = tbMyAlbums.getSelectionModel().getSelectedIndex();
             Album album = new Album();
+            album.setId(tbMyAlbums.getSelectionModel().getSelectedItem().getId());
             album.setName(txtAlbumName.getText());
             LocalDate datePicker = dpCreationDate.getValue();
             Date date = Date.from(datePicker.atStartOfDay(ZoneId.systemDefault()).toInstant());
@@ -793,27 +792,6 @@ public class AlbumsViewController {
         }
     }
 
-    /**
-     * Method that handles the button "Membership" from menu
-     *
-     * @param event The action event object
-     */
-    @FXML
-    private void handleMembershipButtonAction(ActionEvent event) {
-        LOGGER.info("Metodo de control del boton de Membership del menú");
-        this.stage.close();
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/membershipPlan/client/MembershipClient.fxml"));
-            Parent root = (Parent) loader.load();
-            //Obtain the Sign In window controller
-            ContentWindowController controller = (ContentWindowController) loader.getController();
-            controller.setStage(stage);
-            controller.initStage(root);
-
-        } catch (IOException ex) {
-            Logger.getLogger(AlbumsViewController.class
-                    .getName()).log(Level.SEVERE, null, ex);
-        }
-    }
+    
 
 }
