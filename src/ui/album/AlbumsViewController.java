@@ -5,9 +5,9 @@
 package ui.album;
 
 import businessLogic.album.FactoryAlbum;
-import businessLogic.album.AlbumInterface;
 import businessLogic.user.FactoryUser;
 import exceptions.NameExistException;
+import businessLogic.album.AlbumInterface;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -153,7 +153,7 @@ public class AlbumsViewController {
     //Logger for the aplication. 
     private static final Logger LOGGER = Logger.getLogger("package view.Album");
     private ObservableList<Album> clientsData;
-    private static User loggedUser;
+    private User loggedUser = new User();
     private AlbumInterface client;
     private ArrayList<Album> albumList;
     private static ArrayList<User> userList;
@@ -167,6 +167,8 @@ public class AlbumsViewController {
     public void initStage(Parent root, User loggedUser) {
         LOGGER.info("Initializing Albums window");
         this.loggedUser = loggedUser;
+        loggedUser.setLogin("u1");
+
         //Creates an scene
         Scene scene = new Scene(root);
         //Establishes an scene
@@ -188,23 +190,14 @@ public class AlbumsViewController {
         tbSharedAlbums.getSelectionModel().selectedItemProperty()
                 .addListener(this::handleAlbumsTableSelectionChanged);
 
-        //Charge tables data
-        try {
-            client = FactoryAlbum.getModel();
-            clientsData = FXCollections.observableArrayList(client.findMyAllAlbums_XML(new GenericType<List<Album>>() {
-            }, loggedUser.getLogin()));
-            tbMyAlbums.setItems(clientsData);
-            tbMyAlbums.refresh();
+        //Charge into the combobox the select actions and selecting the first.
+        cbSearchType.getItems().addAll(
+            "Name",
+            "Date",
+            "Creator");
+    cbSearchType.getSelectionModel().selectFirst();
 
-            clientsData = FXCollections.observableArrayList(client.findMyAllSharedAlbums_XML(new GenericType<List<Album>>() {
-            }, loggedUser.getLogin()));
-            tbSharedAlbums.setItems(clientsData);
-            clientsData.stream().forEach(cd -> System.out.println(cd));
-            tbSharedAlbums.refresh();
-
-        } catch (Exception e) {
-            LOGGER.info(e.getMessage());
-        }
+        
         //Show the window
         stage.show();
     }
@@ -236,12 +229,7 @@ public class AlbumsViewController {
         //Filds disabled at first
         taUsers.setDisable(true);
 
-        //Charge into the combobox the select actions and selecting the first.
-        cbSearchType.getItems().addAll(
-                "Name",
-                "Date",
-                "Creator");
-        cbSearchType.getSelectionModel().selectFirst();
+       
 
         //Set factories for cell values in users table columns (My albums table)
         columnNameMyAlbums.setCellValueFactory(
@@ -263,6 +251,26 @@ public class AlbumsViewController {
                 new PropertyValueFactory<>("users"));
         columnDescSharedAlbums.setCellValueFactory(
                 new PropertyValueFactory<>("description"));
+
+
+    //Charge tables data
+    try {
+        client = FactoryAlbum.getModel();
+        clientsData = FXCollections.observableArrayList(client.findMyAllAlbums_XML(new GenericType<List<Album>>() {
+        }, loggedUser.getLogin()));
+
+        tbMyAlbums.setItems(clientsData);
+        tbMyAlbums.refresh();
+
+        clientsData = FXCollections.observableArrayList(client.findMyAllSharedAlbums_XML(new GenericType<List<Album>>() {
+        }, loggedUser.getLogin()));
+        tbSharedAlbums.setItems(clientsData);
+        clientsData.stream().forEach(cd -> System.out.println(cd));
+        tbSharedAlbums.refresh();
+
+    } catch (Exception e) {
+        LOGGER.info(e.getMessage());
+}
     }
 
     /**
@@ -641,17 +649,17 @@ public class AlbumsViewController {
              * buttons
              */
             int selectedRow = tbMyAlbums.getSelectionModel().getSelectedIndex();
-            txtAlbumName.setText(albumList.get(selectedRow).getName());
-            dpCreationDate.setValue(albumList.get(selectedRow).getCreationDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
-            txtAlbumCreator.setText(albumList.get(selectedRow).getCreator().getLogin());
-            taAlbumDesc.setText(albumList.get(selectedRow).getDescription());
+            txtAlbumName.setText(album.getName());
+            dpCreationDate.setValue(album.getCreationDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+            txtAlbumCreator.setText(album.getCreator().getLogin());
+            taAlbumDesc.setText(album.getDescription());
             txtAddUser.setText("");
 
-            if (!albumList.get(selectedRow).getUsers().isEmpty()) {
-                taUsers.setText(arrayToString((ArrayList<User>) albumList.get(selectedRow).getUsers()));
+            if (!album.getUsers().isEmpty()) {
+                taUsers.setText(arrayToString((ArrayList<User>) album.getUsers()));
                 checkShare.isSelected();
             }
-            if (album.getCreator().getLogin().equalsIgnoreCase(albumList.get(selectedRow).getCreator().getLogin())) {
+            if (album.getCreator().getLogin().equalsIgnoreCase(loggedUser.getLogin())) {
                 btnCreateAlbum.setDisable(false);
                 btnModifyAlbum.setDisable(false);
                 btnDeleteAlbum.setDisable(false);
