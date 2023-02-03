@@ -31,7 +31,7 @@ public class AlbumFacadeREST implements AlbumInterface{
     private final Client client;
     //Mover a Archivo de Propiedades!!!!
     private static final ResourceBundle bundle = ResourceBundle.getBundle("files.URLCredentials");
-    private static final String BASE_URI = "http://localhost:8080/BloomingWeb/webresources";
+    private static final String BASE_URI = bundle.getString("BASE_URI");
     
     public AlbumFacadeREST() {
         client = javax.ws.rs.client.ClientBuilder.newClient();
