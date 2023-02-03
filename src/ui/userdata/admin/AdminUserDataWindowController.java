@@ -437,7 +437,7 @@ public class AdminUserDataWindowController {
 
         btnAddUser.setDisable(!correctParams);
         btnModifyUser.setDisable(!correctParams);
-        btnDeleteUser.setDefaultButton(!correctParams);
+        btnDeleteUser.setDisable(!correctParams);
     }
 
 
