@@ -681,7 +681,7 @@ public class AdminUserDataWindowController {
             //Obtain the Sign In window controller
             AdminMembershipPlanController controller = (AdminMembershipPlanController) loader.getController();
             controller.setStage(stageAlbum);
-            controller.initStage(root);
+            controller.initStage(root, adminLoged);
         } catch (Exception e) {
             // TODO: handle exception
         }
@@ -708,7 +708,7 @@ public class AdminUserDataWindowController {
 
      public void initStage(Parent root, User user) {
         LOGGER.info("Initializing 'User' window");
-
+        adminLoged = user;
         // Stablish scene
         Scene scene = new Scene(root);
         stage.setScene(scene);

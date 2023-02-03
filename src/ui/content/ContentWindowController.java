@@ -11,6 +11,7 @@ import businessLogic.customImage.CustomImageFactory;
 import businessLogic.customImage.CustomImageInterface;
 import businessLogic.customText.CustomTextFactory;
 import businessLogic.customText.CustomTextInterface;
+import changePassword.ChangePasswordController;
 import exceptions.ClientErrorException;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
@@ -74,6 +75,8 @@ import net.sf.jasperreports.view.JasperViewer;
 import objects.CustomImage;
 import objects.Content;
 import objects.CustomText;
+import objects.User;
+import ui.album.AlbumsViewController;
 import ui.content.help.HelpController;
 
 /**
@@ -86,6 +89,8 @@ public class ContentWindowController {
     //Defined the attributes for the window controller
     @FXML
     private Button btnLogo;
+    @FXML
+    private Button btnChangePassword;
     @FXML
     private Button btnAlbum;
     @FXML
@@ -728,8 +733,20 @@ public class ContentWindowController {
      * @param event
      */
     @FXML
-    private void handleAlbumButtonAction(ActionEvent event
-    ) {
+    private void handleAlbumButtonAction(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("ui/album/UIAlbum.fxml"));
+            Parent root = (Parent) loader.load();
+            //Obtain the Sign In window controller
+            AlbumsViewController controller = (AlbumsViewController) loader.getController();
+
+            controller.setStage(stage);
+            User user = new User();
+            user.setLogin("u1");
+            controller.initStage(root, user);
+        } catch (IOException ex) {
+            Logger.getLogger(ContentWindowController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -748,8 +765,18 @@ public class ContentWindowController {
      * @param event
      */
     @FXML
-    private void handleMyProfileButtonAction(ActionEvent event
-    ) {
+    private void handleChangeButtonAction(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/changePassword/ChangePasswordWindow.fxml"));
+            Parent root = (Parent) loader.load();
+            Stage stageAlbum = new Stage();
+            //Obtain the Sign In window controller
+            ChangePasswordController controller = (ChangePasswordController) loader.getController();
+            controller.setStage(stageAlbum);
+            controller.initStage(root);
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
     }
 
     /**

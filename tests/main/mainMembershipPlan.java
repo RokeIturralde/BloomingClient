@@ -13,6 +13,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.stage.Stage;
+import objects.User;
 import ui.membershipPlan.admin.AdminMembershipPlanController;
 
 /**
@@ -29,7 +30,9 @@ public class mainMembershipPlan extends Application {
             AdminMembershipPlanController controller = (AdminMembershipPlanController) loader.getController();
 
             controller.setStage(stage);
-            controller.initStage(root);
+            User user = new User();
+            user = null;
+            controller.initStage(root, user);
         } catch (IOException ex) {
             Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
         }
