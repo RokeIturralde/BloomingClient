@@ -10,6 +10,7 @@ import businessLogic.membership.MembershipPlanInterface;
 import businessLogic.user.FactoryMember;
 import businessLogic.user.MemberInterface;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -156,7 +157,7 @@ public class AdminMembershipPlanController {
         cPrice.setCellValueFactory(new PropertyValueFactory<>("price"));
         membershipClient = MembershipPlanFactory.getModel();
         memberClient = FactoryMember.get();
-        //Method that refreshes table´s data
+        //Method that refreshes tableÂ´s data
         refreshPlus();
         btnCreate.setDisable(true);
         btnModify.setDisable(true);
@@ -440,8 +441,9 @@ public class AdminMembershipPlanController {
     public void handlePrintButtonAction(ActionEvent event) {
         try {
 
-            JasperReport report = JasperCompileManager.compileReport(getClass().getResource("MembershipPlan.jrxml").getPath());
-            Collection<MembershipPlan> plansis = this.tbPlans.getItems();
+            InputStream input = getClass().getResourceAsStream("MembershipPlan.jrxml");
+            JasperReport report = JasperCompileManager.compileReport(input);
+            input.close();
             JRBeanCollectionDataSource dataItems = new JRBeanCollectionDataSource((Collection<MembershipPlan>) this.tbPlans.getItems());
 
             Map<String, Object> parameters = new HashMap<>();
@@ -453,6 +455,8 @@ public class AdminMembershipPlanController {
             Logger.getLogger(AdminMembershipPlanController.class
                     .getName()).log(Level.SEVERE, null, ex);
             new Alert(Alert.AlertType.ERROR, ex.getMessage(), ButtonType.OK).showAndWait();
+        } catch (IOException ex) {
+            Logger.getLogger(AdminMembershipPlanController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

@@ -865,7 +865,9 @@ public class ContentWindowController {
          * information
          */
         try {
-            JasperReport report = JasperCompileManager.compileReport(getClass().getResource("CustomImage.jrxml").getPath());
+            InputStream input = getClass().getResourceAsStream("CustomImage.jrxml");
+            JasperReport report = JasperCompileManager.compileReport(input);
+            input.close();
             JRBeanCollectionDataSource dataItems = new JRBeanCollectionDataSource((Collection<Content>) this.tableCustomImage.getItems());
             Map<String, Object> parameters = new HashMap<>();
             JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameters, dataItems);
@@ -876,6 +878,8 @@ public class ContentWindowController {
             Logger.getLogger(ContentWindowController.class
                     .getName()).log(Level.SEVERE, null, ex);
             new Alert(Alert.AlertType.ERROR, ex.getMessage(), ButtonType.OK).showAndWait();
+        } catch (IOException ex) {
+            Logger.getLogger(ContentWindowController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
