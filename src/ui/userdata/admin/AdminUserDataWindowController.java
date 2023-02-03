@@ -647,13 +647,13 @@ public class AdminUserDataWindowController {
 
     @FXML
     private void handleDeleteUserButtonAction() {
-        User u = createFromParams(); 
+        String login = txtLogin.getText();
         try {
-            FactoryUser.get().removeUser(u.getLogin());
+            FactoryUser.get().removeUser(login);
         } catch (Exception e) {
             new Alert(
                 AlertType.ERROR, 
-                "There was an error deleting user " + u + ".");
+                "There was an error deleting user " + login + ".");
         }
     }
 
