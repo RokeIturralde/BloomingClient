@@ -11,6 +11,7 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.GenericType;
 
 import businessLogic.membership.MembershipPlanInterface;
+import java.util.ResourceBundle;
 
 /**
  * Jersey REST client generated for REST resource:MembershipPlanFacadeREST
@@ -29,7 +30,8 @@ public class MembershipPlanFacadeREST implements MembershipPlanInterface{
 
     private WebTarget webTarget;
     private Client client;
-    private static final String BASE_URI = "http://localhost:8080/BloomingWeb/webresources";
+    private static final ResourceBundle bundle = ResourceBundle.getBundle("files.URLCredentials");
+    private static final String BASE_URI = bundle.getString("BASE_URI");
 
     public MembershipPlanFacadeREST()  {
         client = javax.ws.rs.client.ClientBuilder.newClient();
