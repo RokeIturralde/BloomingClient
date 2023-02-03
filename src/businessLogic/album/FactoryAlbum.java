@@ -6,7 +6,7 @@ package businessLogic.album;
  * and open the template in the editor.
  */
 
-import services.AlbumFarcadeREST;
+import services.AlbumFacadeREST;
 /**
  *
  * @author nerea
@@ -16,7 +16,7 @@ public class FactoryAlbum {
 
     public static AlbumInterface getModel() {
         if (model == null) {
-            model = new AlbumFarcadeREST();
+            model = new AlbumFacadeREST();
         }
         return model;
     }

@@ -25,15 +25,15 @@ import javax.ws.rs.core.GenericType;
  *
  * @author nerea
  */
-public class AlbumFarcadeREST implements AlbumInterface{
+public class AlbumFacadeREST implements AlbumInterface{
 
     private final WebTarget webTarget;
     private final Client client;
     //Mover a Archivo de Propiedades!!!!
     private static final ResourceBundle bundle = ResourceBundle.getBundle("files.URLCredentials");
-    private static final String BASE_URI = bundle.getString("BASE_URI");
-
-    public AlbumFarcadeREST() {
+    private static final String BASE_URI = "http://localhost:8080/BloomingWeb/webresources";
+    
+    public AlbumFacadeREST() {
         client = javax.ws.rs.client.ClientBuilder.newClient();
         webTarget = client.target(BASE_URI).path("entities.album");
     }
