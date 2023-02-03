@@ -33,6 +33,7 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import objects.User;
 
+
 import javax.crypto.Cipher;
 import newUserInterface.NewUserInterface;
 import newUserInterface.NewUserInterfaceFactory;
@@ -114,6 +115,7 @@ public class SignInController {
      * @param event The action event object
      */
     @FXML
+
     private void handleEntrarComoAdminButtonAction(ActionEvent event) throws LoginPasswordFormatException, LoginFormatException {
         User user = new User();
         user.setLogin("loginAdmin");
@@ -124,11 +126,13 @@ public class SignInController {
         user.setFullName("Login Admin");
         user.setStatus(Status.ENABLE);
         
+
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("ui/membershipPlan/admin/AdminMembershipPlan.fxml"));
             Parent root = (Parent) loader.load();
             //Obtain the Sign In window controller
             AdminMembershipPlanController controller = (AdminMembershipPlanController) loader.getController();
+
 
             controller.setStage(stage);
             controller.initStage(root, user);
@@ -150,6 +154,7 @@ public class SignInController {
             
         } catch (IOException ex) {
             Logger.getLogger(SignInController.class.getName()).log(Level.SEVERE, null, ex);
+
         }
     }
 
@@ -161,10 +166,12 @@ public class SignInController {
     @FXML
     private void handleEmailDemoButtonAction(ActionEvent event) {
         try {
+
             NewUserInterface userInterface = NewUserInterfaceFactory.getModel();
             userInterface.recoverPassword_XML(User.class, txtLogin1.getText());
         } catch (ClientErrorException ex) {
             Logger.getLogger(SignInController.class.getName()).log(Level.SEVERE, null, ex);
+
         }
     }
 
@@ -205,30 +212,4 @@ public class SignInController {
     public void setStage(Stage stage) {
         this.stage = stage;
     }
-
-    /**
-     * A method to encript the password with the server's public key.
-     *
-     * @param passwd An String with the password to encript
-     * @return An string with the encripted password pased to hexadecimal.
-     */
-    private String cifrarClavePrivada(String passwd) {
-
-        //Coger clave publica del servidor 
-        byte[] encodedPasswd = null;
-        /*Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
-        cipher.init(Cipher.ENCRYPT_MODE, publicKey);
-        encodedPasswd = cipher.doFinal(passwd.getBytes());*/
-        return Hexadecimal(encodedPasswd);
-    }
-
-    // Convierte Array de Bytes en hexadecimal
-    static String Hexadecimal(byte[] resumen) {
-        StringBuilder result = new StringBuilder();
-        for (byte aByte : resumen) {
-            result.append(String.format("%02x", aByte));
-        }
-        return result.toString();
-    }
-
 }

@@ -1,24 +1,24 @@
 package ui.userdata.admin;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import javax.ws.rs.core.GenericType;
 
-import org.apache.xpath.functions.FuncExtFunctionAvailable;
-import org.hibernate.loader.custom.CollectionReturn;
-
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -32,6 +32,8 @@ import objects.MembershipPlan;
 import objects.Privilege;
 import objects.Status;
 import objects.User;
+import ui.membershipPlan.admin.AdminMembershipPlanController;
+import ui.signIn.SignInController;
 import businessLogic.membership.MembershipPlanFactory;
 import businessLogic.user.FactoryMember;
 import businessLogic.user.FactoryUser;
@@ -43,10 +45,14 @@ public class AdminUserDataWindowController {
 
     // FXML (window elements)
 
+    private User adminLoged;
+
     @FXML
     private Button 
         btnSearch, btnClear, btnAddUser,
-        btnModifyUser,btnDeleteUser;
+        btnModifyUser,btnDeleteUser, btnPrint,
+        // pane
+        btnBlooming, btnMembership, btnUser, btnMyProfile;
     private final String
         btnSearchText = "Search", btnClearText = "Clear", btnModifyUserText = "Modify user",
         btnAddUserText = "Add user", btnDeleteUserText = "Delete user";
@@ -97,7 +103,7 @@ public class AdminUserDataWindowController {
         radioButtonAdmin,
         radioButtonClient, radioButtonMember;
     private final String 
-        radioButtonAdminText = "Administrator",
+        radioButtonAdminText = "Admin",
         radioButtonClientText = "Client", radioButtonMemberText = "Member";
 
     @FXML
@@ -132,26 +138,256 @@ public class AdminUserDataWindowController {
 
     public List <String> membershipPlanNames() {
         try {
-            /* return MembershipPlanFactory.getModel()
-            .findAll_XML(
-                new GenericType <List<MembershipPlan>> () {}); */
            return
-            MembershipPlanFactory.getModel()
-                .findAll_XML(
-                    new GenericType <List<MembershipPlan>> () {})
-                    .stream().map(p -> p.getName())
-                        .collect(Collectors.toList());  
+                MembershipPlanFactory.getModel()
+                    .findAll_XML(
+                        new GenericType <List<MembershipPlan>> () {})
+                        .stream().map(p -> p.getName())
+                            .collect(Collectors.toList());
         } catch (Exception e) {
-            e.printStackTrace();
-            return Arrays.asList("bro que cojones");
+            return Arrays.asList("1", "2", "3", "4");
         }
     } 
-            
 
+
+     /**
+     * puts every prompt text.
+     * 
+     * @return true if every user param is full,
+     * with proper format.
+     */
+
+     private boolean everyUserParamIsCorrect() {
+        boolean // this boolean will be concatenated.
+            nicely = true;
+
+        // text checkings
+
+        if (txtSearchValue.getText().isEmpty()) // just in case
+            txtSearchValue.setPromptText(txtSearchValuePromptText);
+
+
+        if (txtLogin.getText().isEmpty())
+            txtLogin.setPromptText(txtLoginPromptText);
+        else 
+            nicely = nicely && USF.isLoginFormat(txtLogin.getText());
+    
+        if (txtEmail.getText().isEmpty())
+            txtEmail.setPromptText(txtEmailPromptText);    
+        else
+            nicely = nicely && USF.isFullNameFormat(txtFullName.getText());
+
+        if (txtFullName.getText().isEmpty())
+            txtFullName.setPromptText(txtFullNamePromptText);
+        else
+            nicely = nicely && USF.isEmailFormat(txtEmail.getText()); 
+
+
+        // radio buttons
+
+        nicely = nicely &&
+            (radioButtonMember.isSelected() 
+            || radioButtonClient.isSelected()
+            || radioButtonAdmin.isSelected());
+            
+        
+        // date checkings TODO: bro what
+
+        // check if the date is a valid value
+
+        /* if (radioButtonMember.isSelected()) {
+            if (datePickerStart.getTypeSelector().isEmpty())
+                datePickerStart.setPromptText(datePickerStartText);
+            else
+                nicely = nicely && USF.dateFormatIsFine(datePickerStart.getValue());
+            
+            if (datePickerEnd.getTypeSelector().isEmpty())
+                datePickerEnd.setPromptText(datePickerEndText);
+
+            else
+                nicely = nicely && USF.dateFormatIsFine(datePickerEnd.getValue());
+        }  */
+
+        return nicely;
+    }
+
+
+    /**
+     * checks if the spaces have values
+     * @return 
+     */
+
+    private boolean everyUserParamIsEmpty() {
+        return 
+            txtLogin.getText().isEmpty() &&
+            txtEmail.getText().isEmpty() &&
+            txtFullName.getText().isEmpty() &&
+
+            !(radioButtonAdmin.isArmed() 
+            || radioButtonMember.isArmed() 
+            || radioButtonClient.isArmed()) && 
+
+            !checkBoxStatus.isArmed() &&
+
+            !comboBoxMembershipPlans.isArmed() &&
+            
+            !(datePickerStart.isArmed() &&
+            datePickerEnd.isArmed());
+    }
+
+    /**
+     * puts every user of the database in the table.
+     */
+
+    private void loadEveryUser() {
+        try {
+            tableUsers.setItems(
+                FXCollections
+                .observableArrayList(FactoryMember.get().getEveryUser())
+            );
+        } catch (Exception e) {
+            new Alert(AlertType.ERROR, "There was an error loading all users.");
+            LOGGER.severe("Error loading users:\n" + e.getMessage());
+        }   
+    }
+    
+    /**
+     * method that puts the user data at the table
+     * @param u
+     */
+    private void loadUserData(User u) {
+        if (u == null) {
+            new Alert(AlertType.ERROR, "Not valid value");
+            LOGGER.severe("User value is null.");
+            return;
+        }
+
+        LOGGER.info("Loading user data of user of login=" + u.getLogin());
+
+        txtLogin.setText(u.getLogin());
+        txtEmail.setText(u.getEmail());
+        txtFullName.setText(u.getFullName()); 
+
+        boolean enabled = u.getStatus().equals(Status.ENABLE);
+        if (enabled)
+            checkBoxStatus.setText(checkBoxStatusEnableText);
+        else 
+            checkBoxStatus.setText(checkBoxStatusDisableText);
+        
+        checkBoxStatus.setSelected(enabled);
+
+        if (u.getPrivilege().equals(Privilege.ADMIN))
+            radioButtonAdmin.setSelected(true);
+        if (u.getPrivilege().equals(Privilege.CLIENT))
+            radioButtonClient.setSelected(true);
+        if (u.getPrivilege().equals(Privilege.MEMBER)) {
+            radioButtonMember.setSelected(true);
+
+            Member m = Member.class.cast(u);
+
+            comboBoxMembershipPlans.getSelectionModel()
+                .select(
+                    m.getPlan().getId());
+                
+            datePickerStart.setValue(
+                toLocalDate(
+                    m.getMemberStartingDate()));
+            datePickerEnd.setValue(
+                toLocalDate(
+                    m.getMemberEndingDate()));
+        } 
+        else {
+            comboBoxMembershipPlans.setPromptText(comboBoxMembershipPlansText);
+        }
+    }
+
+    /**
+     * convert value to LocalDate
+     * @param date 
+     * @return new value in LocalDate
+     */
+    private LocalDate toLocalDate(Date date) {
+        return date.toInstant()
+            .atZone(ZoneId.systemDefault())
+                .toLocalDate();
+    }
+
+    /**
+     * convert the value to Date
+     * @param date
+     * @return
+     */
+
+    private Date toDate(LocalDate date) {
+        return Date.from(date.atStartOfDay(ZoneId.systemDefault()).toInstant());
+    }
+    
+    /**
+     * function to load every 
+     * user parameter in an object
+     * @return user with every value in the boxes
+     */
+
+    private User createFromParams() { // 
+        LOGGER.info("Creating user from parameters.");
+        User u = new User();
+
+        Privilege p = Privilege.CLIENT; // default
+
+        if (radioButtonAdmin.isSelected()) {
+            p = Privilege.MEMBER;
+            Member.class.cast(u)
+                .setMemberStartingDate(
+                    this.toDate(datePickerStart.getValue()));
+            Member.class.cast(u)
+                .setMemberEndingDate(
+                    this.toDate(datePickerEnd.getValue()));
+
+            List <MembershipPlan> l = new LinkedList<MembershipPlan>();
+
+            try {
+               l = MembershipPlanFactory.getModel()
+                    .findPlanByName_XML(
+                        new GenericType<List<MembershipPlan>>() {},
+                        comboBoxMembershipPlans.getSelectionModel()
+                    .getSelectedItem());                
+            } catch (Exception e) {
+                // TODO: handle exception
+            }
+                if (!l.isEmpty())
+                    Member.class.cast(u).setPlan(l.get(0));
+        }
+            
+        else if (radioButtonClient.isSelected())
+            p = Privilege.ADMIN;
+        else if (radioButtonMember.isSelected())
+            p = Privilege.CLIENT;
+
+        
+        u.setLogin(txtLogin.getText());
+        u.setEmail(txtEmail.getText());
+        u.setFullName(txtFullName.getText());
+
+        u.setPassword("DEFAULT"); // default passwords.
+
+        u.setPrivilege(p);
+
+        Status s = 
+            checkBoxStatus.isSelected() ? 
+                Status.ENABLE :
+                Status.DISABLE;
+
+        u.setStatus(s);
+        
+        u.setLastPasswordChange(Date.from(Instant.now()));
+
+        LOGGER.info("User " + u.toString() + " created.");
+        
+        return u;
+    }
 
 
     // HANDLERS OF EVERY CHANGE IN THE WINDOW ------------------------------------------------------------------------------------------
-
 
 
      /**
@@ -205,90 +441,7 @@ public class AdminUserDataWindowController {
     }
 
 
-    /**
-     * puts every prompt text.
-     * 
-     * @return true if every user param is full,
-     * with proper format.
-     */
-
-    private boolean everyUserParamIsCorrect() {
-        boolean // this boolean will be concatenated.
-            nicely = true;
-
-        // text checkings
-
-        if (txtSearchValue.getText().isEmpty())
-            txtSearchValue.setPromptText(txtSearchValuePromptText);
-
-
-        if (txtLogin.getText().isEmpty())
-            txtLogin.setPromptText(txtLoginPromptText);
-        else 
-            nicely = nicely && USF.isLoginFormat(txtLogin.getText());
-    
-        if (txtEmail.getText().isEmpty())
-            txtEmail.setPromptText(txtEmailPromptText);    
-        else
-            nicely = nicely && USF.isFullNameFormat(txtFullName.getText());
-
-        if (txtFullName.getText().isEmpty())
-            txtFullName.setPromptText(txtFullNamePromptText);
-        else
-            nicely = nicely && USF.isEmailFormat(txtEmail.getText()); 
-
-
-        // radio buttons
-
-        nicely = nicely &&
-            (radioButtonMember.isSelected() 
-            || radioButtonClient.isSelected()
-            || radioButtonAdmin.isSelected());
-            
-        
-        // date checkings
-
-        /* if (radioButtonMember.isSelected()) {
-            if (datePickerStart.getTypeSelector().isEmpty())
-                datePickerStart.setPromptText(datePickerStartText);
-            else
-                nicely = nicely && USF.dateFormatIsFine(datePickerStart.getValue());
-            
-            if (datePickerEnd.getTypeSelector().isEmpty())
-                datePickerEnd.setPromptText(datePickerEndText);
-
-            else
-                nicely = nicely && USF.dateFormatIsFine(datePickerEnd.getValue());
-        } */
-        
-        
-
-        return nicely;
-    }
-
-
-    /**
-     * checks if the spaces have values
-     * @return
-     */
-
-    private boolean everyUserParamIsEmpty() {
-        return 
-            txtLogin.getText().isEmpty() &&
-            txtEmail.getText().isEmpty() &&
-            txtFullName.getText().isEmpty() &&
-
-            !(radioButtonAdmin.isArmed() 
-            || radioButtonMember.isArmed() 
-            || radioButtonClient.isArmed()) && 
-
-            !checkBoxStatus.isArmed() &&
-
-            !comboBoxMembershipPlans.isArmed() &&
-            
-            !(datePickerStart.isArmed() &&
-            datePickerEnd.isArmed());
-    }
+   
     
 
     /**
@@ -332,16 +485,8 @@ public class AdminUserDataWindowController {
 
         LOGGER.info("Attempting to load users to the table.");
         
-        try {
-            tableUsers.setItems(
-                FXCollections
-                .observableArrayList(FactoryMember.get().getEveryUser())
-            );
-        } catch (Exception e) {
-            LOGGER.severe("There was an error loading users:\n" + e.getMessage());
-        }   
+        loadEveryUser();
     }
-
 
     /**
      * method that makes the research.
@@ -357,7 +502,7 @@ public class AdminUserDataWindowController {
             
 
         User u = null;
-        List <User> searchResults = null; // every result will be stored in here
+        List <User> searchResults = new LinkedList<>(); // every result will be stored in here
 
             try {
 
@@ -374,8 +519,10 @@ public class AdminUserDataWindowController {
                             .findUserByName(value);
 
                     // multiple results
-                    if (searchResults == null)
+                    if (searchResults != null || u != null)
                         Arrays.asList(u);
+                    else
+                        throw new Exception("Some error");
                 }
 
                 else { // case of being an enumerated search
@@ -393,17 +540,15 @@ public class AdminUserDataWindowController {
 
             } catch (Exception e) {
                 // TODO: handle
-                e.printStackTrace();
+                //e.printStackTrace();
+                new Alert(AlertType.INFORMATION, "No users were found with" + param + "=" + value);
             } 
 
-            LOGGER.info(
-            "Attempting to search users by " + param + "=" + value);
+        LOGGER.info(
+        "Attempting to search users by " + param.toLowerCase() + "=" + value);
 
-           
-        if (searchResults == null)
-            new Alert(AlertType.INFORMATION, "No users were found with" + param + "=" + value);
-        else
-            tableUsers.setItems(FXCollections.observableArrayList(searchResults));
+
+        tableUsers.setItems(FXCollections.observableArrayList(searchResults));
     }
 
     private void handleUsersTableSelectionChanged(
@@ -416,53 +561,7 @@ public class AdminUserDataWindowController {
 
     }
 
-    private void loadUserData(User u) {
-        if (u == null) {
-            new Alert(AlertType.ERROR, "Some error");
-            return;
-        }
-
-        Member m;
-
-        // if (Member.class.isInstance(u))
-
-        
-        txtLogin.setText(u.getLogin());
-        txtEmail.setText(u.getEmail());
-        txtFullName.setText(u.getFullName()); 
-
-        boolean enabled = u.getStatus().equals(Status.ENABLE);
-        if (enabled)
-            checkBoxStatus.setText(checkBoxStatusEnableText);
-        else 
-            checkBoxStatus.setText(checkBoxStatusDisableText);
-        
-        checkBoxStatus.setSelected(enabled);
-
-        if (u.getPrivilege().equals(Privilege.ADMIN))
-            radioButtonAdmin.setSelected(true);
-        if (u.getPrivilege().equals(Privilege.CLIENT))
-            radioButtonClient.setSelected(true);
-        if (u.getPrivilege().equals(Privilege.MEMBER)) {
-            radioButtonMember.setSelected(true);
-            
-            datePickerStart.setValue(
-                toLocalDate(
-                    Member.class.cast(u)
-                    .getMemberStartingDate()));
-            datePickerEnd.setValue(
-                toLocalDate(
-                    Member.class.cast(u)
-                    .getMemberEndingDate()));
-        }
-    }
-
-
-    public LocalDate toLocalDate(Date date) {
-        return date.toInstant()
-            .atZone(ZoneId.systemDefault())
-                .toLocalDate();
-    }
+    
 
     @FXML
     private void handleClearButtonAction() {
@@ -491,7 +590,7 @@ public class AdminUserDataWindowController {
         checkBoxStatus.setText(checkBoxStatusDisableText);
 
         radioButtonAdmin.setSelected(false);
-        radioButtonClient.setSelected(false);
+        radioButtonClient.setSelected(true);
         radioButtonMember.setSelected(false);
 
         datePickerStart.setValue(null);
@@ -499,27 +598,107 @@ public class AdminUserDataWindowController {
         datePickerEnd.setValue(null);
         datePickerEnd.setPromptText(datePickerEndText);
 
-        comboBoxSearchParameter.getSelectionModel().clearSelection();
+        //comboBoxSearchParameter.getSelectionModel().clearSelection();
         comboBoxSearchParameter.setPromptText(comboBoxSearchParameterText);
 
-        /* comboBoxMembershipPlans.getSelectionModel().clearSelection();
-        comboBoxMembershipPlans.setPromptText(comboBoxMembershipPlansText); */
+        comboBoxMembershipPlans.getSelectionModel().clearSelection();
+        comboBoxMembershipPlans.setPromptText(comboBoxMembershipPlansText);
 
         comboBoxSearch.getSelectionModel().clearSelection();
         comboBoxSearch.setVisible(false);
+
+        try {
+            tableUsers.setItems(
+                FXCollections
+                .observableArrayList(FactoryMember.get().getEveryUser())
+            );
+        } catch (Exception e) {
+            LOGGER.severe("There was an error loading users:\n" + e.getMessage());
+        }   
     }
+
+    
+    
+    
     @FXML
     private void handleAddUserButtonAction() {
+        User u = createFromParams(); 
+        try {
+            FactoryUser.get().createUser(u);
+        } catch (Exception e) {
+            new Alert(
+                AlertType.ERROR, 
+                "There was an error recording user "+ u +".");
+        }
+
     }
+
     @FXML
     private void handleModifyUserButtonAction() {
+        User u = createFromParams(); 
+        try {
+            FactoryUser.get().editUser(u);
+        } catch (Exception e) {
+            new Alert(
+                AlertType.ERROR, 
+                "There was an error editing user " + u + ".");
+        }
     }
+
     @FXML
     private void handleDeleteUserButtonAction() {
+        User u = createFromParams(); 
+        try {
+            FactoryUser.get().removeUser(u.getLogin());
+        } catch (Exception e) {
+            new Alert(
+                AlertType.ERROR, 
+                "There was an error deleting user " + u + ".");
+        }
     }
+
     @FXML
-    private void handlePrintButtonAction() {
+    private void handleBloomingButtonAction() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/signIn/SignInCrud.fxml"));
+            Parent root = (Parent) loader.load();
+            Stage stageAlbum = new Stage();
+            //Obtain the Sign In window controller
+            SignInController controller = (SignInController) loader.getController();
+            controller.setStage(stageAlbum);
+            controller.initStage(root);
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
     }
+
+    @FXML
+    private void handleMembershipButtonAction() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/membershipPlan/admin/AdminMembershipPlan.fxml"));
+            Parent root = (Parent) loader.load();
+            Stage stageAlbum = new Stage();
+            //Obtain the Sign In window controller
+            AdminMembershipPlanController controller = (AdminMembershipPlanController) loader.getController();
+            controller.setStage(stageAlbum);
+            controller.initStage(root);
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
+    }
+
+    @FXML
+    private void handleUserButtonAction() {
+        
+    }
+
+    @FXML
+    private void handleMyProfileButtonAction() {
+        
+    }
+
+    @FXML
+    private void handlePrintButtonAction() {}
 
 
     /**
@@ -552,7 +731,6 @@ public class AdminUserDataWindowController {
 
         txtFullName.textProperty().addListener(
             this::handleTextChanged);
-
 
 
         // checkbox
@@ -611,39 +789,32 @@ public class AdminUserDataWindowController {
                 comboBoxSearch.getSelectionModel().isEmpty());
         });
 
-        /* comboBoxMembershipPlans.setItems(
-            FXCollections.observableArrayList(membershipPlanNames()));
- */
-        /* MembershipPlanFactory.getModel().findAll_XML(new GenericType<List<MembershipPlan>>() {});
-
-
-        MembershipPlanFactory.getModel().findPlanByName_XML(new GenericType<List<MembershipPlan>>() {}, "plan1"); */
 
         // table users 
-        {
-            tableUsers.getSelectionModel().selectedItemProperty()
-                .addListener(this::handleUsersTableSelectionChanged);
-            
-            tbColLogin.setCellValueFactory(
-                new PropertyValueFactory<>("login"));
-            tbColEmail.setCellValueFactory(
-                new PropertyValueFactory<>("email"));
+        
+        tableUsers.getSelectionModel().selectedItemProperty()
+           .addListener(this::handleUsersTableSelectionChanged);
+        
+        tbColLogin.setCellValueFactory(
+            new PropertyValueFactory<>("login"));
+        tbColEmail.setCellValueFactory(
+            new PropertyValueFactory<>("email"));
 
-            tbColFullName.setCellValueFactory(
-                new PropertyValueFactory<>("fullName"));
+        tbColFullName.setCellValueFactory(
+            new PropertyValueFactory<>("fullName"));
 
-            tbColStatus.setCellValueFactory(
-                new PropertyValueFactory<>("status"));
+        tbColStatus.setCellValueFactory(
+            new PropertyValueFactory<>("status"));
 
-            tbColPrivilege.setCellValueFactory(
-                new PropertyValueFactory<>("privilege"));
+        tbColPrivilege.setCellValueFactory(
+            new PropertyValueFactory<>("privilege"));
 
-            tbColMembershipPlan.setCellValueFactory(
-                new PropertyValueFactory<>("plan"));
+        tbColMembershipPlan.setCellValueFactory(
+            new PropertyValueFactory<>("plan"));
 
-            tbColLastPasswordChange.setCellValueFactory(
-                new PropertyValueFactory<>("lastPasswordChange"));  
-        }
+        tbColLastPasswordChange.setCellValueFactory(
+            new PropertyValueFactory<>("lastPasswordChange"));
+        
 
         handleClearButtonAction();
 

@@ -18,9 +18,9 @@ public interface AlbumInterface {
 
     public void updateAlbum_XML(Object requestEntity) throws ClientErrorException;
 
-    public void removeAlbum(String id) throws ClientErrorException;
+    public void removeAlbum(Integer id) throws ClientErrorException;
 
-    public <T> T findAlbumByID_XML(Class<T> objectClass, String id) throws ClientErrorException;
+    public <T> T findAlbumByID_XML(Class<T> objectClass, Integer id) throws ClientErrorException;
 
     public <T> T findMyAllAlbums_XML(GenericType<T> genericType, String userLogin) throws ClientErrorException;
 
