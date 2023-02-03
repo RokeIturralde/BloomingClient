@@ -4,11 +4,11 @@
  * and open the template in the editor.
  */
 package ui.membershipPlan.admin;
-
 import businessLogic.membership.MembershipPlanFactory;
 import businessLogic.membership.MembershipPlanInterface;
 import businessLogic.user.FactoryMember;
 import businessLogic.user.MemberInterface;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -52,10 +52,13 @@ import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.view.JasperViewer;
 import ui.membershipPlan.admin.help.HelpController;
+import ui.signIn.SignInController;
+import ui.userdata.admin.AdminUserDataWindowController;
 
 /**
- *
- * @author minyb
+ * Controller class for Admin membership plan window. 
+ * CRUD for MembershipPlan entity
+ * @author Eneko 
  */
 public class AdminMembershipPlanController {
 
@@ -111,14 +114,17 @@ public class AdminMembershipPlanController {
     private Button btnLogo;
     @FXML
     private Button btnShowUsers;
-
+    User user;
     private ObservableList<MembershipPlan> membershipPlanData;
     private Stage stage;
     private MembershipPlanInterface membershipClient;
     private MemberInterface memberClient;
+    //Creates logger
     private static final Logger LOGGER = Logger.getLogger("package membership.admin");
 
-    public void initStage(Parent root) {
+    
+    public void initStage(Parent root, User user) {
+        this.user = user;
         LOGGER.info("Initializing MembershipPlanAdminController window");
         //Creates an scene
         Scene scene = new Scene(root);
@@ -149,7 +155,15 @@ public class AdminMembershipPlanController {
         cPrice.setCellValueFactory(new PropertyValueFactory<>("price"));
         membershipClient = MembershipPlanFactory.getModel();
         memberClient = FactoryMember.get();
+        //Method that refreshes table´s data
         refreshPlus();
+        btnCreate.setDisable(true);
+        btnModify.setDisable(true);
+        btnSearch.setDisable(true);
+        btnDelete.setDisable(true);
+        btnShowUsers.setDisable(true);
+        cbShareable.setSelected(false);
+        cboxParameter.getItems().addAll("Name", "Price", "Duration");
         stage.show();
     }
 
@@ -465,16 +479,32 @@ public class AdminMembershipPlanController {
     }
 
     @FXML
-    public void handleMembershipButtonAction(ActionEvent event) {
-    }
-
-    @FXML
     public void handleUsersButtonAction(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("ui/userdata/admin/AdminUserDataWindow.fxml"));
+            Parent root = (Parent) loader.load();
+            //Obtain the Sign In window controller
+            AdminUserDataWindowController controller = (AdminUserDataWindowController) loader.getController();
 
+            controller.setStage(stage);
+            controller.initStage(root, user);
+        } catch (IOException ex) {
+            Logger.getLogger(SignInController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @FXML
     public void handleLogoButtonAction(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("ui/signIn/SignInCrud.fxml"));
+            Parent root = (Parent) loader.load();
+            //Obtain the Sign In window controller
+            SignInController controller = (SignInController) loader.getController();
 
+            controller.setStage(stage);
+            controller.initStage(root);
+        } catch (IOException ex) {
+            Logger.getLogger(AdminMembershipPlanController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }

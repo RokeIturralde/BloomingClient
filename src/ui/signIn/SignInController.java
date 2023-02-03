@@ -12,6 +12,9 @@ import businessLogic.user.UserInterface;
 import encrypt.Cryptology;
 import exceptions.*;
 import java.io.IOException;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.value.ObservableValue;
@@ -28,12 +31,13 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-import objects.Privilege;
 import objects.User;
 
 import javax.crypto.Cipher;
 import newUserInterface.NewUserInterface;
 import newUserInterface.NewUserInterfaceFactory;
+import objects.Privilege;
+import objects.Status;
 
 import ui.album.AlbumsViewController;
 import ui.content.ContentWindowController;
@@ -59,6 +63,7 @@ public class SignInController {
     private Button btnRegister;
     @FXML
     private TextField txtLogin1;
+    User user;
 
     private Stage stage;
     private static final Logger LOGGER = Logger.getLogger("package ui.signIn");
@@ -110,6 +115,15 @@ public class SignInController {
      */
     @FXML
     private void handleEntrarComoAdminButtonAction(ActionEvent event) throws LoginPasswordFormatException, LoginFormatException {
+        User user = new User();
+        user.setLogin("loginAdmin");
+        user.setEmail("login@gmail.com");
+        user.setPassword("abcd*1234");
+        user.setLastPasswordChange(Date.from(Instant.now()));
+        user.setPrivilege(Privilege.ADMIN);
+        user.setFullName("Login Admin");
+        user.setStatus(Status.ENABLE);
+        
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("ui/membershipPlan/admin/AdminMembershipPlan.fxml"));
             Parent root = (Parent) loader.load();
@@ -117,7 +131,7 @@ public class SignInController {
             AdminMembershipPlanController controller = (AdminMembershipPlanController) loader.getController();
 
             controller.setStage(stage);
-            controller.initStage(root);
+            controller.initStage(root, user);
         } catch (IOException ex) {
             Logger.getLogger(SignInController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -133,6 +147,7 @@ public class SignInController {
 
             controller.setStage(stage);
             controller.initStage(root);
+            
         } catch (IOException ex) {
             Logger.getLogger(SignInController.class.getName()).log(Level.SEVERE, null, ex);
         }

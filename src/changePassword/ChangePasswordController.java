@@ -8,6 +8,8 @@ package changePassword;
 import businessLogic.user.FactoryUser;
 import encrypt.Cryptology;
 import exceptions.ClientErrorException;
+import exceptions.LoginDoesNotExistException;
+import exceptions.NotThePasswordException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.value.ObservableValue;
@@ -82,13 +84,19 @@ public class ChangePasswordController {
         byte[] passByte = crypto.encrypt(pass);
         String newPass = Cryptology.hexadecimal(passByte);
         
-        
         try {
-            user = FactoryUser.get().findUserByLogin("u2");
-            user.setPassword(newPass);
-            FactoryUser.get().editUser(user);
+            user = FactoryUser.get().signIn(user.getLogin(), pfNew.getText());
+            if(user != null){
+               user.setPassword(newPass);
+               FactoryUser.get().editUser(user); 
+            }
+            
             
         } catch (ClientErrorException ex) {
+            Logger.getLogger(ChangePasswordController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (LoginDoesNotExistException ex) {
+            Logger.getLogger(ChangePasswordController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NotThePasswordException ex) {
             Logger.getLogger(ChangePasswordController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

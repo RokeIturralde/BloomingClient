@@ -312,6 +312,45 @@ public class ContentWindowController {
         } catch (Exception e) {
             new Alert(Alert.AlertType.ERROR, "Failed connecting to the server, try again later please", ButtonType.OK).showAndWait();
         }
+        
+        LOGGER.info("Iniciando ContentWindowController::handlerWindowShowing");
+        btnDeleteContent.setDisable(true);
+        btnAddContent.setDisable(true);
+        btnModifyContent.setDisable(true);
+        btnFileChooser.setDisable(true);
+        txtName.setDisable(true);
+        txtValue.setDisable(true);
+        taDescription.setDisable(true);
+        txtLocation.setDisable(true);
+        uploadDate.setDisable(true);
+        btnFind.setDisable(true);
+        cboxParameter.getItems().addAll(
+                "",
+                "Name"
+        );
+        cboxParameter.valueProperty().addListener((ObservableList, oldValue, newValue) -> {
+            if (newValue.equals("Name")) {
+                txtValue.setDisable(false);
+            } else {
+                txtValue.setDisable(true);
+            }
+        });
+        // Handle action events for the radio buttons. 
+        rbCustomImage.setOnAction(e -> {
+            btnFileChooser.setDisable(false);
+            txtName.setDisable(false);
+            txtLocation.setDisable(false);
+            uploadDate.setDisable(false);
+            taDescription.setDisable(true);
+        });
+
+        rbCustomText.setOnAction(e -> {
+            btnFileChooser.setDisable(true);
+            txtName.setDisable(false);
+            txtLocation.setDisable(false);
+            uploadDate.setDisable(false);
+            taDescription.setDisable(false);
+        });
 
         stage.show();
     }
