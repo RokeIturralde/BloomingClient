@@ -181,20 +181,11 @@ public class UserManager implements UserInterface {
         User u;
         try {
             LOGGER.info("User manager: attemting to log user with login=" + login);
-
-            if (findUserByLogin(login) == null) // not found
-                throw new LoginDoesNotExistException();
-            else 
                 u = webClient.signIn_XML(User.class, login, password);
-            
             if (u == null)
                 throw new NotThePasswordException();
             else
                 return u;
-
-            
-        } catch (ClientErrorException ce) {
-            // error searching user
         } 
         catch (Exception ex) {
             LOGGER.log(Level.SEVERE,

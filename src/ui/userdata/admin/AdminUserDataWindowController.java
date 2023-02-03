@@ -706,7 +706,7 @@ public class AdminUserDataWindowController {
      * @param root parent 
      */
 
-     public void initStage(Parent root) {
+     public void initStage(Parent root, User user) {
         LOGGER.info("Initializing 'User' window");
 
         // Stablish scene

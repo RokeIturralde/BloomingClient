@@ -8,9 +8,13 @@ package ui.signIn;
 import ui.signUp.SignUpWindowController;
 import businessLogic.album.AlbumInterface;
 import businessLogic.user.FactoryUser;
+import businessLogic.user.UserInterface;
 import encrypt.Cryptology;
 import exceptions.*;
 import java.io.IOException;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.value.ObservableValue;
@@ -27,10 +31,18 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-import objects.Privilege;
 import objects.User;
 
+
+import javax.crypto.Cipher;
+import newUserInterface.NewUserInterface;
+import newUserInterface.NewUserInterfaceFactory;
+import objects.Privilege;
+import objects.Status;
+
 import ui.album.AlbumsViewController;
+import ui.content.ContentWindowController;
+import ui.membershipPlan.admin.AdminMembershipPlanController;
 import ui.userdata.admin.AdminUserDataWindowController;
 
 /**
@@ -50,10 +62,13 @@ public class SignInController {
     private Button btnSignIn;
     @FXML
     private Button btnRegister;
+    @FXML
+    private TextField txtLogin1;
+    User user;
 
     private Stage stage;
     private static final Logger LOGGER = Logger.getLogger("package ui.signIn");
-    private AlbumInterface client;
+    private UserInterface client;
 
     /**
      * Initializing the window method
@@ -73,8 +88,6 @@ public class SignInController {
         //Set the Event handlers
         stage.setOnShowing(this::handlerWindowShowing);
         //Set the textfields with a listener
-        txtLogin.textProperty().addListener(this::textChanged);
-        cpPassword.textProperty().addListener(this::textChanged);
         stage.show();
     }
 
@@ -90,7 +103,7 @@ public class SignInController {
         //Login text field without text
         cpPassword.setText("");
         //The Accept button is disabled
-        btnSignIn.setDisable(true);
+        btnSignIn.setDisable(false);
         //The Login field is focus
         txtLogin.requestFocus();
     }
@@ -102,79 +115,46 @@ public class SignInController {
      * @param event The action event object
      */
     @FXML
-    private void handleSignInButtonAction(ActionEvent event) throws LoginPasswordFormatException, LoginFormatException, ClientErrorException {
-        LOGGER.info("Inicio de sesion a la aplicación");
+
+    private void handleEntrarComoAdminButtonAction(ActionEvent event) throws LoginPasswordFormatException, LoginFormatException {
+        User user = new User();
+        user.setLogin("loginAdmin");
+        user.setEmail("login@gmail.com");
+        user.setPassword("abcd*1234");
+        user.setLastPasswordChange(Date.from(Instant.now()));
+        user.setPrivilege(Privilege.ADMIN);
+        user.setFullName("Login Admin");
+        user.setStatus(Status.ENABLE);
+        
+
         try {
+            FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("ui/membershipPlan/admin/AdminMembershipPlan.fxml"));
+            Parent root = (Parent) loader.load();
+            //Obtain the Sign In window controller
+            AdminMembershipPlanController controller = (AdminMembershipPlanController) loader.getController();
 
-            //Validates login format
-            if (Character.isDigit(txtLogin.getText().charAt(0)) || txtLogin.getText().contains(" ")) {
-                throw new LoginFormatException();
-            }
-            //Validates password format
-            if (cpPassword.getText().contains(" ")) {
-                throw new LoginPasswordFormatException();
-            }
-            //Modo de abrir la ventana por si acaso no va el login
-            if (txtLogin.getText().equalsIgnoreCase("u1") && cpPassword.getText().equalsIgnoreCase("u1")) {
-                User usSignIn = new User();
-                usSignIn.setLogin("u1");
-                //Closing SignIn window
-                this.stage.close();
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/album/UIAlbum.fxml"));
-                Parent root = (Parent) loader.load();
-                Stage stageAlbum = new Stage();
-                //Obtain the Sign In window controller
-                AlbumsViewController controller = (AlbumsViewController) loader.getController();
-                controller.setStage(stageAlbum);
-                controller.initStage(root, usSignIn);
-            }
 
-            //The data from the server is charged into an User
-            User usSignIn = new User();
-            String passwd = Cryptology.hexadecimal(Cryptology.encrypt(cpPassword.getText()));
-            usSignIn = FactoryUser.get().signIn(txtLogin.getText(),passwd);
-            if (usSignIn == null) {
-                Alert alert = new Alert(AlertType.WARNING);
-                alert.setTitle("Error");
-                alert.setHeaderText("Login not exit exception");
-                alert.setContentText("That login is not found, try with another one");
-                alert.showAndWait();
-            } else {
-                if (usSignIn.getPassword().equals("notFound")) {
-                    Alert alert = new Alert(AlertType.WARNING);
-                    alert.setTitle("Error");
-                    alert.setHeaderText("Not the password exception");
-                    alert.setContentText("Wrong password, try another one or try to recover it");
-                    alert.showAndWait();
-                } else if (usSignIn.getPrivilege().equals(Privilege.CLIENT) || usSignIn.getPrivilege().equals(Privilege.MEMBER)) {
-                    LOGGER.info("Inicio de sesion como " + usSignIn.getPrivilege().toString() + ": Intentando abrir la ventana Album");
-                    //Closing SignIn window
-                    this.stage.close();
-                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/album/UIAlbum.fxml"));
-                    Parent root = (Parent) loader.load();
-                    Stage stageAlbum = new Stage();
-                    //Obtain the Sign In window controller
-                    AlbumsViewController controller = (AlbumsViewController) loader.getController();
-                    controller.setStage(stageAlbum);
-                    controller.initStage(root, usSignIn);
-                } else {
-                    LOGGER.info("Inicio de sesion como " + usSignIn.getPrivilege().toString() + ": Intentando abrir la ventana Users");
-                    //Closing SignIn window
-                    this.stage.close();
-                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/userdata/admin/AdminUserDataWindow"));
-                    Parent root = (Parent) loader.load();
-                    Stage stageAlbum = new Stage();
-                    //Obtain the Sign In window controller
-                    AdminUserDataWindowController controller = (AdminUserDataWindowController) loader.getController();
-                    controller.setStage(stageAlbum);
-                    controller.initStage(root);
-                }
-            }
+            controller.setStage(stage);
+            controller.initStage(root, user);
         } catch (IOException ex) {
-            new Alert(Alert.AlertType.ERROR, ex.getMessage(), ButtonType.OK).showAndWait();
-        } catch (LoginDoesNotExistException | NotThePasswordException ex) {
             Logger.getLogger(SignInController.class.getName()).log(Level.SEVERE, null, ex);
-            new Alert(Alert.AlertType.ERROR, ex.getMessage(), ButtonType.OK).showAndWait();
+        }
+    }
+
+    @FXML
+    private void handleEntrarComoClientButtonAction(ActionEvent event) throws LoginPasswordFormatException, LoginFormatException {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("ui/content/ContentWindow.fxml"));
+            Parent root = (Parent) loader.load();
+            //Obtain the Sign In window controller
+            ContentWindowController controller = (ContentWindowController) loader.getController();
+
+            controller.setStage(stage);
+            controller.initStage(root);
+            
+        } catch (IOException ex) {
+            Logger.getLogger(SignInController.class.getName()).log(Level.SEVERE, null, ex);
+
         }
     }
 
@@ -184,21 +164,14 @@ public class SignInController {
      * @param event
      */
     @FXML
-    private void handleRegisterButtonAction(ActionEvent event) {
+    private void handleEmailDemoButtonAction(ActionEvent event) {
         try {
-            LOGGER.info("Oppening SignUp window");
-            //We need another stage to open it in a Modal way
-            Stage stageSignUp = new Stage();
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/signUp/SignUpWindow"));
-            Parent root = (Parent) loader.load();
-            //Obtain the controller of the Sign Up window
-            SignUpWindowController controller = (SignUpWindowController) loader.getController();
-            controller.setStage(stageSignUp);
-            controller.initSignUp(root);
 
-        } catch (IOException ex) {
-            Logger.getLogger(SignInController.class
-                    .getName()).log(Level.SEVERE, null, ex);
+            NewUserInterface userInterface = NewUserInterfaceFactory.getModel();
+            userInterface.recoverPassword_XML(User.class, txtLogin1.getText());
+        } catch (ClientErrorException ex) {
+            Logger.getLogger(SignInController.class.getName()).log(Level.SEVERE, null, ex);
+
         }
     }
 
