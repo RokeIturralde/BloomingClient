@@ -35,7 +35,7 @@ public class USF {
         String patternEmail = 
             "([a-z0-9]*)@([a-z]*).(com|org|cn|net|gov|eus)";
 
-        return Pattern.matches(patternEmail, email) || email.contains(" "); 
+        return Pattern.matches(patternEmail, email) && !email.contains(" "); 
     }
 
     /**
@@ -45,7 +45,8 @@ public class USF {
      */
 
     public static boolean isFullNameFormat(String fullName) {
-        return fullName.contains(" ");
+        return fullName.contains(" ") &&
+        (fullName.charAt(0) != ' ' && fullName.charAt(fullName.length() - 1) != ' ');
     }
 
     /**
@@ -55,7 +56,7 @@ public class USF {
      */
     
     public static boolean dateFormatIsFine(LocalDate date) {
-        return false;
+        return true;
     }
 
 
