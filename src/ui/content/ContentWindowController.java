@@ -523,10 +523,10 @@ public class ContentWindowController {
                 new Alert(Alert.AlertType.ERROR, "The Upload Date is not set", ButtonType.OK).showAndWait();
             }
         } catch (Exception e) {
-            String msg = "Custom Text cannot be created\n" + e.getMessage();
+            String msg = "Content cannot be created\n" + e.getMessage();
             Alert alert = new Alert(Alert.AlertType.ERROR, msg);
             alert.show();
-            LOGGER.log(Level.SEVERE, "ContentWindowController: Error at creating a custom text: ", e.getMessage());
+            LOGGER.log(Level.SEVERE, "ContentWindowController: Error at creating a content: ", e.getMessage());
         }
     }
 
@@ -622,10 +622,10 @@ public class ContentWindowController {
                 new Alert(Alert.AlertType.ERROR, "The date cannot be a future one", ButtonType.OK).showAndWait();
             }
         } catch (Exception e) {
-            String msg = "Custom Text cannot be modified\n" + e.getMessage();
+            String msg = "Content cannot be modified\n" + e.getMessage();
             Alert alert = new Alert(Alert.AlertType.ERROR, msg);
             alert.show();
-            LOGGER.log(Level.SEVERE, "ContentWindowController: Error at modifying a custom text: ", e.getMessage());
+            LOGGER.log(Level.SEVERE, "ContentWindowController: Error at modifying a content: ", e.getMessage());
         }
     }
 
@@ -704,10 +704,10 @@ public class ContentWindowController {
                 }
             }
         } catch (Exception e) {
-            String msg = "Custom Image cannot be deleted\n" + e.getMessage();
+            String msg = "Content cannot be deleted\n" + e.getMessage();
             Alert alert2 = new Alert(Alert.AlertType.ERROR, msg);
             alert2.show();
-            LOGGER.log(Level.SEVERE, "ContentWindowController: Error at deleting a custom image: ", e.getMessage());
+            LOGGER.log(Level.SEVERE, "ContentWindowController: Error at deleting a content: ", e.getMessage());
         }
     }
 
