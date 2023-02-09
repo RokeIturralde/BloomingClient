@@ -418,47 +418,47 @@ public class ContentWindowController {
     @FXML
     private void handleAddContentButtonAction(ActionEvent event
     ) {
-        /**
-         * First we check if the Data Picker has any data, if not the user gets
-         * a notification
-         */
-        LocalDate datePicker = uploadDate.getValue();
-        if (datePicker != null) {
+        try {
             /**
-             * Prove that is introducing a valid date
+             * First we check if the Data Picker has any data, if not the user
+             * gets a notification
              */
-            boolean prove;
-            Period checkDate;
-            LocalDate today = LocalDate.now();
-
-            checkDate = Period.between(datePicker, today);
-            prove = checkDate.isNegative();
-            if (!prove) {
+            LocalDate datePicker = uploadDate.getValue();
+            if (datePicker != null) {
                 /**
-                 * Here we do the check for which radio button is selected in
-                 * order to enable some fields or others
+                 * Prove that is introducing a valid date
                  */
-                if (rbCustomImage.isSelected()) {
+                boolean prove;
+                Period checkDate;
+                LocalDate today = LocalDate.now();
+
+                checkDate = Period.between(datePicker, today);
+                prove = checkDate.isNegative();
+                if (!prove) {
                     /**
-                     * First we check that the image is loaded
+                     * Here we do the check for which radio button is selected
+                     * in order to enable some fields or others
                      */
-                    if (imageBytes != null) {
+                    if (rbCustomImage.isSelected()) {
                         /**
-                         * We charge the CustomImage object with the data
-                         * provided by the user
+                         * First we check that the image is loaded
                          */
-                        CustomImage customImage = new CustomImage();
-                        customImage.setName(txtName.getText());
-                        customImage.setLocation(txtLocation.getText());
-                        Date date = Date.from(datePicker.atStartOfDay(ZoneId.systemDefault()).toInstant());
-                        customImage.setUploadDate(date);
-                        customImage.setBytes(imageBytes);
-                        /**
-                         * After getting the REST we call the method to create a
-                         * new Image Content
-                         */
-                        CustomImageInterface customImageInterface = CustomImageFactory.getModel();
-                        try {
+                        if (imageBytes != null) {
+                            /**
+                             * We charge the CustomImage object with the data
+                             * provided by the user
+                             */
+                            CustomImage customImage = new CustomImage();
+                            customImage.setName(txtName.getText());
+                            customImage.setLocation(txtLocation.getText());
+                            Date date = Date.from(datePicker.atStartOfDay(ZoneId.systemDefault()).toInstant());
+                            customImage.setUploadDate(date);
+                            customImage.setBytes(imageBytes);
+                            /**
+                             * After getting the REST we call the method to
+                             * create a new Image Content
+                             */
+                            CustomImageInterface customImageInterface = CustomImageFactory.getModel();
                             customImageInterface.createCustomImage_XML(customImage);
                             /**
                              * After the method is done the user gets a
@@ -484,25 +484,18 @@ public class ContentWindowController {
                             tableCustomImage.setItems(listCustomImage);
                             tableCustomImage.refresh();
 
-                        } catch (Exception e) {
-                            String msg = "Custom Image cannot be added\n" + e.getMessage();
-                            Alert alert = new Alert(Alert.AlertType.ERROR, msg);
-                            alert.show();
-                            LOGGER.log(Level.SEVERE, "ContentWindowController: Error at adding a Custom Image: ", e.getMessage());
+                        } else {
+                            new Alert(Alert.AlertType.ERROR, "The Image is not set", ButtonType.OK).showAndWait();
                         }
-                    } else {
-                        new Alert(Alert.AlertType.ERROR, "The Image is not set", ButtonType.OK).showAndWait();
-                    }
-                } else if (rbCustomText.isSelected()) {
-                    //Charge the CustomText with values
-                    CustomText customText = new CustomText();
-                    customText.setName(txtName.getText());
-                    customText.setLocation(txtLocation.getText());
-                    Date date = Date.from(datePicker.atStartOfDay(ZoneId.systemDefault()).toInstant());
-                    customText.setUploadDate(date);
-                    customText.setText(taDescription.getText());
-                    CustomTextInterface customTextInterface = CustomTextFactory.getModel();
-                    try {
+                    } else if (rbCustomText.isSelected()) {
+                        //Charge the CustomText with values
+                        CustomText customText = new CustomText();
+                        customText.setName(txtName.getText());
+                        customText.setLocation(txtLocation.getText());
+                        Date date = Date.from(datePicker.atStartOfDay(ZoneId.systemDefault()).toInstant());
+                        customText.setUploadDate(date);
+                        customText.setText(taDescription.getText());
+                        CustomTextInterface customTextInterface = CustomTextFactory.getModel();
                         //Starting the talking with the server and clear of the fields if the method is successfull
                         customTextInterface.create_XML(customText);
                         new Alert(Alert.AlertType.INFORMATION, "Content Added", ButtonType.OK).showAndWait();
@@ -522,18 +515,18 @@ public class ContentWindowController {
                         tableCustomText.setItems(listCustomText);
                         tableCustomText.refresh();
 
-                    } catch (Exception e) {
-                        String msg = "Custom Text cannot be created\n" + e.getMessage();
-                        Alert alert = new Alert(Alert.AlertType.ERROR, msg);
-                        alert.show();
-                        LOGGER.log(Level.SEVERE, "ContentWindowController: Error at creating a custom text: ", e.getMessage());
                     }
+                } else {
+                    new Alert(Alert.AlertType.ERROR, "The date cannot be a future one", ButtonType.OK).showAndWait();
                 }
             } else {
-                new Alert(Alert.AlertType.ERROR, "The date cannot be a future one", ButtonType.OK).showAndWait();
+                new Alert(Alert.AlertType.ERROR, "The Upload Date is not set", ButtonType.OK).showAndWait();
             }
-        } else {
-            new Alert(Alert.AlertType.ERROR, "The Upload Date is not set", ButtonType.OK).showAndWait();
+        } catch (Exception e) {
+            String msg = "Custom Text cannot be created\n" + e.getMessage();
+            Alert alert = new Alert(Alert.AlertType.ERROR, msg);
+            alert.show();
+            LOGGER.log(Level.SEVERE, "ContentWindowController: Error at creating a custom text: ", e.getMessage());
         }
     }
 
@@ -545,98 +538,94 @@ public class ContentWindowController {
     @FXML
     private void handleModifyContentButtonAction(ActionEvent event
     ) {
-        /**
-         * Prove that is introducing a valid date
-         */
-        LocalDate datePicker = uploadDate.getValue();
-        boolean prove;
-        Period checkDate;
-        LocalDate today = LocalDate.now();
-
-        checkDate = Period.between(datePicker, today);
-        prove = checkDate.isNegative();
-        if (!prove) {
+        try {
             /**
-             * First we check which of the table is selected in order to call a
-             * method or other
+             * Prove that is introducing a valid date
              */
-            if (customImageTableIsSelected) {
+            LocalDate datePicker = uploadDate.getValue();
+            boolean prove;
+            Period checkDate;
+            LocalDate today = LocalDate.now();
+
+            checkDate = Period.between(datePicker, today);
+            prove = checkDate.isNegative();
+            if (!prove) {
                 /**
-                 * In this case the image one is, so we charge all the data to
-                 * the Object
+                 * First we check which of the table is selected in order to
+                 * call a method or other
                  */
-                int selectedRow = tableCustomImage.getSelectionModel().getSelectedIndex();
-                CustomImageInterface customImageInterface = CustomImageFactory.getModel();
-                CustomImage customImage = new CustomImage();
-                customImage.setContentId(customImageList.get(selectedRow).getContentId());
-                customImage.setName(txtName.getText());
-                customImage.setLocation(txtLocation.getText());
-                Date date = Date.from(uploadDate.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
-                customImage.setUploadDate(date);
-                customImage.setBytes(imageBytes);
-                /**
-                 * Once all is set up we call the REST method and if
-                 * successfull, the user gets notified
-                 */
-                try {
+                if (customImageTableIsSelected) {
+                    /**
+                     * In this case the image one is, so we charge all the data
+                     * to the Object
+                     */
+                    int selectedRow = tableCustomImage.getSelectionModel().getSelectedIndex();
+                    CustomImageInterface customImageInterface = CustomImageFactory.getModel();
+                    CustomImage customImage = new CustomImage();
+                    customImage.setContentId(customImageList.get(selectedRow).getContentId());
+                    customImage.setName(txtName.getText());
+                    customImage.setLocation(txtLocation.getText());
+                    Date date = Date.from(uploadDate.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
+                    customImage.setUploadDate(date);
+                    customImage.setBytes(imageBytes);
+                    /**
+                     * Once all is set up we call the REST method and if
+                     * successfull, the user gets notified
+                     */
                     customImageInterface.edit_XML(customImage);
                     contentList = FXCollections.observableArrayList(client.findAllContents_XML(new GenericType<List<Content>>() {
                     }));
                     new Alert(Alert.AlertType.INFORMATION, "Content Modified", ButtonType.OK).showAndWait();
                     LOGGER.info("Custom Image modified successfully");
-                } catch (Exception e) {
-                    String msg = "Custom Image cannot be modified\n" + e.getMessage();
-                    Alert alert = new Alert(Alert.AlertType.ERROR, msg);
-                    alert.show();
-                    LOGGER.log(Level.SEVERE, "ContentWindowController: Error at modifying a custom image: ", e.getMessage());
-                }
-                /**
-                 * After the call we refresh the table to show the modified data
-                 */
-                customImageList = findAllCustomImages(contentList);
-                ObservableList<CustomImage> listCustomImage = FXCollections.observableArrayList(customImageList);
-                tableCustomImage.setItems(listCustomImage);
-                tableCustomImage.refresh();
 
-            } else if (customTextTableIsSelected) {
-                /**
-                 * In this case the Text Table is selected, and same process
-                 * here
-                 */
-                int selectedRow = tableCustomText.getSelectionModel().getSelectedIndex();
-                CustomTextInterface customTextInterface = CustomTextFactory.getModel();
-                CustomText customText = new CustomText();
-                customText.setContentId(customTextList.get(selectedRow).getContentId());
-                customText.setName(txtName.getText());
-                customText.setLocation(txtLocation.getText());
-                Date date = Date.from(uploadDate.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
-                customText.setUploadDate(date);
-                customText.setText(taDescription.getText());
-                /**
-                 * After the object is filled with data, is sent to the REST and
-                 * if done correctly, a notification is shown to the user and
-                 * also the tables are refreshed
-                 */
-                try {
+                    /**
+                     * After the call we refresh the table to show the modified
+                     * data
+                     */
+                    customImageList = findAllCustomImages(contentList);
+                    ObservableList<CustomImage> listCustomImage = FXCollections.observableArrayList(customImageList);
+                    tableCustomImage.setItems(listCustomImage);
+                    tableCustomImage.refresh();
+
+                } else if (customTextTableIsSelected) {
+                    /**
+                     * In this case the Text Table is selected, and same process
+                     * here
+                     */
+                    int selectedRow = tableCustomText.getSelectionModel().getSelectedIndex();
+                    CustomTextInterface customTextInterface = CustomTextFactory.getModel();
+                    CustomText customText = new CustomText();
+                    customText.setContentId(customTextList.get(selectedRow).getContentId());
+                    customText.setName(txtName.getText());
+                    customText.setLocation(txtLocation.getText());
+                    Date date = Date.from(uploadDate.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
+                    customText.setUploadDate(date);
+                    customText.setText(taDescription.getText());
+                    /**
+                     * After the object is filled with data, is sent to the REST
+                     * and if done correctly, a notification is shown to the
+                     * user and also the tables are refreshed
+                     */
                     customTextInterface.edit_XML(customText);
                     contentList = FXCollections.observableArrayList(client.findAllContents_XML(new GenericType<List<Content>>() {
                     }));
                     new Alert(Alert.AlertType.INFORMATION, "Content Modified", ButtonType.OK).showAndWait();
                     LOGGER.info("Custom Text modified successfully");
-                } catch (Exception e) {
-                    String msg = "Custom Text cannot be modified\n" + e.getMessage();
-                    Alert alert = new Alert(Alert.AlertType.ERROR, msg);
-                    alert.show();
-                    LOGGER.log(Level.SEVERE, "ContentWindowController: Error at modifying a custom text: ", e.getMessage());
-                }
-                customTextList = findAllCustomTexts(contentList);
-                ObservableList<CustomText> listCustomText = FXCollections.observableArrayList(customTextList);
-                tableCustomText.setItems(listCustomText);
-                tableCustomText.refresh();
 
+                    customTextList = findAllCustomTexts(contentList);
+                    ObservableList<CustomText> listCustomText = FXCollections.observableArrayList(customTextList);
+                    tableCustomText.setItems(listCustomText);
+                    tableCustomText.refresh();
+
+                }
+            } else {
+                new Alert(Alert.AlertType.ERROR, "The date cannot be a future one", ButtonType.OK).showAndWait();
             }
-        } else {
-            new Alert(Alert.AlertType.ERROR, "The date cannot be a future one", ButtonType.OK).showAndWait();
+        } catch (Exception e) {
+            String msg = "Custom Text cannot be modified\n" + e.getMessage();
+            Alert alert = new Alert(Alert.AlertType.ERROR, msg);
+            alert.show();
+            LOGGER.log(Level.SEVERE, "ContentWindowController: Error at modifying a custom text: ", e.getMessage());
         }
     }
 
@@ -648,81 +637,77 @@ public class ContentWindowController {
     @FXML
     private void handleDeleteContentButtonAction(ActionEvent event
     ) {
-        /**
-         * First we ask the user for a confirmation
-         */
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setHeaderText("Delete Content");
-        alert.setTitle("Confirmation");
-        alert.setContentText("Are you sure you want to delete this content?");
-        Optional<ButtonType> action = alert.showAndWait();
-        //If you click on OK
-        if (action.get() == ButtonType.OK) {
-            if (customImageTableIsSelected) {
-                /**
-                 * If the Image table is selected we get the content id and then
-                 * we call the method
-                 */
-                int selectedRow = tableCustomImage.getSelectionModel().getSelectedIndex();
-                ContentInterface contentInterface = ContentFactory.getModel();
-                try {
+        try {
+            /**
+             * First we ask the user for a confirmation
+             */
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setHeaderText("Delete Content");
+            alert.setTitle("Confirmation");
+            alert.setContentText("Are you sure you want to delete this content?");
+            Optional<ButtonType> action = alert.showAndWait();
+            //If you click on OK
+            if (action.get() == ButtonType.OK) {
+                if (customImageTableIsSelected) {
+                    /**
+                     * If the Image table is selected we get the content id and
+                     * then we call the method
+                     */
+                    int selectedRow = tableCustomImage.getSelectionModel().getSelectedIndex();
+                    ContentInterface contentInterface = ContentFactory.getModel();
                     contentInterface.remove(customImageList.get(selectedRow).getContentId() + "");
                     contentList = FXCollections.observableArrayList(contentInterface.findAllContents_XML(new GenericType<List<Content>>() {
                     }));
                     LOGGER.info("Custom Image Deleted successfully");
-                } catch (Exception e) {
-                    String msg = "Custom Image cannot be deleted\n" + e.getMessage();
-                    Alert alert2 = new Alert(Alert.AlertType.ERROR, msg);
-                    alert2.show();
-                    LOGGER.log(Level.SEVERE, "ContentWindowController: Error at deleting a custom image: ", e.getMessage());
-                }
-                /**
-                 * Once the method is finnished the table refreshes and the
-                 * fields are cleared
-                 */
-                customImageList = findAllCustomImages(contentList);
-                ObservableList<CustomImage> listCustomImage = FXCollections.observableArrayList(customImageList);
-                tableCustomImage.setItems(listCustomImage);
-                tableCustomImage.refresh();
-                //Clear all 
-                imagePreview.setImage(null);
-                txtLocation.setText("");
-                txtName.setText("");
-                uploadDate.setValue(null);
-                btnModifyContent.setDisable(true);
-                btnDeleteContent.setDisable(true);
-            } else if (customTextTableIsSelected) {
-                /**
-                 * Same method as before but getting the id from the other table
-                 */
-                int selectedRow = tableCustomText.getSelectionModel().getSelectedIndex();
-                ContentInterface contentInterface = ContentFactory.getModel();
-                try {
+
+                    /**
+                     * Once the method is finnished the table refreshes and the
+                     * fields are cleared
+                     */
+                    customImageList = findAllCustomImages(contentList);
+                    ObservableList<CustomImage> listCustomImage = FXCollections.observableArrayList(customImageList);
+                    tableCustomImage.setItems(listCustomImage);
+                    tableCustomImage.refresh();
+                    //Clear all 
+                    imagePreview.setImage(null);
+                    txtLocation.setText("");
+                    txtName.setText("");
+                    uploadDate.setValue(null);
+                    btnModifyContent.setDisable(true);
+                    btnDeleteContent.setDisable(true);
+                } else if (customTextTableIsSelected) {
+                    /**
+                     * Same method as before but getting the id from the other
+                     * table
+                     */
+                    int selectedRow = tableCustomText.getSelectionModel().getSelectedIndex();
+                    ContentInterface contentInterface = ContentFactory.getModel();
                     contentInterface.remove(customTextList.get(selectedRow).getContentId() + "");
                     contentList = FXCollections.observableArrayList(contentInterface.findAllContents_XML(new GenericType<List<Content>>() {
                     }));
                     LOGGER.info("Custom Text Deleted successfully");
-                } catch (Exception e) {
-                    String msg = "Custom Text cannot be deleted\n" + e.getMessage();
-                    Alert alert2 = new Alert(Alert.AlertType.ERROR, msg);
-                    alert2.show();
-                    LOGGER.log(Level.SEVERE, "ContentWindowController: Error at deleting a custom text: ", e.getMessage());
+
+                    /**
+                     * Refreshing the table and clearing fields
+                     */
+                    customTextList = findAllCustomTexts(contentList);
+                    ObservableList<CustomText> listCustomText = FXCollections.observableArrayList(customTextList);
+                    tableCustomText.setItems(listCustomText);
+                    tableCustomText.refresh();
+                    //Clear all 
+                    taDescription.setText("");
+                    txtLocation.setText("");
+                    txtName.setText("");
+                    uploadDate.setValue(null);
+                    btnModifyContent.setDisable(true);
+                    btnDeleteContent.setDisable(true);
                 }
-                /**
-                 * Refreshing the table and clearing fields
-                 */
-                customTextList = findAllCustomTexts(contentList);
-                ObservableList<CustomText> listCustomText = FXCollections.observableArrayList(customTextList);
-                tableCustomText.setItems(listCustomText);
-                tableCustomText.refresh();
-                //Clear all 
-                taDescription.setText("");
-                txtLocation.setText("");
-                txtName.setText("");
-                uploadDate.setValue(null);
-                btnModifyContent.setDisable(true);
-                btnDeleteContent.setDisable(true);
             }
+        } catch (Exception e) {
+            String msg = "Custom Image cannot be deleted\n" + e.getMessage();
+            Alert alert2 = new Alert(Alert.AlertType.ERROR, msg);
+            alert2.show();
+            LOGGER.log(Level.SEVERE, "ContentWindowController: Error at deleting a custom image: ", e.getMessage());
         }
     }
 
@@ -778,7 +763,8 @@ public class ContentWindowController {
      * @param event
      */
     @FXML
-    private void handleAlbumButtonAction(ActionEvent event) {
+    private void handleAlbumButtonAction(ActionEvent event
+    ) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("ui/album/UIAlbum.fxml"));
             Parent root = (Parent) loader.load();
@@ -789,8 +775,10 @@ public class ContentWindowController {
             User user = new User();
             user.setLogin("u1");
             controller.initStage(root, user);
+
         } catch (IOException ex) {
-            Logger.getLogger(ContentWindowController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ContentWindowController.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -810,7 +798,8 @@ public class ContentWindowController {
      * @param event
      */
     @FXML
-    private void handleChangeButtonAction(ActionEvent event) {
+    private void handleChangeButtonAction(ActionEvent event
+    ) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/changePassword/ChangePasswordWindow.fxml"));
             Parent root = (Parent) loader.load();
@@ -904,7 +893,8 @@ public class ContentWindowController {
      * @param event
      */
     @FXML
-    private void handlePrintCustomImageButtonAction(ActionEvent event) {
+    private void handlePrintCustomImageButtonAction(ActionEvent event
+    ) {
         /**
          * We select the jrxml and the report is loaded with the table
          * information
@@ -919,12 +909,15 @@ public class ContentWindowController {
             JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
             jasperViewer.setVisible(true);
             // jasperViewer.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
+
         } catch (JRException ex) {
             Logger.getLogger(ContentWindowController.class
                     .getName()).log(Level.SEVERE, null, ex);
             new Alert(Alert.AlertType.ERROR, ex.getMessage(), ButtonType.OK).showAndWait();
+
         } catch (IOException ex) {
-            Logger.getLogger(ContentWindowController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ContentWindowController.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -960,7 +953,8 @@ public class ContentWindowController {
      * @param event
      */
     @FXML
-    private void btnClearSelectionButtonAction(ActionEvent event) {
+    private void btnClearSelectionButtonAction(ActionEvent event
+    ) {
         /**
          * We deselect the radio buttons, clear all the text, and disable the
          * crud buttons
