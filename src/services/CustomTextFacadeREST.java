@@ -6,10 +6,11 @@
 package services;
 
 import businessLogic.customText.CustomTextInterface;
+import exceptions.ClientErrorException;
 import java.util.ResourceBundle;
-import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.WebTarget;
+import objects.CustomText;
 
 /**
  * Jersey REST client generated for REST resource:CustomTextFacadeREST
@@ -37,7 +38,11 @@ public class CustomTextFacadeREST implements CustomTextInterface {
     }
 
     public void edit_XML(Object requestEntity) throws ClientErrorException {
-        webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_XML).put(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_XML));
+        try {
+            webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_XML).put(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_XML), CustomText.class);
+        } catch (Exception e) {
+            throw new exceptions.ClientErrorException("An error ocurred when trying to modify a custom text: " + e.getMessage());
+        }
     }
 
     public void edit_JSON(Object requestEntity) throws ClientErrorException {
@@ -45,7 +50,11 @@ public class CustomTextFacadeREST implements CustomTextInterface {
     }
 
     public void create_XML(Object requestEntity) throws ClientErrorException {
-        webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_XML).post(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_XML));
+        try {
+            webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_XML).post(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_XML), CustomText.class);
+        } catch (Exception e) {
+            throw new ClientErrorException("An error ocurred when trying to create a custom text: " + e.getMessage());
+        }
     }
 
     public void create_JSON(Object requestEntity) throws ClientErrorException {
@@ -53,9 +62,13 @@ public class CustomTextFacadeREST implements CustomTextInterface {
     }
 
     public <T> T findCustomTextById_XML(Class<T> responseType, String id) throws ClientErrorException {
-        WebTarget resource = webTarget;
-        resource = resource.path(java.text.MessageFormat.format("customTextFindId/{0}", new Object[]{id}));
-        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
+        try {
+            WebTarget resource = webTarget;
+            resource = resource.path(java.text.MessageFormat.format("customTextFindId/{0}", new Object[]{id}));
+            return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
+        } catch (Exception e) {
+            throw new ClientErrorException("An error ocurred when trying to find a custom text by its id: " + e.getMessage());
+        }
     }
 
     public <T> T findCustomTextById_JSON(Class<T> responseType, String id) throws ClientErrorException {

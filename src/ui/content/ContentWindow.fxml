@@ -5,6 +5,9 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
@@ -115,45 +118,45 @@
                 </Button>
             </children>
         </Pane>
-        <Button fx:id="btnDeleteContent" layoutX="1015.0" layoutY="285.0" mnemonicParsing="false" onAction="#handleDeleteContentButtonAction" prefHeight="25.0" prefWidth="134.0" text="Delete Content">
+        <Button fx:id="btnDeleteContent" layoutX="1020.0" layoutY="330.0" mnemonicParsing="false" onAction="#handleDeleteContentButtonAction" prefHeight="25.0" prefWidth="134.0" text="Delete Content">
             <cursor>
                 <Cursor fx:constant="HAND" />
             </cursor>
         </Button>
-        <Button fx:id="btnAddContent" layoutX="1015.0" layoutY="216.0" mnemonicParsing="false" onAction="#handleAddContentButtonAction" prefHeight="25.0" prefWidth="134.0" text="Add Content">
+        <Button fx:id="btnAddContent" layoutX="1020.0" layoutY="261.0" mnemonicParsing="false" onAction="#handleAddContentButtonAction" prefHeight="25.0" prefWidth="134.0" text="Add Content">
             <cursor>
                 <Cursor fx:constant="HAND" />
             </cursor>
         </Button>
-        <Button fx:id="btnModifyContent" layoutX="1015.0" layoutY="251.0" mnemonicParsing="false" onAction="#handleModifyContentButtonAction" prefHeight="25.0" prefWidth="134.0" text="Modify Content">
+        <Button fx:id="btnModifyContent" layoutX="1020.0" layoutY="296.0" mnemonicParsing="false" onAction="#handleModifyContentButtonAction" prefHeight="25.0" prefWidth="134.0" text="Modify Content">
             <cursor>
                 <Cursor fx:constant="HAND" />
             </cursor>
         </Button>
-        <RadioButton fx:id="rbCustomImage" layoutX="763.0" layoutY="61.0" mnemonicParsing="false" text="Custom Image">
+        <RadioButton fx:id="rbCustomImage" layoutX="768.0" layoutY="106.0" mnemonicParsing="false" text="Custom Image">
             <toggleGroup>
                 <ToggleGroup fx:id="tgType" />
             </toggleGroup>
         </RadioButton>
-        <RadioButton fx:id="rbCustomText" layoutX="928.0" layoutY="61.0" mnemonicParsing="false" text="Custom Text" toggleGroup="$tgType" />
-        <Text layoutX="728.0" layoutY="43.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Creation/Modification">
+        <RadioButton fx:id="rbCustomText" layoutX="933.0" layoutY="106.0" mnemonicParsing="false" text="Custom Text" toggleGroup="$tgType" />
+        <Text layoutX="733.0" layoutY="88.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Creation/Modification">
             <font>
                 <Font size="18.0" />
             </font>
         </Text>
-        <TextField fx:id="txtName" layoutX="763.0" layoutY="107.0" prefHeight="25.0" prefWidth="149.0" />
-        <TextField fx:id="txtLocation" layoutX="763.0" layoutY="173.0" prefHeight="20.0" prefWidth="149.0" />
-        <Text layoutX="763.0" layoutY="104.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Name" wrappingWidth="46.0933837890625" />
-        <Text layoutX="760.0" layoutY="169.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Location" wrappingWidth="66.55665323272115" />
-        <Button fx:id="btnFileChooser" layoutX="967.0" layoutY="173.0" mnemonicParsing="false" onAction="#handleFileChooserButtonAction" prefHeight="25.0" prefWidth="120.0" text="Choose Image">
+        <TextField fx:id="txtName" layoutX="768.0" layoutY="152.0" prefHeight="25.0" prefWidth="149.0" />
+        <TextField fx:id="txtLocation" layoutX="768.0" layoutY="218.0" prefHeight="20.0" prefWidth="149.0" />
+        <Text layoutX="768.0" layoutY="149.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Name" wrappingWidth="46.0933837890625" />
+        <Text layoutX="765.0" layoutY="214.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Location" wrappingWidth="66.55665323272115" />
+        <Button fx:id="btnFileChooser" layoutX="972.0" layoutY="218.0" mnemonicParsing="false" onAction="#handleFileChooserButtonAction" prefHeight="25.0" prefWidth="120.0" text="Choose Image">
             <cursor>
                 <Cursor fx:constant="HAND" />
             </cursor>
         </Button>
-        <TextArea fx:id="taDescription" layoutX="763.0" layoutY="232.0" prefHeight="62.0" prefWidth="149.0" />
-        <Text layoutX="763.0" layoutY="228.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Description" />
-        <DatePicker fx:id="uploadDate" layoutX="963.0" layoutY="107.0" prefHeight="25.0" prefWidth="149.0" />
-        <Text layoutX="963.0" layoutY="104.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Upload Date" />
+        <TextArea fx:id="taDescription" layoutX="768.0" layoutY="277.0" prefHeight="62.0" prefWidth="149.0" />
+        <Text layoutX="768.0" layoutY="273.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Description" />
+        <DatePicker fx:id="uploadDate" layoutX="968.0" layoutY="152.0" prefHeight="25.0" prefWidth="149.0" />
+        <Text layoutX="968.0" layoutY="149.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Upload Date" />
         <Text layoutX="315.0" layoutY="419.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Image Table" wrappingWidth="87.76995175429329" />
         <TableView fx:id="tableCustomText" layoutX="642.0" layoutY="424.0" prefHeight="221.0" prefWidth="456.0">
             <columns>
@@ -184,15 +187,32 @@
                 <Font size="18.0" />
             </font>
         </Label>
-        <Button fx:id="btnHelp" layoutX="1108.0" layoutY="20.0" mnemonicParsing="false" onAction="#handleHelpButtonAction" prefHeight="25.0" prefWidth="60.0" text="Help">
+        <Button fx:id="btnHelp" layoutX="1113.0" layoutY="65.0" mnemonicParsing="false" onAction="#handleHelpButtonAction" prefHeight="25.0" prefWidth="60.0" text="Help">
             <cursor>
                 <Cursor fx:constant="HAND" />
             </cursor>
         </Button>
-        <Button fx:id="btnClearSelection" layoutX="1038.0" layoutY="327.0" mnemonicParsing="false" onAction="#btnClearSelectionButtonAction" text="Clear Selection">
+        <Button fx:id="btnClearSelection" layoutX="1043.0" layoutY="372.0" mnemonicParsing="false" onAction="#btnClearSelectionButtonAction" text="Clear Selection">
             <cursor>
                 <Cursor fx:constant="HAND" />
             </cursor>
         </Button>
+      <MenuBar layoutX="127.0" layoutY="7.0">
+        <menus>
+          <Menu mnemonicParsing="false" text="Operations">
+            <items>
+              <MenuItem mnemonicParsing="false" onAction="#handleAddContentButtonAction" text="Add Content" />
+                  <MenuItem mnemonicParsing="false" onAction="#handleModifyContentButtonAction" text="Modify Content" />
+                  <MenuItem mnemonicParsing="false" onAction="#handleDeleteContentButtonAction" text="Delete Content" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Help">
+            <items>
+              <MenuItem mnemonicParsing="false" onAction="#handleHelpButtonAction" text="Help" />
+                  <MenuItem fx:id="miAbout" mnemonicParsing="false" onAction="#handleAboutButtonAction" text="About" />
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
     </children>
 </Pane>

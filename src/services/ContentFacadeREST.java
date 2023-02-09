@@ -6,11 +6,12 @@
 package services;
 
 import businessLogic.content.ContentInterface;
+import exceptions.ClientErrorException;
 import java.util.ResourceBundle;
-import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.GenericType;
+import objects.Content;
 
 /**
  * Jersey REST client generated for REST resource:ContentFacadeREST
@@ -38,9 +39,13 @@ public class ContentFacadeREST implements ContentInterface {
     }
 
     public <T> T findContentByDate_XML(GenericType<T> responseType, String date) throws ClientErrorException {
-        WebTarget resource = webTarget;
-        resource = resource.path(java.text.MessageFormat.format("date/{0}", new Object[]{date}));
-        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
+        try {
+            WebTarget resource = webTarget;
+            resource = resource.path(java.text.MessageFormat.format("date/{0}", new Object[]{date}));
+            return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
+        } catch (Exception e) {
+            throw new ClientErrorException("An error ocurred when trying to find a content by date: " + e.getMessage());
+        }
     }
 
     public <T> T findContentByDate_JSON(Class<T> responseType, String date) throws ClientErrorException {
@@ -50,9 +55,13 @@ public class ContentFacadeREST implements ContentInterface {
     }
 
     public <T> T findContentByLocation_XML(GenericType<T> responseType, String contentLocation) throws ClientErrorException {
-        WebTarget resource = webTarget;
-        resource = resource.path(java.text.MessageFormat.format("findByLocation/{0}", new Object[]{contentLocation}));
-        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
+        try {
+            WebTarget resource = webTarget;
+            resource = resource.path(java.text.MessageFormat.format("findByLocation/{0}", new Object[]{contentLocation}));
+            return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
+        } catch (Exception e) {
+            throw new ClientErrorException("An error ocurred when trying to find a content by location: " + e.getMessage());
+        }
     }
 
     public <T> T findContentByLocation_JSON(Class<T> responseType, String contentLocation) throws ClientErrorException {
@@ -62,9 +71,13 @@ public class ContentFacadeREST implements ContentInterface {
     }
 
     public <T> T findContentById_XML(Class<T> responseType, String id) throws ClientErrorException {
-        WebTarget resource = webTarget;
-        resource = resource.path(java.text.MessageFormat.format("{0}", new Object[]{id}));
-        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
+        try {
+            WebTarget resource = webTarget;
+            resource = resource.path(java.text.MessageFormat.format("{0}", new Object[]{id}));
+            return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
+        } catch (Exception e) {
+            throw new ClientErrorException("An error ocurred when trying to find a content by id: " + e.getMessage());
+        }
     }
 
     public <T> T findContentById_JSON(Class<T> responseType, String id) throws ClientErrorException {
@@ -74,8 +87,12 @@ public class ContentFacadeREST implements ContentInterface {
     }
 
     public <T> T findAllContents_XML(GenericType<T> responseType) throws ClientErrorException {
-        WebTarget resource = webTarget;
-        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
+        try {
+            WebTarget resource = webTarget;
+            return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
+        } catch (Exception e) {
+            throw new ClientErrorException("An error ocurred when trying to find all contents: " + e.getMessage());
+        }
     }
 
     public <T> T findAllContents_JSON(Class<T> responseType) throws ClientErrorException {
@@ -84,13 +101,21 @@ public class ContentFacadeREST implements ContentInterface {
     }
 
     public void remove(String id) throws ClientErrorException {
-        webTarget.path(java.text.MessageFormat.format("{0}", new Object[]{id})).request().delete();
+        try {
+            webTarget.path(java.text.MessageFormat.format("{0}", new Object[]{id})).request().delete(Content.class);
+        } catch (Exception e) {
+            throw new ClientErrorException("An error ocurred when trying to remove a content: " + e.getMessage());
+        }
     }
 
     public <T> T findContentByName_XML(GenericType<T> responseType, String name) throws ClientErrorException {
-        WebTarget resource = webTarget;
-        resource = resource.path(java.text.MessageFormat.format("findByName/{0}", new Object[]{name}));
-        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
+        try {
+            WebTarget resource = webTarget;
+            resource = resource.path(java.text.MessageFormat.format("findByName/{0}", new Object[]{name}));
+            return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
+        } catch (Exception e) {
+            throw new ClientErrorException("An error ocurred when trying to find a content by name: " + e.getMessage());
+        }
     }
 
     public <T> T findContentByName_JSON(Class<T> responseType, String name) throws ClientErrorException {
@@ -100,9 +125,13 @@ public class ContentFacadeREST implements ContentInterface {
     }
 
     public <T> T findContentByAlbum_XML(Class<T> responseType, String albumId) throws ClientErrorException {
-        WebTarget resource = webTarget;
-        resource = resource.path(java.text.MessageFormat.format("findByAlbum/{0}", new Object[]{albumId}));
-        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
+        try {
+            WebTarget resource = webTarget;
+            resource = resource.path(java.text.MessageFormat.format("findByAlbum/{0}", new Object[]{albumId}));
+            return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
+        } catch (Exception e) {
+            throw new ClientErrorException("An error ocurred when trying to find a content by album: " + e.getMessage());
+        }
     }
 
     public <T> T findContentByAlbum_JSON(Class<T> responseType, String albumId) throws ClientErrorException {
